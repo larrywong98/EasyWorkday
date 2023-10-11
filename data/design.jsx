@@ -25,8 +25,8 @@ const test = () => {
     currentAddress: "building apt street city state zip",
 
     // section 3
-    cellPhoneNumber: "000-000-0000",
-    workPhoneNumber: "000-000-0000",
+    cellPhoneNumber: "0000000000",
+    workPhoneNumber: "0000000000",
     email: "xxx@gmail.com",
 
     // section 4
@@ -78,6 +78,14 @@ const test = () => {
 
   //   },
   // },
+  const status = {
+    initial: 0,
+    partial: 1,
+    pending: 2,
+    approved: 3,
+    rejected: 4,
+    deleted: 5,
+  };
 
   return <>{profile}</>;
 };
