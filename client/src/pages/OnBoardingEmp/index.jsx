@@ -1,8 +1,8 @@
-import { Space, DatePicker, Card, Row, Col } from "antd";
+import { Space, Card, Row, Col } from "antd";
 
 import { Button, Form, Typography } from "antd";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
 import ContactSection from "../../components/ContactSection";
@@ -13,17 +13,33 @@ import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
 import { fillInfo } from "../../reducer/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Input } from "antd";
+import Feedback from "../../components/Feedback";
+
+const { TextArea } = Input;
 
 const OnBoardingEmp = () => {
   // const { register, handleSubmit, control } = useForm();
-  const [formData, setFormData] = useState();
+  // const [formData, setFormData] = useState();
   const [form] = Form.useForm();
-  const [gender, setGender] = useState("");
-  const [citizen, setCitizen] = useState("");
-  const [visa, setVisa] = useState("");
-  const [ssnValue, setSsnValue] = useState("");
-  const [emergencyContacts, setEmergencyContacts] = useState(["#1"]);
+  // const [gender, setGender] = useState("");
+  // const [citizen, setCitizen] = useState("");
+  // const [visa, setVisa] = useState("");
+  // const [ssnValue, setSsnValue] = useState("");
+  // const [emergencyContacts, setEmergencyContacts] = useState(["#1"]);
+  const user = useSelector((state) => state.userReducer);
+  const initialData = useMemo(() => {
+    let tmp = { ...user.data };
+    tmp.dob = dayjs(user.data.dob, "YYYY/MM/DD");
+    // tmp.startDate = dayjs(user.data.visaDate[0], "YYYY/MM/DD");
+    // tmp.endDate = dayjs(user.data.visaDate[1], "YYYY/MM/DD");
+    tmp.visaDate = [
+      dayjs(user.data.visaDate[0], "YYYY/MM/DD"),
+      dayjs(user.data.visaDate[1], "YYYY/MM/DD"),
+    ];
+    return tmp;
+  }, [user.data]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [sectionClosed, setsectionClosed] = useState(Array(6).fill(false));
@@ -32,12 +48,19 @@ const OnBoardingEmp = () => {
   const onSubmit = (data) => {
     data.profilePic = "http://";
 
-    data.applicationStatus = status.pending;
-    data.dob = new Date(data.dob.$d).getTime();
-    // console.log(new Date(data.dob.$d).getTime());
+    // applicationStatus = status.pending;
+    // data.dob = new Date(data.dob.$d).getTime();
+    data.dob = data.dob.format("YYYY/MM/DD");
+
+    data.visaDate = [
+      data.visaDate[0].format("YYYY/MM/DD"),
+      data.visaDate[1].format("YYYY/MM/DD"),
+    ];
+    // console.log(typeof data.dob.format("YYYY/MM/DD"));
     // console.log(data);
-    dispatch(fillInfo({ data: data }));
-    setFormData(data);
+    // console.log(data);
+    dispatch(fillInfo({ applicationStatus: status.pending, data: data }));
+    // setFormData(data);
     navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {
@@ -45,11 +68,11 @@ const OnBoardingEmp = () => {
     newsectionClosed[i] = !newsectionClosed[i];
     setsectionClosed(newsectionClosed);
   };
-  const requiredItem = [
-    {
-      required: true,
-    },
-  ];
+  const checkStatus = () => {
+    console.log(user.applicationStatus, status.pending);
+    return user.applicationStatus === status.pending ? true : false;
+  };
+
   return (
     <>
       <Card
@@ -64,7 +87,7 @@ const OnBoardingEmp = () => {
             span: 6,
           }}
           wrapperCol={{
-            span: 12,
+            span: 14,
           }}
           style={{
             width: "100%",
@@ -72,74 +95,10 @@ const OnBoardingEmp = () => {
             maxWidth: 1600,
           }}
           layout="horizontal"
-          initialValues={{
-            // section 1
-            firstName: "Xiaoyun",
-            lastName: "Wang",
-            middleName: "",
-            preferredName: "larry",
-            profilePic: "url", // static file on server
-            ssn: "000000000", // hide show
-
-            dob: dayjs("2015/01/01", "YYYY/MM/DD"),
-            gender: "None",
-
-            // section 2
-            address: "building apt street city state zip",
-
-            // section 3
-            cellPhoneNumber: "0000000000",
-            workPhoneNumber: "0000000000",
-            email: "xxx@gmail.com",
-
-            // section 4
-            usCitizen: "No",
-            visaTitle: "F1(CPT/OPT)",
-            startDate: dayjs("2015/01/01", "YYYY/MM/DD"),
-            endDate: dayjs("2015/01/02", "YYYY/MM/DD"),
-
-            firstNameRef: "11",
-            lastNameRef: "11",
-            middleNameRef: "11",
-            preferredNameRef: "11",
-            phoneRef: "11",
-            emailRef: "11",
-            relationshipRef: "11",
-
-            // section 5
-            reference: [
-              {
-                firstName: "11",
-                lastName: "11",
-                middleName: "11",
-                preferredName: "11",
-                phone: "11",
-                email: "11",
-                relationship: "11",
-              },
-            ],
-            // emergency: {
-            //   firstName: "",
-            //   lastName: "",
-            //   middleName: "",
-            //   phone: "",
-            //   email: "",
-            //   relationship: "",
-            // },
-            emergency: [
-              {
-                firstName: "22",
-                lastName: "22",
-                middleName: "22",
-                preferredName: "22",
-                phone: "22",
-                email: "22",
-                relationship: "22",
-              },
-            ],
-          }}
+          initialValues={initialData}
           form={form}
           onFinish={onSubmit}
+          disabled={checkStatus()}
         >
           <Title
             level={2}
@@ -186,10 +145,22 @@ const OnBoardingEmp = () => {
             />
             <Col span={16}>
               <Space style={{ width: "100%" }} align="end" direction="vertical">
-                <Button type="primary" htmlType="submit">
-                  submit
-                </Button>
+                <Space size="middle">
+                  {user.applicationStatus === status.pending ? (
+                    <Typography style={{ color: "#ff9800" }}>
+                      Please wait for HR to review your application
+                    </Typography>
+                  ) : (
+                    <></>
+                  )}
+                  <Button type="primary" htmlType="submit">
+                    submit
+                  </Button>
+                </Space>
               </Space>
+            </Col>
+            <Col span={16}>
+              <Feedback />
             </Col>
           </Row>
         </Form>

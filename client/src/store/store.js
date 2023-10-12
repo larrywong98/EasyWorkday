@@ -40,8 +40,4 @@ const store = configureStore(
 
 const persistor = persistStore(store);
 
-store.subscribe(() => {
-  console.log(store.getState());
-});
-
 export { store, persistor };

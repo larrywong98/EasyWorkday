@@ -1,17 +1,20 @@
 import { Button, Card, Col, DatePicker, Form, Input, Radio, Space } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUsCitizen } from "../../reducer/userSlice";
 
 const CitizenSection = (props) => {
   const sectionClosed = props.sectionClosed;
   const sectionControl = props.sectionControl;
+  const dispatch = useDispatch();
   const requiredItem = [
     {
       required: true,
     },
   ];
   const { RangePicker } = DatePicker;
-  const [citizen, setCitizen] = useState("");
+  const citizen = useSelector((state) => state.userReducer.data.usCitizen);
   const [visa, setVisa] = useState("");
 
   return (
@@ -32,13 +35,21 @@ const CitizenSection = (props) => {
           hidden={sectionClosed[3]}
         >
           <Radio.Group
-            onChange={(e) => setCitizen(e.target.value)}
+            onChange={(e) =>
+              dispatch(updateUsCitizen({ usCitizen: e.target.value }))
+            }
             value={citizen}
           >
-            <Radio.Button value="Yes" onChange={() => setCitizen("Yes")}>
+            <Radio.Button
+              value="Yes"
+              onChange={() => dispatch(updateUsCitizen({ usCitizen: "Yes" }))}
+            >
               Yes
             </Radio.Button>
-            <Radio.Button value="No" onChange={() => setCitizen("No")}>
+            <Radio.Button
+              value="No"
+              onChange={() => dispatch(updateUsCitizen({ usCitizen: "No" }))}
+            >
               No
             </Radio.Button>
           </Radio.Group>

@@ -1,10 +1,7 @@
-import { useEffect } from "react";
-import UploadWidget from "../components/UploadWidget";
-import Upload from "../components/Upload";
 import OnBoardingEmp from "./OnBoardingEmp";
 
 import React from "react";
-import { Breadcrumb, Layout, Menu, Space, theme } from "antd";
+import { Layout } from "antd";
 import HeaderComp from "../components/HeaderComp";
 import FooterComp from "../components/FooterComp";
 import { Route, Routes } from "react-router";
@@ -16,6 +13,8 @@ import ProfileHr from "./ProfileHr";
 import { Content } from "antd/es/layout/layout";
 import Authform from "../components/Authform";
 import Success from "./Success";
+import Home from "./Home";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const App = () => {
   return (
@@ -33,10 +32,17 @@ const App = () => {
       >
         <Routes>
           <Route path="/">
-            <Route index element={<OnBoardingEmp />} />
+            <Route index element={<Home />} />
             <Route path="signin" element={<Authform />} />
             <Route path="emp">
-              <Route path="onboard" element={<OnBoardingEmp />} />
+              <Route
+                path="onboard"
+                element={
+                  <ProtectedRoute>
+                    <OnBoardingEmp />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="visa" element={<VisaEmp />} />
               <Route path="profile" element={<ProfileEmp />}>
                 <Route path=":empId" element={<ProfileEmp />} />

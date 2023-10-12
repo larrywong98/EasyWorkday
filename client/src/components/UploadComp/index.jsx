@@ -20,11 +20,11 @@ const UploadComp = (props) => {
     return isLt2M;
   };
 
-  const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result));
-    reader.readAsDataURL(img);
-  };
+  // const getBase64 = (img, callback) => {
+  //   const reader = new FileReader();
+  //   reader.addEventListener("load", () => callback(reader.result));
+  //   reader.readAsDataURL(img);
+  // };
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
       setLoading(true);
@@ -45,9 +45,9 @@ const UploadComp = (props) => {
       console.log(user.profilePic);
     }
   };
-  const request = async () => {
-    // const response = await fetch('http://127.0.0.1:4000/api/upload')
-  };
+  // const request = async () => {
+  //   // const response = await fetch('http://127.0.0.1:4000/api/upload')
+  // };
   return (
     <>
       <Upload
@@ -58,7 +58,7 @@ const UploadComp = (props) => {
         listType={props.listType}
         onChange={handleChange}
         beforeUpload={beforeUpload}
-        defaultFileList={user.profilePic.uid === "" ? [] : [user.profilePic]}
+        // defaultFileList={user.profilePic.uid === "" ? [] : [user.profilePic]}
       >
         <div>
           <PlusOutlined />
