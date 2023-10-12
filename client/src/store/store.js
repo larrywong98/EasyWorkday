@@ -1,6 +1,7 @@
 import { configureStore, applyMiddleware } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import userReducer from "../reducer/userSlice";
+import statusReducer from "../reducer/statusSlice";
 import thunk from "redux-thunk";
 import {
   persistStore,
@@ -16,6 +17,7 @@ import storage from "redux-persist/lib/storage";
 
 const rootReducer = combineReducers({
   userReducer,
+  statusReducer,
 });
 
 const persistConfig = {
