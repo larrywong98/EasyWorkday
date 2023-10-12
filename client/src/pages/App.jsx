@@ -15,6 +15,7 @@ import VisaHr from "./VisaHr";
 import ProfileHr from "./ProfileHr";
 import { Content } from "antd/es/layout/layout";
 import Authform from "../components/Authform";
+import Success from "./Success";
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
               <Route path="visa" element={<VisaHr />} />
               <Route path="profile" element={<ProfileHr />} />
             </Route>
+            <Route path="success" element={<Success />} />
           </Route>
         </Routes>
       </Content>

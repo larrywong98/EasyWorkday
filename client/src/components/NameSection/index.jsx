@@ -57,12 +57,7 @@ const NameSection = (props) => {
             rules={requiredItem}
             hidden={sectionClosed[0]}
           >
-            <Input
-              //   status={!formData ? "" : formData.ssn.length !== 9 ? "error" : ""}
-              value={ssnValue}
-              onChange={(e) => setSsnValue(e.target.value)}
-              style={{ width: "150px" }}
-            />
+            <Input style={{ width: "150px" }} />
           </Form.Item>
           <Form.Item
             label="Date of Birth"
@@ -87,6 +82,9 @@ const NameSection = (props) => {
               </Radio.Button>
               <Radio.Button value="Female" onChange={() => setGender("Female")}>
                 Female
+              </Radio.Button>
+              <Radio.Button value="None" onChange={() => setGender("None")}>
+                I do not wish to Answer
               </Radio.Button>
             </Radio.Group>
           </Form.Item>

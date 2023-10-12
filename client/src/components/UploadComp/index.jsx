@@ -1,10 +1,13 @@
 import { Upload } from "antd";
 import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { updateProfilePic } from "../../reducer/userSlice";
 const UploadComp = (props) => {
   const [loading, setLoading] = useState(false);
   //   const [previewUrl, setPreviewUrl] = useState("");
-
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.userReducer);
   const beforeUpload = (file) => {
     // const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
     // if (!isJpgOrPng) {
@@ -28,13 +31,18 @@ const UploadComp = (props) => {
       return;
     }
     if (info.file.status === "done") {
-      console.log(info.file.response);
-      //   setPreviewUrl(info.file.response);
-      //   getBase64(info.file.originFileObj, (url) => {
-      //     setLoading(false);
-      //     // setImageUrl(url);
-      //     // console.log(url);
-      //   });
+      dispatch(
+        updateProfilePic({
+          profilePic: {
+            uid: "1",
+            name: "ProfileUrl.png",
+            status: "done",
+            url: info.file.response.fileUrl,
+          },
+        })
+      );
+
+      console.log(user.profilePic);
     }
   };
   const request = async () => {
@@ -44,14 +52,13 @@ const UploadComp = (props) => {
     <>
       <Upload
         name="file"
-        // customRequest={request}
-        // loading={loading}
         action="http://127.0.0.1:4000/api/upload"
         showUploadList={true}
         maxCount={1}
         listType={props.listType}
         onChange={handleChange}
         beforeUpload={beforeUpload}
+        defaultFileList={user.profilePic.uid === "" ? [] : [user.profilePic]}
       >
         <div>
           <PlusOutlined />

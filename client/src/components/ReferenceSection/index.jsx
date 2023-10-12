@@ -9,23 +9,25 @@ import {
   Typography,
 } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
-
+import { status } from "../../reducer/global";
+import { useSelector } from "react-redux";
 const ReferenceSection = (props) => {
   const sectionClosed = props.sectionClosed;
   const sectionControl = props.sectionControl;
+  const user = useSelector((state) => state.userReducer);
   const requiredItem = [
     {
       required: true,
     },
   ];
   const inputFields = [
-    { label: "First Name", name: "firstNameRef", rules: requiredItem },
-    { label: "Middle Name", name: "middleNameRef", rules: [] },
-    { label: "Last Name", name: "lastNameRef", rules: requiredItem },
-    { label: "Preferred Name", name: "preferredNameRef", rules: [] },
-    { label: "phone", name: "phoneRef", rules: [] },
-    { label: "Email", name: "emailRef", rules: [] },
-    { label: "Relationship", name: "relationshipRef", rules: requiredItem },
+    { label: "First Name", name: "firstName", rules: requiredItem },
+    { label: "Middle Name", name: "middleName", rules: [] },
+    { label: "Last Name", name: "lastName", rules: requiredItem },
+    { label: "Preferred Name", name: "preferredName", rules: [] },
+    { label: "phone", name: "phone", rules: [] },
+    { label: "Email", name: "email", rules: [] },
+    { label: "Relationship", name: "relationship", rules: requiredItem },
   ];
   return (
     <Col span={16}>
@@ -39,17 +41,27 @@ const ReferenceSection = (props) => {
           ></Button>
         }
       >
-        {inputFields.map((item, index) => (
-          <Form.Item
-            key={index}
-            label={item.label}
-            name={item.name}
-            hidden={sectionClosed[4]}
-            rules={item.rules}
-          >
-            <Input />
-          </Form.Item>
-        ))}
+        <Form.List name="reference">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map((field, index, ...restField) => (
+                <div key={field.key}>
+                  {inputFields.map((item, innerIndex) => (
+                    <Form.Item
+                      key={innerIndex}
+                      label={item.label}
+                      name={[index, item.name]}
+                      hidden={sectionClosed[4]}
+                      rules={item.rules}
+                    >
+                      <Input />
+                    </Form.Item>
+                  ))}
+                </div>
+              ))}
+            </>
+          )}
+        </Form.List>
 
         {sectionClosed[4] ? <></> : <Divider></Divider>}
         <Form.Item hidden={sectionClosed[4]}>
@@ -63,72 +75,70 @@ const ReferenceSection = (props) => {
             Emergency contacts
           </Typography>
         </Form.Item>
-        <Form.List name="emergency" fields={["1"]}>
-          {(fields, { add, remove }) => {
-            return (
-              <div>
-                {fields.map((field, index) => (
-                  <div key={field.key}>
-                    <Form.Item hidden={sectionClosed[4]}>
-                      <Typography
-                        style={{
-                          margin: "20px",
-                          fontSize: "16px",
-                          fontWeight: "600",
-                        }}
-                      >
-                        #{index + 1}
-                      </Typography>
-                    </Form.Item>
-                    {inputFields.map((item, innerindex) => (
-                      <Form.Item
-                        key={innerindex}
-                        label={item.label}
-                        name={[index, item.name]}
-                        hidden={sectionClosed[4]}
-                        rules={item.rules}
-                      >
-                        <Input />
-                      </Form.Item>
-                    ))}
-
-                    <Space
-                      direction="vertical"
-                      align="end"
-                      style={{ width: "100%" }}
+        <Form.List name="emergency">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map((field, index, ...restField) => (
+                <div key={field.key}>
+                  <Form.Item hidden={sectionClosed[4]}>
+                    <Typography
+                      style={{
+                        margin: "20px",
+                        fontSize: "16px",
+                        fontWeight: "600",
+                      }}
                     >
-                      {fields.length > 1 ? (
-                        <Button
-                          type="primary"
-                          onClick={() => remove(field.name)}
-                          danger
-                        >
-                          Remove
-                        </Button>
-                      ) : null}
-                    </Space>
-                    {sectionClosed[4] ? <></> : <Divider></Divider>}
-                  </div>
-                ))}
-
-                <Space
-                  direction="vertical"
-                  align="end"
-                  style={{ width: "100%" }}
-                >
-                  {fields.length < 2 ? (
-                    <Form.Item hidden={sectionClosed[4]}>
-                      <Button onClick={() => add()}>
-                        <PlusOutlined /> Add
-                      </Button>
+                      #{index + 1}
+                    </Typography>
+                  </Form.Item>
+                  {inputFields.map((item, innerindex) => (
+                    <Form.Item
+                      key={innerindex}
+                      label={item.label}
+                      name={[index, item.name]}
+                      hidden={sectionClosed[4]}
+                      rules={item.rules}
+                    >
+                      {/* {user.applicationStatus === status.initial ? (
+                          <Input />
+                        ) : ( */}
+                      <Input />
+                      {/* )} */}
                     </Form.Item>
-                  ) : (
-                    <></>
-                  )}
-                </Space>
-              </div>
-            );
-          }}
+                  ))}
+
+                  <Space
+                    direction="vertical"
+                    align="end"
+                    style={{ width: "100%" }}
+                  >
+                    {fields.length > 1 ? (
+                      <Button
+                        type="primary"
+                        onClick={() => remove(field.name)}
+                        danger
+                      >
+                        Remove
+                      </Button>
+                    ) : null}
+                  </Space>
+                  {sectionClosed[4] ? <></> : <Divider></Divider>}
+                </div>
+              ))}
+
+              <Space direction="vertical" align="end" style={{ width: "100%" }}>
+                {fields.length < 2 ? (
+                  <Form.Item hidden={sectionClosed[4]}>
+                    <Button onClick={() => add()}>
+                      <PlusOutlined /> Add
+                    </Button>
+                  </Form.Item>
+                ) : (
+                  <></>
+                )}
+              </Space>
+            </>
+          )}
         </Form.List>
       </Card>
     </Col>

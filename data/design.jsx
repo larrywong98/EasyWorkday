@@ -30,7 +30,7 @@ const test = () => {
     email: "xxx@gmail.com",
 
     // section 4
-    visaTitle: "F1",
+    visaTitle: "F1(CPT/OPT)",
     startDate: new Date(),
     endDate: new Date(),
 

@@ -26,7 +26,7 @@ const CitizenSection = (props) => {
         }
       >
         <Form.Item
-          label="Citizen of the U.S.?"
+          label="Citizen of the U.S."
           name="usCitizen"
           rules={requiredItem}
           hidden={sectionClosed[3]}
@@ -45,11 +45,12 @@ const CitizenSection = (props) => {
         </Form.Item>
         {citizen === "Yes" ? (
           <Form.Item
+            label="GC"
             name="visaTitle"
             rules={requiredItem}
             hidden={sectionClosed[3]}
           >
-            <Radio.Group style={{ marginLeft: "50px" }}>
+            <Radio.Group>
               <Radio value="Green Card">Green Card</Radio>
               <Radio value="Citizen">Citizen</Radio>
             </Radio.Group>
@@ -57,12 +58,13 @@ const CitizenSection = (props) => {
         ) : citizen === "No" ? (
           <>
             <Form.Item
+              label="Visa"
               name="visaTitle"
               rules={requiredItem}
               hidden={sectionClosed[3]}
             >
-              <Radio.Group value={visa} style={{ marginLeft: "50px" }}>
-                <Space direction="vertical">
+              <Radio.Group value={visa}>
+                <Space direction="vertical" style={{ marginTop: "7px" }}>
                   <Radio value="H1-B" onChange={() => setVisa("H1-B")}>
                     H1-B
                   </Radio>
@@ -92,7 +94,11 @@ const CitizenSection = (props) => {
                 </Space>
               </Radio.Group>
             </Form.Item>
-            <Form.Item name="visaDate" hidden={sectionClosed[3]}>
+            <Form.Item
+              label="Start and End Date"
+              name="visaDate"
+              hidden={sectionClosed[3]}
+            >
               <RangePicker />
             </Form.Item>
           </>
