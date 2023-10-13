@@ -70,7 +70,37 @@ const userSlice = createSlice({
         status: "",
         url: "",
       },
+
+      optReceipt: {
+        uid: "",
+        name: "",
+        status: "",
+        url: "",
+      },
+      optReceiptFeedback: "",
+      optEad: {
+        uid: "",
+        name: "",
+        status: "",
+        url: "",
+      },
+      optEadFeedback: "",
+      i983: {
+        uid: "",
+        name: "",
+        status: "",
+        url: "",
+      },
+      i983Feedback: "",
+      i20: {
+        uid: "",
+        name: "",
+        status: "",
+        url: "",
+      },
+      i20Feedback: "",
     },
+
     // info
     // address: "",
     // cellPhoneNumber: "",

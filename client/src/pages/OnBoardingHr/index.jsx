@@ -1,4 +1,4 @@
-import { Button, Input } from "antd";
+import { Button, Card, Input, Space } from "antd";
 import { useDispatch } from "react-redux";
 import {
   updateApplicationStatus,
@@ -6,6 +6,7 @@ import {
 } from "../../reducer/userSlice";
 import { status } from "../../reducer/global";
 import { useState } from "react";
+const { TextArea } = Input;
 
 const OnBoardingHr = () => {
   const dispatch = useDispatch();
@@ -22,13 +23,21 @@ const OnBoardingHr = () => {
 
   return (
     <>
-      <Input value={feedback} onChange={(e) => setFeedback(e.target.value)} />
-      <Button type="primary" onClick={() => approve()}>
-        Approve
-      </Button>
-      <Button type="primary" onClick={() => reject()} danger>
-        Reject
-      </Button>
+      Hiring Management page
+      <Card style={{ display: "flex", justifyContent: "center" }}>
+        <Space>
+          <TextArea
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+          />
+          <Button type="primary" onClick={() => approve()}>
+            Approve
+          </Button>
+          <Button type="primary" onClick={() => reject()} danger>
+            Reject
+          </Button>
+        </Space>
+      </Card>
     </>
   );
 };

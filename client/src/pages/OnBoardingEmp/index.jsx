@@ -2,7 +2,7 @@ import { Space, Card, Row, Col } from "antd";
 
 import { Button, Form, Typography } from "antd";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
 import ContactSection from "../../components/ContactSection";
@@ -28,6 +28,7 @@ const OnBoardingEmp = () => {
   // const [visa, setVisa] = useState("");
   // const [ssnValue, setSsnValue] = useState("");
   // const [emergencyContacts, setEmergencyContacts] = useState(["#1"]);
+  const [disabled, setDisabled] = useState();
   const user = useSelector((state) => state.userReducer);
   const initialData = useMemo(() => {
     let tmp = { ...user.data };
@@ -69,10 +70,18 @@ const OnBoardingEmp = () => {
     setsectionClosed(newsectionClosed);
   };
   const checkStatus = () => {
-    console.log(user.applicationStatus, status.pending);
-    return user.applicationStatus === status.pending ? true : false;
+    if (user.applicationStatus === status.rejected) {
+      return true;
+    }
+    if (user.applicationStatus === status.pending) {
+      return true;
+    }
+    return false;
   };
 
+  useEffect(() => {
+    setDisabled(checkStatus());
+  }, []);
   return (
     <>
       <Card
@@ -98,7 +107,7 @@ const OnBoardingEmp = () => {
           initialValues={initialData}
           form={form}
           onFinish={onSubmit}
-          disabled={checkStatus()}
+          disabled={disabled}
         >
           <Title
             level={2}
@@ -164,6 +173,15 @@ const OnBoardingEmp = () => {
             </Col>
           </Row>
         </Form>
+        <Space style={{ width: "100%" }} align="center" direction="vertical">
+          <Button
+            type="primary"
+            style={{ width: "100%" }}
+            onClick={() => setDisabled(false)}
+          >
+            Edit
+          </Button>
+        </Space>
       </Card>
     </>
   );
