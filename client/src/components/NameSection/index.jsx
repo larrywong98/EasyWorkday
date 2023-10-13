@@ -44,10 +44,10 @@ const NameSection = (props) => {
           ))}
           <Form.Item
             label="Profile Picture"
-            name="profilePic"
+            name="profilePicture"
             hidden={sectionClosed[0]}
           >
-            <UploadComp listType="picture-circle" />
+            <UploadComp name="ProfilePicture" listType="picture-circle" />
           </Form.Item>
 
           <Form.Item

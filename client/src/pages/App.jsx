@@ -43,7 +43,14 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              <Route path="visa" element={<VisaEmp />} />
+              <Route
+                path="visa"
+                element={
+                  <ProtectedRoute>
+                    <VisaEmp />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="profile" element={<ProfileEmp />}>
                 <Route path=":empId" element={<ProfileEmp />} />
               </Route>

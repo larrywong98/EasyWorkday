@@ -10,17 +10,12 @@ const userSlice = createSlice({
     applicationStatus: status.initial,
     onboardFeedback: "",
 
-    data: {
+    info: {
       firstName: "Xiaoyun",
       lastName: "Wang",
       middleName: "middle",
       preferredName: "larry",
-      profilePic: {
-        uid: "1",
-        name: "ProfileUrl.png",
-        status: "done",
-        url: "",
-      },
+
       ssn: "000000000", // hide show
 
       dob: "2014/01/01",
@@ -64,46 +59,23 @@ const userSlice = createSlice({
           relationship: "22",
         },
       ],
-      driverLicense: {
-        uid: "",
-        name: "",
-        status: "",
-        url: "",
-      },
+      profilePicture: {},
+      driverLicense: {},
+      workAuthorization: {},
     },
     // const user = useselector (state=>  state.userReducer)
     // user.visa
     visa: {
-      optReceipt: {
-        uid: "",
-        name: "",
-        status: "",
-        url: "",
-      },
+      optReceipt: {},
       optStatus: "",
       optReceiptFeedback: "",
-      optEad: {
-        uid: "",
-        name: "",
-        status: "",
-        url: "",
-      },
+      optEad: {},
       optEadStatus: "",
       optEadFeedback: "",
-      i983: {
-        uid: "",
-        name: "",
-        status: "",
-        url: "",
-      },
+      i983: {},
       i983Status: "",
       i983Feedback: "",
-      i20: {
-        uid: "",
-        name: "",
-        status: "",
-        url: "",
-      },
+      i20: {},
       i20Status: "",
       i20Feedback: "",
     },
@@ -158,17 +130,72 @@ const userSlice = createSlice({
     loadUser: (state) => {
       return state;
     },
-    updateProfilePic: (state, action) => {
-      state.data.profilePic = action.payload.profilePic;
+    updateFile: (state, action) => {
+      // state.info.profilePic = action.payload.profilePic;
+      // console.log(action.payload);
+      switch (action.payload.fileInfo.name) {
+        case "ProfilePicture":
+          state.info.profilePicture = action.payload.fileInfo;
+          break;
+        case "DriverLicense":
+          state.info.driverLicense = action.payload.fileInfo;
+          break;
+        case "WorkAuthorization":
+          state.info.workAuthorization = action.payload.fileInfo;
+          break;
+        case "OptReceipt":
+          state.visa.optReceipt = action.payload.fileInfo;
+          break;
+        case "OptEad":
+          state.visa.optEad = action.payload.fileInfo;
+          break;
+        case "I983":
+          state.visa.i983 = action.payload.fileInfo;
+          break;
+        case "I20":
+          state.visa.i20 = action.payload.fileInfo;
+          break;
+        default:
+          break;
+      }
+      return state;
+    },
+    removeFile: (state, action) => {
+      // console.log(action.payload);
+      switch (action.payload.fileName) {
+        case "ProfilePicture":
+          state.info.profilePicture = {};
+          break;
+        case "DriverLicense":
+          state.info.driverLicense = {};
+          break;
+        case "WorkAuthorization":
+          state.info.workAuthorization = {};
+          break;
+        case "OptReceipt":
+          state.visa.optReceipt = {};
+          break;
+        case "OptEad":
+          state.visa.optEad = {};
+          break;
+        case "I983":
+          state.visa.i983 = {};
+          break;
+        case "I20":
+          state.visa.i20 = {};
+          break;
+        default:
+          break;
+      }
       return state;
     },
     updateDriverLicense: (state, action) => {
-      state.data.driverLicense = action.payload.driverLicense;
+      state.info.driverLicense = action.payload.driverLicense;
       return state;
     },
 
     updateUsCitizen: (state, action) => {
-      state.data.usCitizen = action.payload.usCitizen;
+      state.info.usCitizen = action.payload.usCitizen;
       return state;
     },
     updateApplicationStatus: (state, action) => {
@@ -180,8 +207,7 @@ const userSlice = createSlice({
       return state;
     },
     fillInfo: (state, action) => {
-      console.log(action.payload.data);
-      state.data = action.payload.data;
+      state.info = action.payload.info;
       state.applicationStatus = action.payload.applicationStatus;
       // state.address = action.payload.address;
       // state.cellPhoneNumber = action.payload.cellPhoneNumber;
@@ -218,7 +244,8 @@ const userSlice = createSlice({
 
 export const {
   loadUser,
-  updateProfilePic,
+  updateFile,
+  removeFile,
   updateDriverLicense,
   updateUsCitizen,
   updateApplicationStatus,

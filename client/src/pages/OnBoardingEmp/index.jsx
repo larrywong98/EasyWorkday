@@ -22,28 +22,28 @@ const OnBoardingEmp = () => {
   const [disabled, setDisabled] = useState();
   const user = useSelector((state) => state.userReducer);
   const initialData = useMemo(() => {
-    let tmp = { ...user.data };
-    tmp.dob = dayjs(user.data.dob, "YYYY/MM/DD");
+    let tmp = { ...user.info };
+    tmp.dob = dayjs(user.info.dob, "YYYY/MM/DD");
     tmp.visaDate = [
-      dayjs(user.data.visaDate[0], "YYYY/MM/DD"),
-      dayjs(user.data.visaDate[1], "YYYY/MM/DD"),
+      dayjs(user.info.visaDate[0], "YYYY/MM/DD"),
+      dayjs(user.info.visaDate[1], "YYYY/MM/DD"),
     ];
     return tmp;
-  }, [user.data]);
+  }, [user.info]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [sectionClosed, setsectionClosed] = useState(Array(6).fill(false));
   const { Title } = Typography;
 
   const onSubmit = (data) => {
-    data.profilePic = "http://";
+    data.profilePicture = "http://";
     data.dob = data.dob.format("YYYY/MM/DD");
     data.visaDate = [
       data.visaDate[0].format("YYYY/MM/DD"),
       data.visaDate[1].format("YYYY/MM/DD"),
     ];
 
-    dispatch(fillInfo({ applicationStatus: status.pending, data: data }));
+    dispatch(fillInfo({ applicationStatus: status.pending, info: data }));
     navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {

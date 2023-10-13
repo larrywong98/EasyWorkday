@@ -37,7 +37,9 @@ const store = configureStore(
   },
   applyMiddleware(thunk)
 );
-
+// store.subscribe(() => {
+//   console.log(store.getState());
+// });
 const persistor = persistStore(store);
 
 export { store, persistor };

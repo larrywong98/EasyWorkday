@@ -14,7 +14,7 @@ const CitizenSection = (props) => {
     },
   ];
   const { RangePicker } = DatePicker;
-  const citizen = useSelector((state) => state.userReducer.data.usCitizen);
+  const citizen = useSelector((state) => state.userReducer.info.usCitizen);
   const [visa, setVisa] = useState("");
 
   return (
