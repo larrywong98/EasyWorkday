@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AiOutlineUser } from "react-icons/ai";
 import { Typography } from "antd";
-import headerStyle from "./index.module.css";
+import styles from "./index.module.css";
 const { Title, Text } = Typography;
 const { Header } = Layout;
 
 const HeaderComp = () => {
-  const [current, setCurrent] = useState("0");
+  const [current, setCurrent] = useState("");
   const user = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
   const onClick = (e) => {
@@ -23,15 +23,15 @@ const HeaderComp = () => {
     hr: ["Hiring Management", "Visa Management", "Employee Profiles"],
   };
   return (
-    <Header className={headerStyle["header"]}>
-      <Text level={3} className={headerStyle["header-title"]}>
+    <Header className={styles["header"]}>
+      <Text level={3} className={styles["header-title"]}>
         EasyWorkday
       </Text>
       <Menu
         theme="dark"
         mode="horizontal"
         onClick={(e) => onClick(e)}
-        defaultSelectedKeys={[current]}
+        // defaultSelectedKeys={[current]}
         selectedKeys={[current]}
         items={headerText[user.role].map((pageName, index) => {
           const key = index;
@@ -40,11 +40,11 @@ const HeaderComp = () => {
             label: pageName,
           };
         })}
-        className={headerStyle["header-menu"]}
+        className={styles["header-menu"]}
       />
       <Button
         type="text"
-        className={headerStyle["header-signin"]}
+        className={styles["header-signin"]}
         onClick={() => navigate("/signin")}
       >
         <AiOutlineUser style={{ width: "30px", height: "30px" }} />
