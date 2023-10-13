@@ -2,6 +2,7 @@ import { Button, Card, Col, DatePicker, Form, Input, Radio } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import UploadComp from "../UploadComp";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const NameSection = (props) => {
   const sectionClosed = props.sectionClosed;
@@ -11,6 +12,7 @@ const NameSection = (props) => {
     },
   ];
   const [gender, setGender] = useState("");
+  const user = useSelector((state) => state.userReducer);
 
   const inputFields = [
     { label: "First Name", name: "firstName", rules: requiredItem },

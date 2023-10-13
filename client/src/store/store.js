@@ -37,9 +37,9 @@ const store = configureStore(
   },
   applyMiddleware(thunk)
 );
-// store.subscribe(() => {
-//   console.log(store.getState());
-// });
+store.subscribe(() => {
+  console.log(store.getState().userReducer.files);
+});
 const persistor = persistStore(store);
 
 export { store, persistor };

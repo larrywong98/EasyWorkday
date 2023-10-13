@@ -2,9 +2,14 @@ import { Button, Card, Col, Input, Space, Typography, Upload } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import { UploadOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { updateDriverLicense } from "../../reducer/userSlice";
+import {
+  removeFile,
+  updateDriverLicense,
+  updateFile,
+} from "../../reducer/userSlice";
 import { useEffect, useState } from "react";
 import UploadComp from "../UploadComp";
+import { fileName } from "../../reducer/global";
 
 const FileSection = (props) => {
   const sectionClosed = props.sectionClosed;

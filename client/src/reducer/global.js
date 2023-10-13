@@ -8,13 +8,13 @@ const status = {
 };
 
 const fileName = {
-  profilePicture: 0,
-  driverLicense: 1,
-  workAuthorization: 2,
-  optReceipt: 3,
-  optEad: 4,
-  i983: 5,
-  i20: 6,
+  ProfilePicture: 0,
+  DriverLicense: 1,
+  WorkAuthorization: 2,
+  OptReceipt: 3,
+  OptEad: 4,
+  I983: 5,
+  I20: 6,
 };
 
 export { status, fileName };
