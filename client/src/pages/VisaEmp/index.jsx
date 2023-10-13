@@ -43,8 +43,8 @@ const VisaEmp = () => {
 
           {approve(status[1]) && (
             <Panel header="I-983" key="I-983">
-              {/* <p>I-983 status: {status[2]}</p> */}
-              <I983 />
+              <p>I-983 status: {status[2]}</p>
+              <I983 status={status[2]} />
             </Panel>
           )}
 

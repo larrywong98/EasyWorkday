@@ -1,7 +1,7 @@
 import React from "react";
 import HRFeedback from "./HRFeedback";
 
-const I983 = (status) => {
+const I983 = ({ status }) => {
   const I983Receipt = () => {
     if (status === "pending") {
       return <p>Waiting for HR to approve your and sign your I-983</p>;
@@ -17,7 +17,7 @@ const I983 = (status) => {
     }
   };
   const receipt = I983Receipt();
-  return <div>I983Receipt: {receipt}</div>;
+  return <div>{receipt}</div>;
 };
 
 export default I983;

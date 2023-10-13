@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  statusArray: ["approved", "approved"],
+  statusArray: ["approved", "approved", "approved", "approved"],
 };
 
 const statusSlice = createSlice({

@@ -1,7 +1,7 @@
 import React from "react";
 import HRFeedback from "./HRFeedback";
 
-const I20 = (status) => {
+const I20 = ({ status }) => {
   const I20Receipt = () => {
     if (status === "pending") {
       return <p>Waiting for HR to approve your I-20</p>;
