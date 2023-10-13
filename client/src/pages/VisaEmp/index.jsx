@@ -1,23 +1,19 @@
 import { Breadcrumb } from "antd";
 // import { Content } from "antd/es/layout/layout";
 
-import { useSelector } from "react-redux"
-import OPT from "../../components/Visas/OPT"
-import EAD from "../../components/Visas/EAD"
-import I20 from "../../components/Visas/I20"
-import I983 from "../../components/Visas/I983"
+import { useSelector } from "react-redux";
+import OPT from "../../components/Visas/OPT";
+import EAD from "../../components/Visas/EAD";
+import I20 from "../../components/Visas/I20";
+import I983 from "../../components/Visas/I983";
 
-import { Collapse } from 'antd';
+import { Collapse } from "antd";
 const { Panel } = Collapse;
 
 const VisaEmp = () => {
-  const visas = ["OPT", "EAD", "I-983", "I-20"];
-  const VisaComponents = [<OPT />, <EAD />, <I20 />, <I983 />];
   const status = useSelector((state) => state.statusReducer.statusArray);
-  const panels = visas.map((visa, idx) => (<Panel header={visa} key={idx}>
-    <p>{visa} status: {status[idx]}</p>
-    {VisaComponents[idx]}
-  </Panel>));
+  const approve = (st) => st === "approved";
+
   return (
     <>
       <Breadcrumb
@@ -32,9 +28,34 @@ const VisaEmp = () => {
           height: "800px",
         }}
       >
-        <Collapse>{panels}</Collapse>
+        <Collapse>
+          <Panel header="OPT" key="OPT">
+            <p>OPT status: {status[0]}</p>
+            <OPT status={status[0]} />
+          </Panel>
 
-      </div >
+          {approve(status[0]) && (
+            <Panel header="EAD" key="EAD">
+              <p>EAD status: {status[1]}</p>
+              <EAD status={status[1]} />
+            </Panel>
+          )}
+
+          {approve(status[1]) && (
+            <Panel header="I-983" key="I-983">
+              {/* <p>I-983 status: {status[2]}</p> */}
+              <I983 />
+            </Panel>
+          )}
+
+          {approve(status[2]) && (
+            <Panel header="I-20" key="I-20">
+              {/* <p>I-20 status: {status[3]}</p> */}
+              <I20 />
+            </Panel>
+          )}
+        </Collapse>
+      </div>
     </>
   );
 };

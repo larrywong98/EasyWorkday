@@ -1,7 +1,8 @@
-import React from 'react'
-import HRFeedback from './HRFeedback';
+import React from "react";
+import HRFeedback from "./HRFeedback";
+import UploadForm from "../VisaForms/UploadForm";
 
-const EAD = (status) => {
+const EAD = ({ status }) => {
   const EADReceipt = () => {
     if (status === "pending") {
       return <p>Waiting for HR to approve your OPT EAD</p>;
@@ -10,10 +11,14 @@ const EAD = (status) => {
     } else if (status === "rejected") {
       return <HRFeedback />;
     }
-  }
+  };
+  const approve = (st) => st === "approved";
+  const receipt = EADReceipt();
   return (
-    <div>EADReceipt: {EADReceipt}</div>
-  )
-}
+    <div>
+      {receipt} {!approve(status) && <UploadForm />}
+    </div>
+  );
+};
 
-export default EAD
+export default EAD;

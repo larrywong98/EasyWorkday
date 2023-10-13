@@ -1,6 +1,5 @@
 import React from "react";
 import HRFeedback from "./HRFeedback";
-import UploadForm from "./UploadForm";
 
 const OPT = ({ status }) => {
   const OPTReceipt = () => {
@@ -12,12 +11,8 @@ const OPT = ({ status }) => {
       return <HRFeedback />;
     }
   };
-  return (
-    <div>
-      <p>OPTReceipt: </p> <p>{OPTReceipt}</p>
-      <UploadForm />
-    </div>
-  );
+  const receipt = OPTReceipt();
+  return <div>{receipt}</div>;
 };
 
 export default OPT;

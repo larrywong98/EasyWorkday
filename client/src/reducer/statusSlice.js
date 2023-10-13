@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  statusArray: ["pending"],
+  statusArray: ["approved", "approved"],
 };
 
 const statusSlice = createSlice({
