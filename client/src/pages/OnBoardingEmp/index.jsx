@@ -17,24 +17,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Input } from "antd";
 import Feedback from "../../components/Feedback";
 
-const { TextArea } = Input;
-
 const OnBoardingEmp = () => {
-  // const { register, handleSubmit, control } = useForm();
-  // const [formData, setFormData] = useState();
   const [form] = Form.useForm();
-  // const [gender, setGender] = useState("");
-  // const [citizen, setCitizen] = useState("");
-  // const [visa, setVisa] = useState("");
-  // const [ssnValue, setSsnValue] = useState("");
-  // const [emergencyContacts, setEmergencyContacts] = useState(["#1"]);
   const [disabled, setDisabled] = useState();
   const user = useSelector((state) => state.userReducer);
   const initialData = useMemo(() => {
     let tmp = { ...user.data };
     tmp.dob = dayjs(user.data.dob, "YYYY/MM/DD");
-    // tmp.startDate = dayjs(user.data.visaDate[0], "YYYY/MM/DD");
-    // tmp.endDate = dayjs(user.data.visaDate[1], "YYYY/MM/DD");
     tmp.visaDate = [
       dayjs(user.data.visaDate[0], "YYYY/MM/DD"),
       dayjs(user.data.visaDate[1], "YYYY/MM/DD"),
@@ -48,20 +37,13 @@ const OnBoardingEmp = () => {
 
   const onSubmit = (data) => {
     data.profilePic = "http://";
-
-    // applicationStatus = status.pending;
-    // data.dob = new Date(data.dob.$d).getTime();
     data.dob = data.dob.format("YYYY/MM/DD");
-
     data.visaDate = [
       data.visaDate[0].format("YYYY/MM/DD"),
       data.visaDate[1].format("YYYY/MM/DD"),
     ];
-    // console.log(typeof data.dob.format("YYYY/MM/DD"));
-    // console.log(data);
-    // console.log(data);
+
     dispatch(fillInfo({ applicationStatus: status.pending, data: data }));
-    // setFormData(data);
     navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {
@@ -169,18 +151,22 @@ const OnBoardingEmp = () => {
               </Space>
             </Col>
             <Col span={16}>
-              <Feedback />
+              <Feedback feedback="onboard" />
             </Col>
           </Row>
         </Form>
         <Space style={{ width: "100%" }} align="center" direction="vertical">
-          <Button
-            type="primary"
-            style={{ width: "100%" }}
-            onClick={() => setDisabled(false)}
-          >
-            Edit
-          </Button>
+          {user.applicationStatus === status.rejected ? (
+            <Button
+              type="primary"
+              style={{ width: "100%" }}
+              onClick={() => setDisabled(false)}
+            >
+              Edit
+            </Button>
+          ) : (
+            <></>
+          )}
         </Space>
       </Card>
     </>

@@ -70,13 +70,17 @@ const userSlice = createSlice({
         status: "",
         url: "",
       },
-
+    },
+    // const user = useselector (state=>  state.userReducer)
+    // user.visa
+    visa: {
       optReceipt: {
         uid: "",
         name: "",
         status: "",
         url: "",
       },
+      optStatus: "",
       optReceiptFeedback: "",
       optEad: {
         uid: "",
@@ -84,6 +88,7 @@ const userSlice = createSlice({
         status: "",
         url: "",
       },
+      optEadStatus: "",
       optEadFeedback: "",
       i983: {
         uid: "",
@@ -91,6 +96,7 @@ const userSlice = createSlice({
         status: "",
         url: "",
       },
+      i983Status: "",
       i983Feedback: "",
       i20: {
         uid: "",
@@ -98,9 +104,9 @@ const userSlice = createSlice({
         status: "",
         url: "",
       },
+      i20Status: "",
       i20Feedback: "",
     },
-
     // info
     // address: "",
     // cellPhoneNumber: "",

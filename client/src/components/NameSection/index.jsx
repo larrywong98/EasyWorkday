@@ -11,7 +11,6 @@ const NameSection = (props) => {
     },
   ];
   const [gender, setGender] = useState("");
-  const [ssnValue, setSsnValue] = useState("");
 
   const inputFields = [
     { label: "First Name", name: "firstName", rules: requiredItem },
