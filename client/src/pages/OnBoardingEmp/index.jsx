@@ -14,7 +14,7 @@ import dayjs from "dayjs";
 import { status } from "../../reducer/global";
 import { fillInfo } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Input } from "antd";
+// import { Input } from "antd";
 import Feedback from "../../components/Feedback";
 
 const OnBoardingEmp = () => {
@@ -42,7 +42,7 @@ const OnBoardingEmp = () => {
       data.visaDate[0].format("YYYY/MM/DD"),
       data.visaDate[1].format("YYYY/MM/DD"),
     ];
-
+    console.log(data);
     dispatch(fillInfo({ applicationStatus: status.pending, info: data }));
     navigate("/success", { state: { message: "Submit Successful" } });
   };

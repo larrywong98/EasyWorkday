@@ -66,6 +66,12 @@ const ProfileEmp = () => {
   useEffect(() => {
     setDisabled(checkStatus());
   }, []);
+  const sectionProps = {
+    sectionClosed: sectionClosed,
+    sectionControl: sectionControl,
+    page: "personalInfo",
+  };
+
   return (
     <>
       <Card
@@ -84,7 +90,7 @@ const ProfileEmp = () => {
             marginBottom: "50px",
           }}
         >
-          Onboarding Application
+          Personal Information
         </Title>
         <Row gutter={16}>
           <Col className="gutter-row" span={6}>
@@ -139,28 +145,40 @@ const ProfileEmp = () => {
             }}
           >
             <NameSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
+              {...sectionProps}
+              // sectionClosed={sectionClosed}
+              // sectionControl={sectionControl}
+              // page="personalInfo"
             />
             <AddressSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
+              {...sectionProps}
+              // sectionClosed={sectionClosed}
+              // sectionControl={sectionControl}
+              // page="personalInfo"
             />
             <ContactSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
+              {...sectionProps}
+              // sectionClosed={sectionClosed}
+              // sectionControl={sectionControl}
+              // page="personalInfo"
             />
             <CitizenSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
+              {...sectionProps}
+              // sectionClosed={sectionClosed}
+              // sectionControl={sectionControl}
+              // page="personalInfo"
             />
             <ReferenceSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
+              {...sectionProps}
+              // sectionClosed={sectionClosed}
+              // sectionControl={sectionControl}
+              // page="personalInfo"
             />
             <FileSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
+              {...sectionProps}
+              // sectionClosed={sectionClosed}
+              // sectionControl={sectionControl}
+              // page="personalInfo"
             />
             <Col span={16}>
               <Space style={{ width: "100%" }} align="end" direction="vertical">

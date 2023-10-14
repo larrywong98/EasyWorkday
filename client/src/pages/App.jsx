@@ -11,10 +11,11 @@ import OnBoardingHr from "./OnBoardingHr";
 import VisaHr from "./VisaHr";
 import ProfileHr from "./ProfileHr";
 import { Content } from "antd/es/layout/layout";
-import Authform from "../components/Authform";
 import Success from "./Success";
 import Home from "./Home";
 import ProtectedRoute from "../components/ProtectedRoute";
+import Register from "./Register";
+import SignIn from "./SignIn";
 
 const App = () => {
   return (
@@ -33,7 +34,8 @@ const App = () => {
         <Routes>
           <Route path="/">
             <Route index element={<Home />} />
-            <Route path="signin" element={<Authform />} />
+            <Route path="register/:regToken" element={<Register />} />
+            <Route path="signin" element={<SignIn />} />
             <Route path="emp">
               <Route
                 path="onboard"
