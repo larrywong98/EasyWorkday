@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import process from "process";
 import dotenv from "dotenv";
+import multer from "multer";
 dotenv.config();
 
 mongoose
@@ -24,6 +25,25 @@ app.use(express.static("public"));
 
 app.get("/", (req, res) => {
   res.json("Home page");
+});
+
+// handle file upload
+import path from "path";
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/resources");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage: storage });
+// const fileUPload = upload.fields([{ name: "file", maxCount: 1 }]);
+
+app.post("/api/upload", upload.single("file"), (req, res, next) => {
+  console.log("ok");
+  console.log(req.file.filename);
+  res.json({ fileUrl: `http://127.0.0.1:4000/resources/${req.file.filename}` });
 });
 
 // import userRoute from "./routes/User.js";
