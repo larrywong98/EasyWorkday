@@ -7,4 +7,14 @@ const status = {
   deleted: "6",
 };
 
-export { status };
+const fileName = {
+  ProfilePicture: 0,
+  DriverLicense: 1,
+  WorkAuthorization: 2,
+  OptReceipt: 3,
+  OptEad: 4,
+  I983: 5,
+  I20: 6,
+};
+
+export { status, fileName };

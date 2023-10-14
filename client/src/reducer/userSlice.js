@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import dayjs from "dayjs";
-import { status } from "./global";
+import { fileName, status } from "./global";
 
 const userSlice = createSlice({
   name: "user",
@@ -10,18 +9,14 @@ const userSlice = createSlice({
     applicationStatus: status.initial,
     onboardFeedback: "",
 
-    data: {
+    info: {
+      // section 1
       firstName: "Xiaoyun",
       lastName: "Wang",
       middleName: "middle",
       preferredName: "larry",
-      profilePic: {
-        uid: "1",
-        name: "ProfileUrl.png",
-        status: "done",
-        url: "",
-      },
-      ssn: "000000000", // hide show
+
+      ssn: "000000000",
 
       dob: "2014/01/01",
       gender: "None",
@@ -37,8 +32,6 @@ const userSlice = createSlice({
       // section 4
       usCitizen: "No",
       visaTitle: "F1(CPT/OPT)",
-      // startDate: "2015/01/01",
-      // endDate: "2015/01/02",
       visaDate: ["2015/01/01", "2015/01/02"],
 
       // section 5
@@ -64,90 +57,34 @@ const userSlice = createSlice({
           relationship: "22",
         },
       ],
-      driverLicense: {
-        uid: "",
-        name: "",
-        status: "",
-        url: "",
-      },
     },
     // const user = useselector (state=>  state.userReducer)
     // user.visa
     visa: {
-      optReceipt: {
-        uid: "",
-        name: "",
-        status: "",
-        url: "",
-      },
       optStatus: "",
       optReceiptFeedback: "",
-      optEad: {
-        uid: "",
-        name: "",
-        status: "",
-        url: "",
-      },
+
       optEadStatus: "",
       optEadFeedback: "",
-      i983: {
-        uid: "",
-        name: "",
-        status: "",
-        url: "",
-      },
+
       i983Status: "",
       i983Feedback: "",
-      i20: {
-        uid: "",
-        name: "",
-        status: "",
-        url: "",
-      },
+
       i20Status: "",
       i20Feedback: "",
     },
-    // info
-    // address: "",
-    // cellPhoneNumber: "",
-    // dob: "",
-    // driverLicense: {
-    //   uid: "",
-    //   name: "",
-    //   status: "",
-    //   url: "",
-    // },
-    // email: "",
-    // // emailEr: "",
-    // // emailRef: ",",
-    // firstName: "",
-    // // firstNameEr: "",
-    // // firstNameRef: "",
-    // gender: "",
-    // lastName: "",
-    // // lastNameEr: "",
-    // // lastNameRef: "",
-    // middleName: "",
-    // // middleNameEr: "",
-    // // middleNameRef: "",
-    // // phoneEr: "",
-    // // phoneRef: "",
-    // preferredName: "",
-    // profilePic: {
-    //   uid: "",
-    //   name: "",
-    //   status: "",
-    //   url: "",
-    // },
-    // // relationshipEr: "",
-    // // relationshipRef: "",
-    // ssn: "",
-    // usCitizen: "",
-    // visaDate: "",
-    // visaTitle: "",
-    // workPhoneNumber: "",
-    // reference: [],
-    // emergency: [],
+
+    //const fileName = {
+    //   profilePicture: 0,
+    //   driverLicense: 1,
+    //   workAuthorization: 2,
+    //   optReceipt: 3,
+    //   optEad: 4,
+    //   i983: 5,
+    //   i20: 6,
+    // };
+    // profilePicture driverLicense workAuthorization optReceipt optEad i983 i20
+    files: [[], [], [], [], [], [], []],
 
     // dates
     createDate: "",
@@ -158,17 +95,25 @@ const userSlice = createSlice({
     loadUser: (state) => {
       return state;
     },
-    updateProfilePic: (state, action) => {
-      state.data.profilePic = action.payload.profilePic;
+    updateFile: (state, action) => {
+      const name = action.payload.name;
+      if (state.files[fileName[name]].length !== 0)
+        state.files[fileName[name]] = [];
+      state.files[fileName[name]].push(action.payload.fileInfo);
+      return state;
+    },
+    removeFile: (state, action) => {
+      const name = action.payload.name;
+      state.files[fileName[name]] = [];
       return state;
     },
     updateDriverLicense: (state, action) => {
-      state.data.driverLicense = action.payload.driverLicense;
+      state.info.driverLicense = action.payload.driverLicense;
       return state;
     },
 
     updateUsCitizen: (state, action) => {
-      state.data.usCitizen = action.payload.usCitizen;
+      state.info.usCitizen = action.payload.usCitizen;
       return state;
     },
     updateApplicationStatus: (state, action) => {
@@ -180,36 +125,8 @@ const userSlice = createSlice({
       return state;
     },
     fillInfo: (state, action) => {
-      console.log(action.payload.data);
-      state.data = action.payload.data;
+      state.info = action.payload.info;
       state.applicationStatus = action.payload.applicationStatus;
-      // state.address = action.payload.address;
-      // state.cellPhoneNumber = action.payload.cellPhoneNumber;
-      // //  state.dob=action.payload.dob;
-      // state.email = action.payload.email;
-      // state.emailEr = action.payload.emailEr;
-      // state.emailRef = action.payload.emailRef;
-      // state.firstName = action.payload.firstName;
-      // //  state.firstNameEr=action.payload.firstNameEr;
-      // state.firstNameRef = action.payload.firstNameRef;
-      // state.gender = action.payload.gender;
-      // state.lastName = action.payload.lastName;
-      // //  state.lastNameEr=action.payload.lastNameEr;
-      // state.lastNameRef = action.payload.lastNameRef;
-      // state.middleName = action.payload.middleName;
-      // //  state.=action.payload.middleNameEr;
-      // state.middleNameRef = action.payload.middleNameRef;
-      // //  state.phoneEr=action.payload.phoneEr;
-      // state.phoneRef = action.payload.phoneRef;
-      // state.preferredName = action.payload.preferredName;
-      // //  state.relationshipEr=action.payload.relationshipEr;
-      // state.relationshipRef = action.payload.relationshipRef;
-      // state.ssn = action.payload.ssn;
-      // state.usCitizen = action.payload.usCitizen;
-      // state.visaDate = action.payload.visaDate;
-      // state.visaTitle = action.payload.visaTitle;
-      // state.workPhoneNumber = action.payload.workPhoneNumber;
-      // state.emergency = action.payload.emergency;
 
       return state;
     },
@@ -218,7 +135,8 @@ const userSlice = createSlice({
 
 export const {
   loadUser,
-  updateProfilePic,
+  updateFile,
+  removeFile,
   updateDriverLicense,
   updateUsCitizen,
   updateApplicationStatus,

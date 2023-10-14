@@ -13,6 +13,13 @@ const ProtectedRoute = ({ children }) => {
         return <>{children}</>;
       }
     }
+    // if (location.pathname.includes("visa")) {
+    //   if (user.data.visaTitle === "F1(CPT/OPT)") {
+    //     return <Navigate to="/emp/onboard" />;
+    //   } else {
+    //     return <>{children}</>;
+    //   }
+    // }
   } else if (user.role === "hr") {
   } else {
     return <Navigate to="error" />;
