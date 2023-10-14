@@ -1,28 +1,48 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  statusArray: ["approved", "approved", "approved", "approved"],
+  // statusArray: ["pending"],
+  arr: ["pending", "initial", "initial", "initial"],
+  cur: 0,
 };
 
 const statusSlice = createSlice({
   name: "status",
   initialState,
   reducers: {
-    addInitialStatus: (state, action) => {
+    statusTrigger: (state, action) => {
       const { status } = action.payload;
-      const lastStatus = state.statusArray[state.statusArray.length - 1];
-      if (lastStatus === "approved") {
-        state.statusArray.push(status);
+      state.arr[state.cur] = status;
+      if (status === "approved") {
+        state.cur++;
       }
     },
-    // setStatusToPending, Rejected, Approved
-    setStatus: (state, action) => {
-      const { status } = action.payload;
-      state.statusArray.push(status);
-    },
+    // // addInitialStatus to pending
+    // setPendingStatus: (state, action) => {
+    //   const { status } = action.payload;
+    //   const lastStatus = state.statusArray[state.statusArray.length - 1];
+    //   if (lastStatus === "approved") {
+    //     // previous status
+    //     state.statusArray.push(status);
+    //   } else if (lastStatus === "rejected") {
+    //     // current status
+    //     state.statusArray.pop();
+    //     state.statusArray.push(status);
+    //   } else {
+    //     return;
+    //   }
+    // },
+    // // setStatusTo Rejected, Approved
+    // changeStatus: (state, action) => {
+    //   const { status } = action.payload;
+    //   state.statusArray.pop();
+    //   state.statusArray.push(status);
+    // },
   },
 });
 
-export const { addInitialStatus, setStatus } = statusSlice.actions;
+// export const { setPendingStatus, changeStatus } = statusSlice.actions;
+
+export const { statusTrigger } = statusSlice.actions;
 
 export default statusSlice.reducer;

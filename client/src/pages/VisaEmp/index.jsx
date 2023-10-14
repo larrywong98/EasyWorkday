@@ -11,7 +11,8 @@ import { Collapse } from "antd";
 const { Panel } = Collapse;
 
 const VisaEmp = () => {
-  const status = useSelector((state) => state.statusReducer.statusArray);
+  // const status = useSelector((state) => state.statusReducer.statusArray);
+  const status = useSelector((state) => state.statusReducer.arr);
   const approve = (st) => st === "approved";
 
   return (
@@ -50,8 +51,8 @@ const VisaEmp = () => {
 
           {approve(status[2]) && (
             <Panel header="I-20" key="I-20">
-              {/* <p>I-20 status: {status[3]}</p> */}
-              <I20 />
+              <p>I-20 status: {status[3]}</p>
+              <I20 status={status[3]} />
             </Panel>
           )}
         </Collapse>

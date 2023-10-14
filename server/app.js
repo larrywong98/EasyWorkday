@@ -14,6 +14,8 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const port = process.env.PORT || 4000;
+
 // yingshan's mongoDB
 const uri = `mongodb+srv://${process.env.MDB_NAME}:${process.env.MDB_PWD}@cluster0.0kmc57i.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -30,6 +32,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Serve static files
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Define the storage and file upload settings for Multer
 const storage = multer.diskStorage({
@@ -46,8 +50,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Serve static files
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.get("/", (req, res) => {
+  res.json("Home page");
+});
 
 // Define a route for handling file uploads
 app.post("/api/upload", upload.single("file"), (req, res) => {
@@ -62,14 +67,17 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
     size: uploadedFile.size,
     mimetype: uploadedFile.mimetype,
   };
-  res.json({ message: "File uploaded successfully", fileInfo });
-});
 
-app.get("/", (req, res) => {
-  res.json("Home page");
-});
+  const BASE_URL = `http://localhost:${port}`;
+  // Generate the URL for the uploaded file
+  const fileUrl = `${BASE_URL}/uploads/${uploadedFile.filename}`;
 
-const port = process.env.PORT || 4000;
+  res.json({
+    message: "File uploaded successfully",
+    fileInfo,
+    pdfUrl: fileUrl,
+  });
+});
 
 app.listen(port, () =>
   console.info(`Server is up on http://localhost:${port}`)
