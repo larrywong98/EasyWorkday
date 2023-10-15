@@ -32,21 +32,27 @@ const ProfileEmp = () => {
     ];
     return tmp;
   }, [user.info]);
+  const [initialDataCopy, setInitialDataCopy] = useState(initialData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [sectionClosed, setsectionClosed] = useState(Array(6).fill(false));
+  const [action, setAction] = useState("cancel");
   const { Title } = Typography;
 
   const onSubmit = (data) => {
-    data.profilePicture = "http://";
-    data.dob = data.dob.format("YYYY/MM/DD");
-    data.visaDate = [
-      data.visaDate[0].format("YYYY/MM/DD"),
-      data.visaDate[1].format("YYYY/MM/DD"),
-    ];
-
-    dispatch(fillInfo({ applicationStatus: status.pending, info: data }));
-    navigate("/success", { state: { message: "Submit Successful" } });
+    setDisabled(true);
+    if (action === "save") {
+      data.profilePicture = "http://";
+      data.dob = data.dob.format("YYYY/MM/DD");
+      data.visaDate = [
+        data.visaDate[0].format("YYYY/MM/DD"),
+        data.visaDate[1].format("YYYY/MM/DD"),
+      ];
+      dispatch(fillInfo({ applicationStatus: status.pending, info: data }));
+      navigate("/success", { state: { message: "Submit Successful" } });
+    } else if (action === "cancel") {
+      form.resetFields();
+    }
   };
   const sectionControl = (i) => {
     let newsectionClosed = [...sectionClosed];
@@ -66,6 +72,12 @@ const ProfileEmp = () => {
   useEffect(() => {
     setDisabled(checkStatus());
   }, []);
+  const onCancel = (e) => {
+    setDisabled(true);
+  };
+  const onSave = (e) => {
+    setDisabled(true);
+  };
   const sectionProps = {
     sectionClosed: sectionClosed,
     sectionControl: sectionControl,
@@ -103,22 +115,56 @@ const ProfileEmp = () => {
             <div></div>
           </Col>
           <Col className="gutter-row" span={4}>
-            <Button
-              type="primary"
-              style={{
-                width: "80%",
-                marginBottom: "20px",
-                justifyContent: "center",
-              }}
-              disabled={!disabled}
-              onClick={() => setDisabled(false)}
-            >
-              Edit
-            </Button>
+            {disabled ? (
+              <Button
+                type="primary"
+                style={{
+                  width: "80%",
+                  marginBottom: "20px",
+                  justifyContent: "center",
+                }}
+                disabled={!disabled}
+                onClick={() => setDisabled(false)}
+              >
+                Edit
+              </Button>
+            ) : (
+              <Space size="middle">
+                <Button
+                  type="primary"
+                  style={{
+                    // width: "80%",
+                    marginBottom: "20px",
+                    justifyContent: "center",
+                  }}
+                  onClick={(e) => {
+                    setAction("cancel");
+                    form.submit();
+                  }}
+                  danger
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="primary"
+                  style={{
+                    marginBottom: "20px",
+                    justifyContent: "center",
+                  }}
+                  onClick={(e) => {
+                    setAction("save");
+                    form.submit();
+                  }}
+                >
+                  Save
+                </Button>
+              </Space>
+            )}
           </Col>
         </Row>
 
         <Form
+          id="personal"
           labelCol={{
             span: 6,
           }}
