@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-// import { setPendingStatus } from "../../reducer/statusSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { statusTrigger } from "../../reducer/statusSlice";
+import { setVisa } from "../../reducer/userSlice";
 
 const UploadForm = () => {
   const dispatch = useDispatch();
+  const statusArray = useSelector((state) => state.statusReducer.arr);
+  const curIdx = useSelector((state) => state.statusReducer.cur);
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState({ started: false, pc: 0 });
   const [msg, setMsg] = useState(null);
@@ -44,6 +46,7 @@ const UploadForm = () => {
         setPdfUrl(res.data.pdfUrl); // Set the PDF URL received from the server
         // dispatch(setPendingStatus({ status: "pending" }));
         dispatch(statusTrigger({ status: "pending" }));
+        dispatch(setVisa({ arr: statusArray, index: curIdx }));
       })
       .catch((err) => {
         setMsg("Upload Failed");
