@@ -62,10 +62,10 @@ const userSlice = createSlice({
     // user.visa
     visa: {
       optStatus: "",
-      optReceiptFeedback: "",
+      optFeedback: "",
 
-      optEadStatus: "",
-      optEadFeedback: "",
+      eadStatus: "",
+      eadFeedback: "",
 
       i983Status: "",
       i983Feedback: "",
@@ -92,6 +92,30 @@ const userSlice = createSlice({
     deleteDate: "",
   },
   reducers: {
+    setVisa: (state, action) => {
+      const { status, index } = action.payload;
+      // Create an array of the status property names
+      const statusProperties = [
+        "optStatus",
+        "eadStatus",
+        "i983Status",
+        "i20Status",
+      ];
+      // Update the status property in the visa object using the index
+      const propertyToUpdate = statusProperties[index];
+      state.visa[propertyToUpdate] = status;
+    },
+    setReceipt: (state, action) => {
+      const { receipt, index } = action.payload;
+      const receiptProperties = [
+        "optFeedback",
+        "eadFeedback",
+        "i983Feedback",
+        "i20Feedback",
+      ];
+      const receiptToUpdate = receiptProperties[index];
+      state.visa[receiptToUpdate] = receipt;
+    },
     loadUser: (state) => {
       return state;
     },
@@ -142,5 +166,7 @@ export const {
   updateApplicationStatus,
   updateOnboardFeedback,
   fillInfo,
+  setReceipt,
+  setVisa,
 } = userSlice.actions;
 export default userSlice.reducer;
