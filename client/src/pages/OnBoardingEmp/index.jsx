@@ -1,7 +1,5 @@
 import { Space, Card, Row, Col } from "antd";
-
 import { Button, Form, Typography } from "antd";
-
 import { useEffect, useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
@@ -14,8 +12,8 @@ import dayjs from "dayjs";
 import { status } from "../../reducer/global";
 import { fillInfo } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-// import { Input } from "antd";
 import Feedback from "../../components/Feedback";
+import sendRequest from "../../services/sendRequest";
 
 const OnBoardingEmp = () => {
   const [form] = Form.useForm();
@@ -35,15 +33,35 @@ const OnBoardingEmp = () => {
   const [sectionClosed, setsectionClosed] = useState(Array(6).fill(false));
   const { Title } = Typography;
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     data.profilePicture = "http://";
     data.dob = data.dob.format("YYYY/MM/DD");
     data.visaDate = [
       data.visaDate[0].format("YYYY/MM/DD"),
       data.visaDate[1].format("YYYY/MM/DD"),
     ];
-    console.log(data);
-    dispatch(fillInfo({ applicationStatus: status.pending, info: data }));
+    // console.log(data);
+    // change to pending
+    dispatch(fillInfo({ applicationStatus: status.initial, info: data }));
+    // console.log(user);
+    // mongodb save
+
+    const response = await sendRequest({
+      url: "http://127.0.0.1:4000/api/emp/save/md5",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify(user),
+    });
+
+    // console.log(response);
+    // console.log(
+    //   await sendRequest({
+    //     url: "http://127.0.0.1:4000/api/emp/md5",
+    //     method: "GET",
+    //   })
+    // );
     navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {
