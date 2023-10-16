@@ -1,10 +1,7 @@
-import { useEffect } from "react";
-import UploadWidget from "../components/UploadWidget";
-import Upload from "../components/Upload";
 import OnBoardingEmp from "./OnBoardingEmp";
 
 import React from "react";
-import { Breadcrumb, Layout, Menu, Space, theme } from "antd";
+import { Layout } from "antd";
 import HeaderComp from "../components/HeaderComp";
 import FooterComp from "../components/FooterComp";
 import { Route, Routes } from "react-router";
@@ -14,7 +11,11 @@ import OnBoardingHr from "./OnBoardingHr";
 import VisaHr from "./VisaHr";
 import ProfileHr from "./ProfileHr";
 import { Content } from "antd/es/layout/layout";
-import Authform from "../components/Authform";
+import Success from "./Success";
+import Home from "./Home";
+import ProtectedRoute from "../components/ProtectedRoute";
+import Register from "./Register";
+import SignIn from "./SignIn";
 
 const App = () => {
   return (
@@ -32,11 +33,26 @@ const App = () => {
       >
         <Routes>
           <Route path="/">
-            <Route index element={<OnBoardingEmp />} />
-            <Route path="signin" element={<Authform />} />
+            <Route index element={<Home />} />
+            <Route path="register/:regToken" element={<Register />} />
+            <Route path="signin" element={<SignIn />} />
             <Route path="emp">
-              <Route path="onboard" element={<OnBoardingEmp />} />
-              <Route path="visa" element={<VisaEmp />} />
+              <Route
+                path="onboard"
+                element={
+                  <ProtectedRoute>
+                    <OnBoardingEmp />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="visa"
+                element={
+                  // <ProtectedRoute>
+                  <VisaEmp />
+                  // </ProtectedRoute>
+                }
+              />
               <Route path="profile" element={<ProfileEmp />}>
                 <Route path=":empId" element={<ProfileEmp />} />
               </Route>
@@ -46,6 +62,7 @@ const App = () => {
               <Route path="visa" element={<VisaHr />} />
               <Route path="profile" element={<ProfileHr />} />
             </Route>
+            <Route path="success" element={<Success />} />
           </Route>
         </Routes>
       </Content>
