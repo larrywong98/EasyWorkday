@@ -1,3 +1,3 @@
 # EasyWorkday
 
-An employee management platform.
+An employee management platform
