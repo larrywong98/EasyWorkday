@@ -14,7 +14,6 @@ const VisaEmp = () => {
   // const status = useSelector((state) => state.statusReducer.statusArray);
   const status = useSelector((state) => state.statusReducer.arr);
   const approve = (st) => st === "approved";
-
   return (
     <>
       <Breadcrumb
@@ -29,7 +28,7 @@ const VisaEmp = () => {
           height: "800px",
         }}
       >
-        <Collapse>
+        <Collapse accordion>
           <Panel header="OPT" key="OPT">
             <p>OPT status: {status[0]}</p>
             <OPT status={status[0]} />
