@@ -83,7 +83,6 @@ const UploadComp = (props) => {
       ) : (
         // Upload Preview
         <Space size="middle">
-          {console.log(user.files[fileName[props.name]][0].url)}
           <a href={user.files[fileName[props.name]][0].url}>{props.name}</a>
           <Button onClick={() => dispatch(removeFile({ name: props.name }))}>
             Remove

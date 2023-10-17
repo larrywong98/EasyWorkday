@@ -48,9 +48,9 @@ const App = () => {
               <Route
                 path="visa"
                 element={
-                  // <ProtectedRoute>
-                  <VisaEmp />
-                  // </ProtectedRoute>
+                  <ProtectedRoute>
+                    <VisaEmp />
+                  </ProtectedRoute>
                 }
               />
               <Route path="profile" element={<ProfileEmp />}>

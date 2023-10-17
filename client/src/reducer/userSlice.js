@@ -4,9 +4,10 @@ import { fileName, status } from "./global";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    userId: "md5",
+    userId: "",
     role: "emp",
     applicationStatus: status.initial,
+    visaStatus: status.initial,
     onboardFeedback: "",
 
     info: {
@@ -91,6 +92,7 @@ const userSlice = createSlice({
     lastUpdateDate: "",
     deleteDate: "",
   },
+
   reducers: {
     setVisa: (state, action) => {
       const { status, index } = action.payload;
@@ -120,7 +122,12 @@ const userSlice = createSlice({
         state.visa[receiptToUpdate] = receipt;
       }
     },
-    loadUser: (state) => {
+    loadUser: (state, action) => {
+      state = action.payload.user;
+      return state;
+    },
+    updateUserId: (state, action) => {
+      state.userId = action.payload.userId;
       return state;
     },
     updateFile: (state, action) => {
@@ -148,6 +155,9 @@ const userSlice = createSlice({
       state.applicationStatus = action.payload.applicationStatus;
       return state;
     },
+    updateVisaStatus: (state, action) => {
+      state.visaStatus = action.payload.visaStatus;
+    },
     updateOnboardFeedback: (state, action) => {
       state.onboardFeedback = action.payload.onboardFeedback;
       return state;
@@ -163,11 +173,13 @@ const userSlice = createSlice({
 
 export const {
   loadUser,
+  updateUserId,
   updateFile,
   removeFile,
   updateDriverLicense,
   updateUsCitizen,
   updateApplicationStatus,
+  updateVisaStatus,
   updateOnboardFeedback,
   fillInfo,
   setReceipt,

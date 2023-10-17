@@ -1,4 +1,4 @@
-const requestData = async ({ url, method, data, headers }) => {
+const sendRequest = async ({ url, method, data, headers }) => {
   const options = {
     headers: {
       ...headers,
@@ -20,4 +20,4 @@ const requestData = async ({ url, method, data, headers }) => {
   }
 };
 
-export default requestData;
+export default sendRequest;
