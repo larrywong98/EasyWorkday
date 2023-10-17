@@ -167,6 +167,10 @@ const userSlice = createSlice({
 
       return state;
     },
+    discardFiles: (state, action) => {
+      state.files = action.payload.files;
+      return state;
+    },
   },
 });
 
@@ -182,6 +186,7 @@ export const {
   updateOnboardFeedback,
   updateVisaTitle,
   fillInfo,
+  discardFiles,
   setReceipt,
   setVisa,
 } = userSlice.actions;

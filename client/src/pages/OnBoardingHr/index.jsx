@@ -1,16 +1,17 @@
-import { Button, Card, Form, Input, Space, Tooltip } from "antd";
-import { useDispatch } from "react-redux";
+import { Button, Card, Divider, Form, Input, List, Space, Tooltip } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setVisa,
   updateApplicationStatus,
   updateOnboardFeedback,
 } from "../../reducer/userSlice";
 import { status } from "../../reducer/global";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import validator from "validator";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
 import { statusTrigger } from "../../reducer/statusSlice";
+import sendRequest from "../../services/sendRequest";
 const { TextArea } = Input;
 
 const OnBoardingHr = () => {
@@ -19,6 +20,8 @@ const OnBoardingHr = () => {
   const [employeeEmail, setEmployeeEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [token, setToken] = useState("");
+  const [data, setData] = useState([]);
+  const user = useSelector((state) => state.userReducer);
 
   const approve = () => {
     dispatch(updateOnboardFeedback({ onboardFeedback: "" }));
@@ -70,6 +73,26 @@ const OnBoardingHr = () => {
   const checkEmail = (email) => {
     return validator.isEmail(email) ? "" : "error";
   };
+  const toUserDetail = async (userId) => {
+    // console.log("http://127.0.0.1:4000/api/emp/" + userId);
+    const response = await sendRequest({
+      url: "http://127.0.0.1:4000/api/emp/" + userId,
+      method: "GET",
+    });
+    // details
+    console.log(response);
+    // load to userSlice  disabled form
+    // back button
+  };
+  useEffect(() => {
+    (async () => {
+      const response = await sendRequest({
+        url: "http://127.0.0.1:4000/api/emp/all",
+        method: "GET",
+      });
+      setData(response);
+    })();
+  }, []);
   return (
     <>
       Hiring Management page
@@ -117,6 +140,21 @@ const OnBoardingHr = () => {
         </Space>
       </Card>
       <Card style={{ display: "flex", justifyContent: "center" }}>
+        <Divider orientation="left">Default Size</Divider>
+        <List size="large" bordered header={<div>Header</div>}>
+          {data.map((item, index) => (
+            <List.Item key={index}>
+              {item.info.firstName} {item.info.middleName} {item.info.lastName}
+              <Divider type="vertical"></Divider>
+              {item.info.ssn} {item.info.visaTitle} {item.info.cellPhoneNumber}{" "}
+              {item.info.email}
+              <Button onClick={() => toUserDetail(item.userId)}>
+                Go to Details
+              </Button>
+            </List.Item>
+          ))}
+        </List>
+
         <Space>
           <TextArea
             value={feedback}
