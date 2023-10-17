@@ -11,7 +11,6 @@ import validator from "validator";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
 import { statusTrigger } from "../../reducer/statusSlice";
-import sendRequest from "../../services/sendRequest";
 const { TextArea } = Input;
 
 const OnBoardingHr = () => {
