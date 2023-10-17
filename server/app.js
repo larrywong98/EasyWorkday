@@ -107,7 +107,10 @@ app.post("/api/emp/save/:userId", async (req, res) => {
     res.json({ status: "error" });
   }
 });
-
+app.get("/api/emp/all", async (req, res) => {
+  const result = await User.find({}, { _id: false });
+  res.json(result);
+});
 app.get("/api/emp/:userId", async (req, res) => {
   const result = await User.findOne(
     { userId: req.params.userId },

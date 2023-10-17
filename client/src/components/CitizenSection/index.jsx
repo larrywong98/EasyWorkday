@@ -131,10 +131,7 @@ const CitizenSection = (props) => {
               </Radio.Group>
             </Form.Item>
             {visaTitle === "F1(CPT/OPT)" ? (
-              <Form.Item
-                label="Opt Receipt"
-                hidden={visaTitle === "F1(OPT/CPT)"}
-              >
+              <Form.Item label="Opt Receipt" hidden={sectionClosed[3]}>
                 <UploadComp name="OptReceipt" listType="picture-card" />
               </Form.Item>
             ) : (
