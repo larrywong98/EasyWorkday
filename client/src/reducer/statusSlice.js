@@ -11,6 +11,9 @@ const statusSlice = createSlice({
   initialState,
   reducers: {
     statusTrigger: (state, action) => {
+      if (state.cur >= 4) {
+        return;
+      }
       const { status } = action.payload;
       state.arr[state.cur] = status;
       if (status === "approved") {

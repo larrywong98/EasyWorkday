@@ -2,16 +2,15 @@ import { Breadcrumb } from "antd";
 // import { Content } from "antd/es/layout/layout";
 
 import { useSelector } from "react-redux";
-import OPT from "../../components/Visas/OPT";
-import EAD from "../../components/Visas/EAD";
-import I20 from "../../components/Visas/I20";
-import I983 from "../../components/Visas/I983";
+import OPT from "../../components/VisasEmp/OPT";
+import EAD from "../../components/VisasEmp/EAD";
+import I20 from "../../components/VisasEmp/I20";
+import I983 from "../../components/VisasEmp/I983";
 
 import { Collapse } from "antd";
 const { Panel } = Collapse;
 
 const VisaEmp = () => {
-  // const status = useSelector((state) => state.statusReducer.statusArray);
   const status = useSelector((state) => state.statusReducer.arr);
   const approve = (st) => st === "approved";
   return (

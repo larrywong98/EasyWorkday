@@ -14,7 +14,6 @@ const { TextArea } = Input;
 
 const VisaHr = () => {
   const dispatch = useDispatch();
-  const statusArray = useSelector((state) => state.statusReducer.arr);
   const curIdx = useSelector((state) => state.statusReducer.cur);
   const [feedback, setFeedback] = useState("");
   const approve = () => {
