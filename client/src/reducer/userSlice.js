@@ -103,8 +103,10 @@ const userSlice = createSlice({
         "i20Status",
       ];
       // Update the status property in the visa object using the index
-      const propertyToUpdate = statusProperties[index];
-      state.visa[propertyToUpdate] = status;
+      if (index < statusProperties.length) {
+        const propertyToUpdate = statusProperties[index];
+        state.visa[propertyToUpdate] = status;
+      }
     },
     setReceipt: (state, action) => {
       const { receipt, index } = action.payload;
@@ -114,8 +116,10 @@ const userSlice = createSlice({
         "i983Feedback",
         "i20Feedback",
       ];
-      const receiptToUpdate = receiptProperties[index];
-      state.visa[receiptToUpdate] = receipt;
+      if (index < receiptProperties.length) {
+        const receiptToUpdate = receiptProperties[index];
+        state.visa[receiptToUpdate] = receipt;
+      }
     },
     loadUser: (state, action) => {
       state = action.payload.user;
