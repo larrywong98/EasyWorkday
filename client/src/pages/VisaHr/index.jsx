@@ -8,7 +8,7 @@ import {
   clearVisaFeedback,
 } from "../../reducer/feedbackSlice";
 
-import { setVisa, setReceipt } from "../../reducer/userSlice";
+import { setVisa, setReceipt, updateVisaStatus } from "../../reducer/userSlice";
 
 const { TextArea } = Input;
 
@@ -23,6 +23,10 @@ const VisaHr = () => {
     dispatch(setReceipt({ receipt: "approved", index: curIdx }));
     dispatch(clearVisaFeedback());
     setFeedback("");
+
+    if (curIdx === 4) {
+      dispatch(updateVisaStatus({ visaStatus: "4" }));
+    }
   };
   const reject = () => {
     // dispatch(changeStatus({ status: "rejected" }));

@@ -49,7 +49,7 @@ const OnBoardingHr = () => {
   const sendEmail = () => {
     //emailjs
     var templateParams = {
-      email: "larrywong9898@gmail.com",
+      email: employeeEmail,
       name: "Xiaoyun Wang",
       registerUrl: "http://127.0.0.1:3000/register/" + token,
     };
