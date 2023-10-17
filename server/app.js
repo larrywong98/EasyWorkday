@@ -99,7 +99,9 @@ app.post("/api/emp/save/:userId", async (req, res) => {
   try {
     const result = await User.findOneAndUpdate(filter, update, {
       upsert: true,
+      new: true,
     });
+    console.log(result);
     res.json({ status: result });
   } catch (err) {
     res.json({ status: "error" });
@@ -111,7 +113,7 @@ app.get("/api/emp/:userId", async (req, res) => {
     { userId: req.params.userId },
     { _id: false }
   );
-  console.log(result);
+  // console.log(result);
   res.json(result);
 });
 
