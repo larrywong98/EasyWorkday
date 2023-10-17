@@ -157,6 +157,10 @@ const userSlice = createSlice({
       state.onboardFeedback = action.payload.onboardFeedback;
       return state;
     },
+    updateVisaTitle: (state, action) => {
+      state.info.visaTitle = action.payload.visaTitle;
+      return state;
+    },
     fillInfo: (state, action) => {
       state.info = action.payload.info;
       state.applicationStatus = action.payload.applicationStatus;
@@ -176,6 +180,7 @@ export const {
   updateApplicationStatus,
   updateVisaStatus,
   updateOnboardFeedback,
+  updateVisaTitle,
   fillInfo,
   setReceipt,
   setVisa,
