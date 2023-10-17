@@ -4,6 +4,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFile, updateFile } from "../../reducer/userSlice";
 import { fileName } from "../../reducer/global";
+import { useEffect, useState } from "react";
 
 //<UploadComp name='OptReceipt' />
 //<UploadComp name='OptEad' />
@@ -20,7 +21,7 @@ const UploadComp = (props) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userReducer);
   // const fileList = [user.profilePicture];
-  // const [showUploadList, setShowUploadList] = useState(true);
+  const [showUploadList, setShowUploadList] = useState(false);
   const beforeUpload = (file) => {
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
@@ -51,6 +52,9 @@ const UploadComp = (props) => {
       return;
     }
   };
+  useEffect(() => {
+    if (props.name === "ProfilePicture") setShowUploadList(true);
+  }, [props.name]);
 
   return (
     <>
@@ -63,7 +67,7 @@ const UploadComp = (props) => {
           onChange={handleChange}
           onRemove={handleRemove}
           beforeUpload={beforeUpload}
-          // showUploadList={showUploadList}
+          showUploadList={showUploadList}
 
           // antd bug not fixed infinite loading if filelist get a value
           // defaultFileList={}
@@ -83,7 +87,16 @@ const UploadComp = (props) => {
       ) : (
         // Upload Preview
         <Space size="middle">
-          <a href={user.files[fileName[props.name]][0].url}>{props.name}</a>
+          {props.name === "ProfilePicture" ? (
+            <img
+              style={{ borderRadius: "50%", width: "100px", height: "100px" }}
+              src={user.files[0][0].url}
+              alt=""
+            />
+          ) : (
+            <a href={user.files[fileName[props.name]][0].url}>{props.name}</a>
+          )}
+
           <Button onClick={() => dispatch(removeFile({ name: props.name }))}>
             Remove
           </Button>

@@ -30,6 +30,10 @@ const FileSection = (props) => {
       name: "Work Authorization",
       linkName: "WorkAuthorization",
     },
+    {
+      name: "OPT Receipt",
+      linkName: "OptReceipt",
+    },
   ];
 
   return (

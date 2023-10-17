@@ -2,7 +2,8 @@ import { Button, Card, Col, DatePicker, Form, Input, Radio, Space } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUsCitizen } from "../../reducer/userSlice";
+import { updateUsCitizen, updateVisaTitle } from "../../reducer/userSlice";
+import UploadComp from "../UploadComp";
 
 const CitizenSection = (props) => {
   const sectionClosed = props.sectionClosed;
@@ -15,7 +16,9 @@ const CitizenSection = (props) => {
   ];
   const { RangePicker } = DatePicker;
   const citizen = useSelector((state) => state.userReducer.info.usCitizen);
-  const [visa, setVisa] = useState("");
+  // const initVisa = useSelector((state) => state.userReducer.info.visaTitle);
+  // const [visa, setVisa] = useState(initVisa);
+  const visaTitle = useSelector((state) => state.userReducer.info.visaTitle);
 
   return (
     <Col span={16}>
@@ -74,24 +77,46 @@ const CitizenSection = (props) => {
               rules={requiredItem}
               hidden={sectionClosed[3]}
             >
-              <Radio.Group value={visa}>
+              <Radio.Group value={visaTitle}>
                 <Space direction="vertical" style={{ marginTop: "7px" }}>
-                  <Radio value="H1-B" onChange={() => setVisa("H1-B")}>
+                  <Radio
+                    value="H1-B"
+                    onChange={() =>
+                      dispatch(updateVisaTitle({ visaTitle: "H1-B" }))
+                    }
+                  >
                     H1-B
                   </Radio>
-                  <Radio value="L2" onChange={() => setVisa("L2")}>
+                  <Radio
+                    value="L2"
+                    onChange={() =>
+                      dispatch(updateVisaTitle({ visaTitle: "L2" }))
+                    }
+                  >
                     L2
                   </Radio>
                   <Radio
                     value="F1(CPT/OPT)"
-                    onChange={() => setVisa("F1(CPT/OPT)")}
+                    onChange={() =>
+                      dispatch(updateVisaTitle({ visaTitle: "F1(CPT/OPT)" }))
+                    }
                   >
                     F1(CPT/OPT)
                   </Radio>
-                  <Radio value="H4" onChange={() => setVisa("H4")}>
+                  <Radio
+                    value="H4"
+                    onChange={() =>
+                      dispatch(updateVisaTitle({ visaTitle: "H4" }))
+                    }
+                  >
                     H4
                   </Radio>
-                  <Radio value="Other" onChange={() => setVisa("Other")}>
+                  <Radio
+                    value="Other"
+                    onChange={() =>
+                      dispatch(updateVisaTitle({ visaTitle: "Other" }))
+                    }
+                  >
                     Other
                     <Input
                       style={{
@@ -99,12 +124,20 @@ const CitizenSection = (props) => {
                         marginLeft: 10,
                       }}
                       onChange={(e) => {}}
-                      disabled={visa === "Other" ? false : true}
+                      disabled={visaTitle === "Other" ? false : true}
                     />
                   </Radio>
                 </Space>
               </Radio.Group>
             </Form.Item>
+            {visaTitle === "F1(CPT/OPT)" ? (
+              <Form.Item label="Opt Receipt" hidden={sectionClosed[3]}>
+                <UploadComp name="OptReceipt" listType="picture-card" />
+              </Form.Item>
+            ) : (
+              <></>
+            )}
+
             <Form.Item
               label="Start and End Date"
               name="visaDate"

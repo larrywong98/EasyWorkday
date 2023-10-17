@@ -14,7 +14,7 @@ import FileSection from "../../components/FileSection";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
-import { fillInfo } from "../../reducer/userSlice";
+import { fillInfo, discardFiles } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Input } from "antd";
 import Feedback from "../../components/Feedback";
@@ -36,6 +36,7 @@ const ProfileEmp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [sectionClosed, setsectionClosed] = useState(Array(6).fill(false));
+  const [initFiles, setInitFiles] = useState(user.files);
   const [action, setAction] = useState("cancel");
   const { Title } = Typography;
 
@@ -73,10 +74,19 @@ const ProfileEmp = () => {
     setDisabled(checkStatus());
   }, []);
   const onCancel = (e) => {
-    setDisabled(true);
+    setAction("cancel");
+    // init files after discard
+    dispatch(discardFiles({ files: initFiles }));
+    // console.log(initFiles);
+    // console.log(user.files);
+    form.submit();
   };
   const onSave = (e) => {
-    setDisabled(true);
+    setAction("save");
+    form.submit();
+  };
+  const onEdit = (e) => {
+    setDisabled(false);
   };
   const sectionProps = {
     sectionClosed: sectionClosed,
@@ -124,7 +134,7 @@ const ProfileEmp = () => {
                   justifyContent: "center",
                 }}
                 disabled={!disabled}
-                onClick={() => setDisabled(false)}
+                onClick={(e) => onEdit(e)}
               >
                 Edit
               </Button>
@@ -137,10 +147,7 @@ const ProfileEmp = () => {
                     marginBottom: "20px",
                     justifyContent: "center",
                   }}
-                  onClick={(e) => {
-                    setAction("cancel");
-                    form.submit();
-                  }}
+                  onClick={(e) => onCancel(e)}
                   danger
                 >
                   Cancel
@@ -152,10 +159,7 @@ const ProfileEmp = () => {
                     marginBottom: "20px",
                     justifyContent: "center",
                   }}
-                  onClick={(e) => {
-                    setAction("save");
-                    form.submit();
-                  }}
+                  onClick={(e) => onSave(e)}
                 >
                   Save
                 </Button>
@@ -191,42 +195,12 @@ const ProfileEmp = () => {
               gap: "15px",
             }}
           >
-            <NameSection
-              {...sectionProps}
-              // sectionClosed={sectionClosed}
-              // sectionControl={sectionControl}
-              // page="personalInfo"
-            />
-            <AddressSection
-              {...sectionProps}
-              // sectionClosed={sectionClosed}
-              // sectionControl={sectionControl}
-              // page="personalInfo"
-            />
-            <ContactSection
-              {...sectionProps}
-              // sectionClosed={sectionClosed}
-              // sectionControl={sectionControl}
-              // page="personalInfo"
-            />
-            <CitizenSection
-              {...sectionProps}
-              // sectionClosed={sectionClosed}
-              // sectionControl={sectionControl}
-              // page="personalInfo"
-            />
-            <ReferenceSection
-              {...sectionProps}
-              // sectionClosed={sectionClosed}
-              // sectionControl={sectionControl}
-              // page="personalInfo"
-            />
-            <FileSection
-              {...sectionProps}
-              // sectionClosed={sectionClosed}
-              // sectionControl={sectionControl}
-              // page="personalInfo"
-            />
+            <NameSection {...sectionProps} />
+            <AddressSection {...sectionProps} />
+            <ContactSection {...sectionProps} />
+            <CitizenSection {...sectionProps} />
+            <ReferenceSection {...sectionProps} />
+            <FileSection {...sectionProps} />
             <Col span={16}>
               <Space style={{ width: "100%" }} align="end" direction="vertical">
                 <Space size="middle">
