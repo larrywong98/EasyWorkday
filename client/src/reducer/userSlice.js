@@ -92,6 +92,7 @@ const userSlice = createSlice({
     lastUpdateDate: "",
     deleteDate: "",
   },
+
   reducers: {
     setVisa: (state, action) => {
       const { status, index } = action.payload;
@@ -154,7 +155,7 @@ const userSlice = createSlice({
       state.applicationStatus = action.payload.applicationStatus;
       return state;
     },
-    updatevisaStatus: (state, action) => {
+    updateVisaStatus: (state, action) => {
       state.visaStatus = action.payload.visaStatus;
     },
     updateOnboardFeedback: (state, action) => {
@@ -178,7 +179,7 @@ export const {
   updateDriverLicense,
   updateUsCitizen,
   updateApplicationStatus,
-  updatevisaStatus,
+  updateVisaStatus,
   updateOnboardFeedback,
   fillInfo,
   setReceipt,
