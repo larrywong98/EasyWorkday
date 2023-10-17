@@ -133,7 +133,7 @@ const ProfileEmp = () => {
                 <Button
                   type="primary"
                   style={{
-                    // width: "80%",
+                    width: "80px",
                     marginBottom: "20px",
                     justifyContent: "center",
                   }}
@@ -148,6 +148,7 @@ const ProfileEmp = () => {
                 <Button
                   type="primary"
                   style={{
+                    width: "80px",
                     marginBottom: "20px",
                     justifyContent: "center",
                   }}

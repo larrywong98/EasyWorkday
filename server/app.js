@@ -7,6 +7,7 @@ import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import { User } from "./models/schema.js";
 
 dotenv.config();
 
@@ -16,9 +17,10 @@ const __dirname = dirname(__filename);
 
 const port = process.env.PORT || 4000;
 
-// yingshan's mongoDB
-const uri = `mongodb+srv://${process.env.MDB_NAME}:${process.env.MDB_PWD}@cluster0.0kmc57i.mongodb.net/?retryWrites=true&w=majority`;
+// // yingshan's mongoDB
+// const uri = `mongodb+srv://${process.env.MDB_NAME}:${process.env.MDB_PWD}@cluster0.0kmc57i.mongodb.net/?retryWrites=true&w=majority`;
 
+const uri = `mongodb+srv://${process.env.MONGODB_NAME}:${process.env.MONGODB_PWD}@cluster0.yyafoyf.mongodb.net/workday?retryWrites=true&w=majority`;
 mongoose
   .connect(uri)
   .then(() => {
@@ -77,6 +79,42 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
     fileInfo,
     pdfUrl: fileUrl,
   });
+});
+app.post("/api/emp/save/:userId", async (req, res) => {
+  // await User.find();
+  // console.log(req.body);
+  let filter = { userId: req.params.userId };
+  let update = {
+    role: req.body.role,
+    applicationStatus: req.body.applicationStatus,
+    onboardFeedback: req.body.onboardFeedback,
+    info: req.body.info,
+    visa: req.body.visa,
+    files: req.body.files,
+    createDate: req.body.createDate,
+    lastUpdateDate: req.body.lastUpdateDate,
+    deleteDate: req.body.deleteDate,
+  };
+
+  try {
+    const result = await User.findOneAndUpdate(filter, update, {
+      upsert: true,
+      new: true,
+    });
+    console.log(result);
+    res.json({ status: result });
+  } catch (err) {
+    res.json({ status: "error" });
+  }
+});
+
+app.get("/api/emp/:userId", async (req, res) => {
+  const result = await User.findOne(
+    { userId: req.params.userId },
+    { _id: false }
+  );
+  // console.log(result);
+  res.json(result);
 });
 
 app.listen(port, () =>
