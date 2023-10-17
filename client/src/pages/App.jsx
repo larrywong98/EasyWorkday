@@ -57,14 +57,7 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="profile"
-                element={
-                  <ProtectedRoute>
-                    <ProfileEmp />
-                  </ProtectedRoute>
-                }
-              >
+              <Route path="profile" element={<ProfileEmp />}>
                 <Route path=":empId" element={<ProfileEmp />} />
               </Route>
               <Route path="profileById" element={<OnBoardingEmpById />}></Route>
