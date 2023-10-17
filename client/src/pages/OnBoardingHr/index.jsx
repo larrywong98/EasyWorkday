@@ -1,6 +1,7 @@
 import { Button, Card, Form, Input, Space, Tooltip } from "antd";
 import { useDispatch } from "react-redux";
 import {
+  setVisa,
   updateApplicationStatus,
   updateOnboardFeedback,
 } from "../../reducer/userSlice";
@@ -9,6 +10,7 @@ import { useState } from "react";
 import validator from "validator";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
+import { statusTrigger } from "../../reducer/statusSlice";
 const { TextArea } = Input;
 
 const OnBoardingHr = () => {
@@ -21,6 +23,8 @@ const OnBoardingHr = () => {
   const approve = () => {
     dispatch(updateOnboardFeedback({ onboardFeedback: "" }));
     dispatch(updateApplicationStatus({ applicationStatus: status.approved }));
+    dispatch(setVisa({ status: "pending", index: 0 }));
+    dispatch(statusTrigger({ status: "pending" }));
   };
   const reject = () => {
     dispatch(updateOnboardFeedback({ onboardFeedback: feedback }));

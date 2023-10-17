@@ -10,10 +10,11 @@ import FileSection from "../../components/FileSection";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
-import { fillInfo } from "../../reducer/userSlice";
+import { fillInfo, updateUserId } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Feedback from "../../components/Feedback";
 import sendRequest from "../../services/sendRequest";
+import md5 from "md5";
 
 const OnBoardingEmp = () => {
   const [form] = Form.useForm();
@@ -33,6 +34,10 @@ const OnBoardingEmp = () => {
   const [sectionClosed, setsectionClosed] = useState(Array(6).fill(false));
   const { Title } = Typography;
 
+  const generateUserId = () => {
+    return md5(Date.now());
+  };
+
   const onSubmit = async (data) => {
     data.profilePicture = "http://";
     data.dob = data.dob.format("YYYY/MM/DD");
@@ -42,20 +47,47 @@ const OnBoardingEmp = () => {
     ];
     // console.log(data);
     // change to pending
-    dispatch(fillInfo({ applicationStatus: status.initial, info: data }));
+    // const newData = { applicationStatus: status.pending, info: data };
+    const newData = {
+      role: user.role,
+      applicationStatus: status.pending,
+      onboardFeedback: user.onboardFeedback,
+      info: data,
+      visa: user.visa,
+      files: user.files,
+      createDate: user.createDate,
+      lastUpdateDate: user.lastUpdateDate,
+      deleteDate: user.deleteDate,
+    };
+    dispatch(fillInfo(newData));
     // console.log(user);
     // mongodb save
+    // generateUserId();
 
     const response = await sendRequest({
-      url: "http://127.0.0.1:4000/api/emp/save/md5",
+      url:
+        "http://127.0.0.1:4000/api/emp/save/" +
+        (user.userId || generateUserId()),
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      data: JSON.stringify(user),
+      data: JSON.stringify(newData),
+      // {
+      // role: user.role,
+      // applicationStatus: status.pending,
+      // onboardFeedback: user.onboardFeedback,
+      // info: data,
+      // visa: user.visa,
+      // files: user.files,
+      // createDate: user.createDate,
+      // lastUpdateDate: user.lastUpdateDate,
+      // deleteDate: user.deleteDate,
+      // }),
     });
+    dispatch(updateUserId({ userId: response.status.userId }));
 
-    // console.log(response);
+    console.log(response);
     // console.log(
     //   await sendRequest({
     //     url: "http://127.0.0.1:4000/api/emp/md5",

@@ -8,18 +8,33 @@ const ProtectedRoute = ({ children }) => {
   if (user.role === "emp") {
     if (location.pathname.includes("onboard")) {
       if (user.applicationStatus === status.approved) {
-        return <Navigate to="/home" />;
+        return <Navigate to="/" />;
       } else {
         return <>{children}</>;
       }
     }
-    // if (location.pathname.includes("visa")) {
-    //   if (user.data.visaTitle === "F1(CPT/OPT)") {
-    //     return <Navigate to="/emp/onboard" />;
-    //   } else {
-    //     return <>{children}</>;
-    //   }
-    // }
+    if (location.pathname.includes("visa")) {
+      if (user.applicationStatus === status.approved) {
+        return <>{children}</>;
+      } else {
+        return <Navigate to="/emp/onboard" />;
+      }
+    }
+    if (location.pathname.includes("profile")) {
+      if (
+        user.applicationStatus === status.approved &&
+        user.visaStatus === status.approved
+      ) {
+        return <>{children}</>;
+      } else if (
+        user.applicationStatus === status.approved &&
+        user.visaStatus !== status.approved
+      ) {
+        return <Navigate to="/emp/visa" />;
+      } else if (user.applicationStatus !== status.approved) {
+        return <Navigate to="/emp/onboard" />;
+      }
+    }
   } else if (user.role === "hr") {
   } else {
     return <Navigate to="error" />;
