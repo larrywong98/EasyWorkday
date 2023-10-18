@@ -19,6 +19,7 @@ import SignIn from "./SignIn";
 import InProgress from "./VisaHr/InProgress";
 import OnBoardingEmpById from "./OnBoardEmpById";
 import InProgress from "./VisaHr/InProgress";
+import HrDecision from "./HrDecision";
 
 const App = () => {
   return (
@@ -73,6 +74,7 @@ const App = () => {
               <Route path="visa" element={<VisaHr />} />
               <Route path="visa/inProgress" element={<InProgress />} />
               <Route path="profile" element={<ProfileHr />} />
+              <Route path="decision" element={<HrDecision />}></Route>
             </Route>
             <Route path="success" element={<Success />} />
           </Route>

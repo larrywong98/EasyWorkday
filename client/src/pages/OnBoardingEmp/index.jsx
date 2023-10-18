@@ -18,8 +18,11 @@ import md5 from "md5";
 
 const OnBoardingEmp = () => {
   const [form] = Form.useForm();
-  const [disabled, setDisabled] = useState();
+
   const user = useSelector((state) => state.userReducer);
+  const [disabled, setDisabled] = useState(
+    user.applicationStatus === status.initial ? false : true
+  );
   const initialData = useMemo(() => {
     let tmp = { ...user.info };
     tmp.dob = dayjs(user.info.dob, "YYYY/MM/DD");
@@ -101,19 +104,19 @@ const OnBoardingEmp = () => {
     newsectionClosed[i] = !newsectionClosed[i];
     setsectionClosed(newsectionClosed);
   };
-  const checkStatus = () => {
-    if (user.applicationStatus === status.rejected) {
-      return true;
-    }
-    if (user.applicationStatus === status.pending) {
-      return true;
-    }
-    return false;
-  };
+  // const checkStatus = () => {
+  //   if (user.applicationStatus === status.rejected) {
+  //     return true;
+  //   }
+  //   if (user.applicationStatus === status.pending) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
 
-  useEffect(() => {
-    setDisabled(checkStatus());
-  }, []);
+  // useEffect(() => {
+  //   setDisabled(checkStatus());
+  // }, []);
   return (
     <>
       <Card
@@ -211,6 +214,7 @@ const OnBoardingEmp = () => {
               type="primary"
               style={{ width: "100%" }}
               onClick={() => setDisabled(false)}
+              disabled={!disabled}
             >
               Edit
             </Button>
