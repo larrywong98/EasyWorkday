@@ -85,7 +85,7 @@ const OnBoardingHr = () => {
     // details
     console.log(response);
     dispatch(loadUser({ user: response }));
-    navigate("/emp/profileById");
+    navigate("/hr/decision");
     // back button
   };
   useEffect(() => {

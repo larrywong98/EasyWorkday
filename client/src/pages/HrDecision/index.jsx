@@ -1,6 +1,6 @@
-import { Space, Card, Row, Col } from "antd";
+import { Space, Card, Row } from "antd";
 import { Button, Form, Typography } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
 import ContactSection from "../../components/ContactSection";
@@ -10,10 +10,7 @@ import FileSection from "../../components/FileSection";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
-import { fillInfo, updateUserId } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Feedback from "../../components/Feedback";
-import sendRequest from "../../services/sendRequest";
 import md5 from "md5";
 import {
   setVisa,
@@ -23,9 +20,8 @@ import {
 import { statusTrigger } from "../../reducer/statusSlice";
 import { Input } from "antd";
 
-const OnBoardingEmpById = () => {
+const HrDecision = () => {
   const [form] = Form.useForm();
-  const [disabled, setDisabled] = useState();
   const user = useSelector((state) => state.userReducer);
   const initialData = useMemo(() => {
     let tmp = { ...user.info };
@@ -42,6 +38,8 @@ const OnBoardingEmpById = () => {
   const { Title } = Typography;
 
   const [feedback, setFeedback] = useState("");
+  const [decisionStatus, setDecisionStatus] = useState("");
+
   const { TextArea } = Input;
 
   const approve = () => {
@@ -49,92 +47,20 @@ const OnBoardingEmpById = () => {
     dispatch(updateApplicationStatus({ applicationStatus: status.approved }));
     dispatch(setVisa({ status: "pending", index: 0 }));
     dispatch(statusTrigger({ status: "pending" }));
+    setDecisionStatus("approved");
   };
   const reject = () => {
     dispatch(updateOnboardFeedback({ onboardFeedback: feedback }));
     dispatch(updateApplicationStatus({ applicationStatus: status.rejected }));
+    setDecisionStatus("rejected");
   };
 
-  const generateUserId = () => {
-    return md5(Date.now());
-  };
-
-  const onSubmit = async (data) => {
-    data.profilePicture = "http://";
-    data.dob = data.dob.format("YYYY/MM/DD");
-    data.visaDate = [
-      data.visaDate[0].format("YYYY/MM/DD"),
-      data.visaDate[1].format("YYYY/MM/DD"),
-    ];
-    // console.log(data);
-    // change to pending
-    // const newData = { applicationStatus: status.pending, info: data };
-    const newData = {
-      role: user.role,
-      applicationStatus: status.pending,
-      onboardFeedback: user.onboardFeedback,
-      info: data,
-      visa: user.visa,
-      files: user.files,
-      createDate: user.createDate,
-      lastUpdateDate: user.lastUpdateDate,
-      deleteDate: user.deleteDate,
-    };
-    dispatch(fillInfo(newData));
-    // console.log(user);
-    // mongodb save
-    // generateUserId();
-
-    const response = await sendRequest({
-      url:
-        "http://127.0.0.1:4000/api/emp/save/" +
-        (user.userId || generateUserId()),
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: JSON.stringify(newData),
-      // {
-      // role: user.role,
-      // applicationStatus: status.pending,
-      // onboardFeedback: user.onboardFeedback,
-      // info: data,
-      // visa: user.visa,
-      // files: user.files,
-      // createDate: user.createDate,
-      // lastUpdateDate: user.lastUpdateDate,
-      // deleteDate: user.deleteDate,
-      // }),
-    });
-    dispatch(updateUserId({ userId: response.status.userId }));
-
-    console.log(response);
-    // console.log(
-    //   await sendRequest({
-    //     url: "http://127.0.0.1:4000/api/emp/md5",
-    //     method: "GET",
-    //   })
-    // );
-    navigate("/success", { state: { message: "Submit Successful" } });
-  };
   const sectionControl = (i) => {
     let newsectionClosed = [...sectionClosed];
     newsectionClosed[i] = !newsectionClosed[i];
     setsectionClosed(newsectionClosed);
   };
-  const checkStatus = () => {
-    if (user.applicationStatus === status.rejected) {
-      return true;
-    }
-    if (user.applicationStatus === status.pending) {
-      return true;
-    }
-    return false;
-  };
 
-  useEffect(() => {
-    setDisabled(checkStatus());
-  }, []);
   return (
     <>
       <Card
@@ -159,8 +85,8 @@ const OnBoardingEmpById = () => {
           layout="horizontal"
           initialValues={initialData}
           form={form}
-          onFinish={onSubmit}
-          disabled={disabled}
+          disabled={true}
+          onSubmit={() => {}}
         >
           <Title
             level={2}
@@ -205,23 +131,12 @@ const OnBoardingEmpById = () => {
               sectionClosed={sectionClosed}
               sectionControl={sectionControl}
             />
-            <Col span={16}>
-              <Space style={{ width: "100%" }} align="end" direction="vertical">
-                <Space size="middle">
-                  <Button type="primary" htmlType="submit">
-                    submit
-                  </Button>
-                </Space>
-              </Space>
-            </Col>
-            <Col span={16}>
-              <Feedback feedback="onboard" />
-            </Col>
           </Row>
         </Form>
         <Space
           direction="row"
           style={{
+            margin: "20px 0",
             width: "100%",
             display: "flex",
             justifyContent: "center",
@@ -241,9 +156,19 @@ const OnBoardingEmpById = () => {
             Reject
           </Button>
         </Space>
+        <Space
+          direction="row"
+          style={{
+            margin: "20px 0",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        ></Space>
       </Card>
     </>
   );
 };
 
-export default OnBoardingEmpById;
+export default HrDecision;

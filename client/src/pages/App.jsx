@@ -16,7 +16,7 @@ import Home from "./Home";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Register from "./Register";
 import SignIn from "./SignIn";
-import OnBoardingEmpById from "./OnBoardEmpById";
+import HrDecision from "./HrDecision";
 
 const App = () => {
   return (
@@ -57,12 +57,12 @@ const App = () => {
               <Route path="profile" element={<ProfileEmp />}>
                 <Route path=":empId" element={<ProfileEmp />} />
               </Route>
-              <Route path="profileById" element={<OnBoardingEmpById />}></Route>
             </Route>
             <Route path="hr">
               <Route path="onboard" element={<OnBoardingHr />} />
               <Route path="visa" element={<VisaHr />} />
               <Route path="profile" element={<ProfileHr />} />
+              <Route path="decision" element={<HrDecision />}></Route>
             </Route>
             <Route path="success" element={<Success />} />
           </Route>
