@@ -10,8 +10,8 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getJwtToken, signInRequest, signUpRequest } from "../services/auth";
-import validateEmail from "../utils/validateEmail";
+// import { getJwtToken, signInRequest, signUpRequest } from "../../services/auth";
+import validateEmail from "../../utils/validateEmail";
 
 const SignIn = () => {
   const [username, setUsername] = useState("");
@@ -59,7 +59,7 @@ const SignIn = () => {
       setUnauthorized(true);
     }
      */
-    
+
     setUsername("");
     setPassword("");
   };
@@ -229,10 +229,10 @@ const SignIn = () => {
                     {userExist
                       ? "User already exists"
                       : unauthorized
-                        ? "Wrong email or password"
-                        : !firstLoad && password === ""
-                          ? "Invalid Password Input"
-                          : ""}
+                      ? "Wrong email or password"
+                      : !firstLoad && password === ""
+                      ? "Invalid Password Input"
+                      : ""}
                   </Typography>
                 </Box>
               </Box>
@@ -265,7 +265,6 @@ const SignIn = () => {
                 marginTop: "22px",
               }}
             >
-
               <Box>
                 <Typography variant="span">Don't have an account?</Typography>
                 <Link

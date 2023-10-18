@@ -10,8 +10,8 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getJwtToken, signInRequest, signUpRequest } from "../services/auth";
-import validateEmail from "../utils/validateEmail";
+// import { getJwtToken, signInRequest, signUpRequest } from "../services/auth";
+import validateEmail from "../../utils/validateEmail";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -25,7 +25,7 @@ const SignUp = () => {
   const [pwdRepeat, setPwdRepeat] = useState(false);
   const user = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const initState = () => {
     setEmail("");
@@ -41,16 +41,14 @@ const SignUp = () => {
   }, []);
 
   const handlePwdRepeat = () => {
-    if (password && password === passwordConfirm)
-      setPwdRepeat(true);
-    else
-      setPwdRepeat(false);
-  }
+    if (password && password === passwordConfirm) setPwdRepeat(true);
+    else setPwdRepeat(false);
+  };
 
   const handlePwdChange = (e) => {
     setPassword(e.target.value);
-    setPasswordConfirm('');
-  }
+    setPasswordConfirm("");
+  };
 
   const submit = (e) => {
     e.preventDefault();
@@ -61,7 +59,6 @@ const SignUp = () => {
       setFirstLoad(false);
       return;
     }
-
 
     /*
     const status = await signUpRequest( email, password, navigate);
@@ -142,7 +139,6 @@ const SignUp = () => {
                 gap: "30px",
               }}
             >
-
               <Box
                 sx={{
                   display: "flex",
@@ -167,7 +163,6 @@ const SignUp = () => {
                     },
                   }}
                 />
-
               </Box>
 
               <Box
@@ -211,8 +206,6 @@ const SignUp = () => {
                   </Typography>
                 </Box>
               </Box>
-
-
 
               <Box
                 sx={{
@@ -270,10 +263,10 @@ const SignUp = () => {
                     {userExist
                       ? "User already exists"
                       : unauthorized
-                        ? "Wrong email or password"
-                        : !firstLoad && password === ""
-                          ? "Invalid Password Input"
-                          : ""}
+                      ? "Wrong email or password"
+                      : !firstLoad && password === ""
+                      ? "Invalid Password Input"
+                      : ""}
                   </Typography>
                 </Box>
               </Box>
@@ -321,7 +314,6 @@ const SignUp = () => {
                 </Box>
               </Box>
 
-
               <Button
                 variant="contained"
                 type="submit"
@@ -351,7 +343,6 @@ const SignUp = () => {
                 marginTop: "22px",
               }}
             >
-
               <Box>
                 <Typography variant="span">
                   Already have an account?&nbsp;
@@ -364,7 +355,6 @@ const SignUp = () => {
                   Sign in
                 </Link>
               </Box>
-
             </Box>
           </Box>
         </Paper>

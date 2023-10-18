@@ -17,6 +17,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import Register from "./Register";
 import SignIn from "./SignIn";
 import InProgress from "./VisaHr/InProgress";
+import OnBoardingEmpById from "./OnBoardEmpById";
 
 const App = () => {
   return (
@@ -64,6 +65,7 @@ const App = () => {
               >
                 <Route path=":empId" element={<ProfileEmp />} />
               </Route>
+              <Route path="profileById" element={<OnBoardingEmpById />}></Route>
             </Route>
             <Route path="hr">
               <Route path="onboard" element={<OnBoardingHr />} />
