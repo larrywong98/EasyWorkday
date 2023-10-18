@@ -30,6 +30,10 @@ const App = () => {
         style={{
           padding: "50px 50px",
           backgroundColor: "#dddddd",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Routes>

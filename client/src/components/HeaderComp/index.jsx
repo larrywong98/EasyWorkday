@@ -11,20 +11,19 @@ const { Header } = Layout;
 const HeaderComp = () => {
   const [current, setCurrent] = useState("");
   const user = useSelector((state) => state.userReducer);
+  const userInfo = useSelector((state) => state.authReducer);
   const navigate = useNavigate();
   const onClick = (e) => {
-    if (e.key === "0") navigate(`/${user.role}/onboard`);
-    if (e.key === "1") navigate(`/${user.role}/visa`);
-    if (e.key === "2") navigate(`/${user.role}/profile`);
+    if (e.key === "0") navigate(`/${userInfo.role}/onboard`);
+    if (e.key === "1") navigate(`/${userInfo.role}/visa`);
+    if (e.key === "2") navigate(`/${userInfo.role}/profile`);
     setCurrent(e.key);
   };
   const headerText = {
     emp: ["Onboarding Application", "Visa Management", "Personal Information"],
     hr: ["Hiring Management", "Visa Management", "Employee Profiles"],
   };
-  useEffect(() => {
-    console.log(user.role);
-  }, [user]);
+
   return (
     <Header className={styles["header"]}>
       <Text level={3} className={styles["header-title"]}>

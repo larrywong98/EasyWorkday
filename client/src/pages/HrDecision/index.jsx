@@ -62,6 +62,7 @@ const HrDecision = () => {
   // Update application status
   const updateDecision = async (decision, reason) => {
     if (decision === "approved") reason = "";
+    // modify
     const response = await sendRequest({
       url: "http://127.0.0.1:4000/api/emp/appstatus/" + user.userId,
       method: "POST",
@@ -73,6 +74,7 @@ const HrDecision = () => {
         reason: reason,
       }),
     });
+
     console.log(response);
   };
 

@@ -117,8 +117,8 @@ const OnBoardingEmp = () => {
 
   useEffect(() => {
     (async () => {
+      // modify
       const response = await loadUserInfo("b43cdec15c14fa8815279ad53c1e1982");
-
       dispatch(loadUser({ user: response }));
     })();
   }, []);

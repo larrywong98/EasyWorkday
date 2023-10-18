@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 // import { getJwtToken, signInRequest, signUpRequest } from "../services/auth";
 import validateEmail from "../../utils/validateEmail";
+import { signUpRequest } from "../../services/auth";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -28,17 +29,17 @@ const SignUp = () => {
   // const dispatch = useDispatch();
 
   const initState = () => {
-    setEmail("");
-    setPassword("");
-    setUnauthorized(false);
-    setUserExist(false);
-    setFirstLoad(true);
+    // setEmail("");
+    // setPassword("");
+    // setUnauthorized(false);
+    // setUserExist(false);
+    // setFirstLoad(true);
   };
-  useEffect(() => {
-    if (user.signedIn) {
-      navigate("/products");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (user.signedIn) {
+  //     navigate("/products");
+  //   }
+  // }, []);
 
   const handlePwdRepeat = () => {
     if (password && password === passwordConfirm) setPwdRepeat(true);
@@ -50,25 +51,11 @@ const SignUp = () => {
     setPasswordConfirm("");
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setUserExist(false);
-    setUnauthorized(false);
 
-    if (pwdRepeat || validateEmail(email) === false || password === "") {
-      setFirstLoad(false);
-      return;
-    }
-
-    /*
-    const status = await signUpRequest( email, password, navigate);
-    if (status === "exist") {
-      setUserExist(true);
-    }
-    */
-
-    setEmail("");
-    setPassword("");
+    const response = await signUpRequest(username, password, email, navigate);
+    console.log(response);
   };
   return (
     <div>
@@ -327,7 +314,7 @@ const SignUp = () => {
                   },
                 }}
               >
-                {"Sign In"}
+                Sign Up
               </Button>
             </Box>
 
