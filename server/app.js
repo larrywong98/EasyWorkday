@@ -52,10 +52,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-app.get("/", (req, res) => {
-  res.json("Home page");
-});
-
 // Define a route for handling file uploads
 app.post("/api/upload", upload.single("file"), (req, res) => {
   // The uploaded file can be accessed via req.file
@@ -81,8 +77,6 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   });
 });
 app.post("/api/emp/save/:userId", async (req, res) => {
-  // await User.find();
-  // console.log(req.body);
   let filter = { userId: req.params.userId };
   let update = {
     role: req.body.role,
@@ -112,12 +106,29 @@ app.get("/api/emp/all", async (req, res) => {
   res.json(result);
 });
 app.get("/api/emp/:userId", async (req, res) => {
-  const result = await User.findOne(
-    { userId: req.params.userId },
-    { _id: false }
-  );
-  // console.log(result);
-  res.json(result);
+  try {
+    const result = await User.findOne(
+      { userId: req.params.userId },
+      { _id: false }
+    );
+    res.json({ status: result });
+  } catch (err) {
+    res.json({ status: "error" });
+  }
+});
+
+app.post("/api/emp/appstatus/:userId", async (req, res) => {
+  let filter = { userId: req.params.userId };
+  let update = {
+    applicationStatus: req.body.decision,
+    onboardFeedback: req.body.reason,
+  };
+  try {
+    const response = await User.findOneAndUpdate(filter, update);
+    res.json(response);
+  } catch (err) {
+    res.json({ status: "error" });
+  }
 });
 
 app.listen(port, () =>

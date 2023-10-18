@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Layout, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -22,6 +22,9 @@ const HeaderComp = () => {
     emp: ["Onboarding Application", "Visa Management", "Personal Information"],
     hr: ["Hiring Management", "Visa Management", "Employee Profiles"],
   };
+  useEffect(() => {
+    console.log(user.role);
+  }, [user]);
   return (
     <Header className={styles["header"]}>
       <Text level={3} className={styles["header-title"]}>

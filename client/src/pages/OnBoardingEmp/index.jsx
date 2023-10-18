@@ -10,11 +10,12 @@ import FileSection from "../../components/FileSection";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
-import { fillInfo, updateUserId } from "../../reducer/userSlice";
+import { fillInfo, loadUser, updateUserId } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Feedback from "../../components/Feedback";
 import sendRequest from "../../services/sendRequest";
 import md5 from "md5";
+import { loadUserInfo } from "../../services/loadUserInfo";
 
 const OnBoardingEmp = () => {
   const [form] = Form.useForm();
@@ -112,11 +113,15 @@ const OnBoardingEmp = () => {
   //     return true;
   //   }
   //   return false;
-  // };
+  // }; setDisabled(checkStatus());
 
-  // useEffect(() => {
-  //   setDisabled(checkStatus());
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      const response = await loadUserInfo("b43cdec15c14fa8815279ad53c1e1982");
+
+      dispatch(loadUser({ user: response }));
+    })();
+  }, []);
   return (
     <>
       <Card

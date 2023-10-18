@@ -14,6 +14,7 @@ import emailjs from "@emailjs/browser";
 import { statusTrigger } from "../../reducer/statusSlice";
 import sendRequest from "../../services/sendRequest";
 import { useNavigate } from "react-router";
+import { loadUserInfo } from "../../services/loadUserInfo";
 const { TextArea } = Input;
 
 const OnBoardingHr = () => {
@@ -78,13 +79,10 @@ const OnBoardingHr = () => {
   };
   const toUserDetail = async (userId) => {
     // console.log("http://127.0.0.1:4000/api/emp/" + userId);
-    const response = await sendRequest({
-      url: "http://127.0.0.1:4000/api/emp/" + userId,
-      method: "GET",
-    });
+    const response = await loadUserInfo(userId);
     // details
-    console.log(response);
-    dispatch(loadUser({ user: response }));
+    // console.log(response);
+    dispatch(loadUser({ user: response.status }));
     navigate("/hr/decision");
     // back button
   };
