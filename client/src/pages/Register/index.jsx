@@ -28,13 +28,13 @@ const SignUp = () => {
   const navigate = useNavigate();
   // const dispatch = useDispatch();
 
-  const initState = () => {
-    // setEmail("");
-    // setPassword("");
-    // setUnauthorized(false);
-    // setUserExist(false);
-    // setFirstLoad(true);
-  };
+  // const initState = () => {
+  // setEmail("");
+  // setPassword("");
+  // setUnauthorized(false);
+  // setUserExist(false);
+  // setFirstLoad(true);
+  // };
   // useEffect(() => {
   //   if (user.signedIn) {
   //     navigate("/products");
@@ -42,13 +42,22 @@ const SignUp = () => {
   // }, []);
 
   const handlePwdRepeat = () => {
-    if (password && password === passwordConfirm) setPwdRepeat(true);
+    if (password !== passwordConfirm) setPwdRepeat(true);
     else setPwdRepeat(false);
   };
 
   const handlePwdChange = (e) => {
     setPassword(e.target.value);
     setPasswordConfirm("");
+    setPwdRepeat(false);
+  };
+
+  const handlePwdConfirmChange = (e) => {
+    setPasswordConfirm(e.target.value);
+    // if (password === passwordConfirm)
+    //   setPwdRepeat(true);
+    // else
+    //   setPwdRepeat(false);
   };
 
   const submit = async (e) => {
@@ -56,6 +65,11 @@ const SignUp = () => {
 
     const response = await signUpRequest(username, password, email, navigate);
     console.log(response);
+
+    setEmail("");
+    setPassword("");
+    setUsername("");
+    setPasswordConfirm("");
   };
   return (
     <div>
@@ -139,6 +153,7 @@ const SignUp = () => {
                   Username
                 </Typography>
                 <OutlinedInput
+                  error={!firstLoad && username === ""}
                   id="username"
                   name="username"
                   onChange={(e) => setUsername(e.target.value)}
@@ -187,9 +202,7 @@ const SignUp = () => {
                   }}
                 >
                   <Typography variant="p" sx={{ fontSize: "14px" }}>
-                    {!firstLoad && !validateEmail(email)
-                      ? "Invalid Email Input"
-                      : ""}
+                    {!firstLoad && username === "" ? "Field Required" : ""}
                   </Typography>
                 </Box>
               </Box>
@@ -210,7 +223,7 @@ const SignUp = () => {
                   id="password"
                   name="password"
                   type={pwdShow ? "password" : "text"}
-                  onBlur={handlePwdRepeat}
+                  // onBlur={handlePwdRepeat}
                   onChange={handlePwdChange}
                   value={password}
                   sx={{
@@ -247,11 +260,7 @@ const SignUp = () => {
                   }}
                 >
                   <Typography variant="p" sx={{ fontSize: "14px" }}>
-                    {userExist
-                      ? "User already exists"
-                      : unauthorized
-                      ? "Wrong email or password"
-                      : !firstLoad && password === ""
+                    {!firstLoad && password === ""
                       ? "Invalid Password Input"
                       : ""}
                   </Typography>
@@ -270,12 +279,12 @@ const SignUp = () => {
                   Password Confirm
                 </Typography>
                 <OutlinedInput
-                  error={pwdRepeat}
+                  error={(!firstLoad && passwordConfirm === "") || pwdRepeat}
                   id="passwordConfirm"
                   name="passwordConfirm"
                   type={pwdShow ? "password" : "text"}
                   onBlur={handlePwdRepeat}
-                  onChange={(e) => setPasswordConfirm(e.target.value)}
+                  onChange={handlePwdConfirmChange}
                   value={passwordConfirm}
                   sx={{
                     height: "56px",
@@ -296,7 +305,11 @@ const SignUp = () => {
                   }}
                 >
                   <Typography variant="p" sx={{ fontSize: "14px" }}>
-                    {pwdRepeat ? "Repeated Password" : ""}
+                    {!firstLoad && passwordConfirm === ""
+                      ? "Filed Required"
+                      : pwdRepeat
+                      ? "Passwords Not Match "
+                      : ""}
                   </Typography>
                 </Box>
               </Box>
@@ -336,7 +349,7 @@ const SignUp = () => {
                 </Typography>
                 <Link
                   to="/signin"
-                  onClick={initState}
+                  // onClick={initState}
                   style={{ color: "#5048e5" }}
                 >
                   Sign in

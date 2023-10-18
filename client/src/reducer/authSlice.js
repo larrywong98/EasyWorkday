@@ -4,7 +4,7 @@ const initialState = {
   userId: "",
   userName: "",
   email: "",
-  role: "",
+  role: "emp",
   signedIn: false,
   regToken: "",
 };
@@ -21,7 +21,14 @@ const authSlice = createSlice({
       return state;
     },
     signOut: (state) => {
-      state.signedIn = false;
+      state = {
+        userId: "",
+        userName: "",
+        email: "",
+        role: "emp",
+        signedIn: false,
+        regToken: "",
+      };
       return state;
     },
   },

@@ -178,6 +178,9 @@ const SignIn = () => {
           >
             Sign In
           </Button>
+          <Box>
+            {authorized ? <></> : <Typography>Wrong password</Typography>}
+          </Box>
         </Box>
         <Box
           sx={{

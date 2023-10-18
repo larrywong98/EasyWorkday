@@ -4,8 +4,8 @@ import { fileName, status } from "./global";
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    userId: "",
-    role: "emp",
+    // userId: "",
+    // role: "emp",
     applicationStatus: status.initial,
     visaStatus: status.initial,
     onboardFeedback: "",
