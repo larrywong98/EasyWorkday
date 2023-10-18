@@ -18,6 +18,7 @@ import Register from "./Register";
 import SignIn from "./SignIn";
 import InProgress from "./VisaHr/InProgress";
 import OnBoardingEmpById from "./OnBoardEmpById";
+import InProgress from "./VisaHr/InProgress";
 
 const App = () => {
   return (
