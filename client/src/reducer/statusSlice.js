@@ -20,31 +20,8 @@ const statusSlice = createSlice({
         state.cur++;
       }
     },
-    // // addInitialStatus to pending
-    // setPendingStatus: (state, action) => {
-    //   const { status } = action.payload;
-    //   const lastStatus = state.statusArray[state.statusArray.length - 1];
-    //   if (lastStatus === "approved") {
-    //     // previous status
-    //     state.statusArray.push(status);
-    //   } else if (lastStatus === "rejected") {
-    //     // current status
-    //     state.statusArray.pop();
-    //     state.statusArray.push(status);
-    //   } else {
-    //     return;
-    //   }
-    // },
-    // // setStatusTo Rejected, Approved
-    // changeStatus: (state, action) => {
-    //   const { status } = action.payload;
-    //   state.statusArray.pop();
-    //   state.statusArray.push(status);
-    // },
   },
 });
-
-// export const { setPendingStatus, changeStatus } = statusSlice.actions;
 
 export const { statusTrigger } = statusSlice.actions;
 

@@ -18,7 +18,7 @@ const __dirname = dirname(__filename);
 const port = process.env.PORT || 4000;
 
 // yingshan's mongoDB
-const uri = `mongodb+srv://${process.env.MDB_NAME}:${process.env.MDB_PWD}@cluster0.0kmc57i.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.MDB_NAME}:${process.env.MDB_PWD}@workday.aicingq.mongodb.net/?retryWrites=true&w=majority`;
 
 // const uri = `mongodb+srv://${process.env.MONGODB_NAME}:${process.env.MONGODB_PWD}@cluster0.yyafoyf.mongodb.net/workday?retryWrites=true&w=majority`;
 mongoose
@@ -81,10 +81,9 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   });
 });
 app.post("/api/emp/save/:userId", async (req, res) => {
-  // await User.find();
-  // console.log(req.body);
-  let filter = { userId: req.params.userId };
-  let update = {
+  // console.log(req.params.userId);
+  const filter = { _id: req.params.userId, userId: req.params.userId };
+  const update = {
     role: req.body.role,
     applicationStatus: req.body.applicationStatus,
     onboardFeedback: req.body.onboardFeedback,
@@ -95,12 +94,9 @@ app.post("/api/emp/save/:userId", async (req, res) => {
     lastUpdateDate: req.body.lastUpdateDate,
     deleteDate: req.body.deleteDate,
   };
-
+  const options = { upsert: true, new: true };
   try {
-    const result = await User.findOneAndUpdate(filter, update, {
-      upsert: true,
-      new: true,
-    });
+    const result = await User.findOneAndUpdate(filter, update, options);
     console.log(result);
     res.json({ status: result });
   } catch (err) {

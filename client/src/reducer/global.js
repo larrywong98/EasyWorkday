@@ -1,3 +1,12 @@
+const statusProperties = ["optStatus", "eadStatus", "i983Status", "i20Status"];
+
+const receiptProperties = [
+  "optFeedback",
+  "eadFeedback",
+  "i983Feedback",
+  "i20Feedback",
+];
+
 const status = {
   initial: "0",
   partial: "1",
@@ -17,4 +26,4 @@ const fileName = {
   I20: 6,
 };
 
-export { status, fileName };
+export { status, fileName, statusProperties, receiptProperties };

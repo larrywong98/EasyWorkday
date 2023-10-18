@@ -12,6 +12,7 @@ const { Panel } = Collapse;
 
 const VisaEmp = () => {
   const status = useSelector((state) => state.statusReducer.arr);
+  console.log(status);
   const approve = (st) => st === "approved";
   return (
     <>

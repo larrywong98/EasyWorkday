@@ -50,7 +50,6 @@ const VisaHr = () => {
           height: "800px",
         }}
       >
-        visa hr
         <Card style={{ display: "flex", justifyContent: "center" }}>
           <Space>
             <TextArea
@@ -66,6 +65,7 @@ const VisaHr = () => {
           </Space>
         </Card>
       </div>
+      {/* <Outlet /> */}
     </>
   );
 };

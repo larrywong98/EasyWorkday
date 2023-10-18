@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fileName, status } from "./global";
+import {
+  fileName,
+  status,
+  statusProperties,
+  receiptProperties,
+} from "./global";
 
 const userSlice = createSlice({
   name: "user",
@@ -97,12 +102,7 @@ const userSlice = createSlice({
     setVisa: (state, action) => {
       const { status, index } = action.payload;
       // Create an array of the status property names
-      const statusProperties = [
-        "optStatus",
-        "eadStatus",
-        "i983Status",
-        "i20Status",
-      ];
+
       // Update the status property in the visa object using the index
       if (index < statusProperties.length) {
         const propertyToUpdate = statusProperties[index];
@@ -111,12 +111,7 @@ const userSlice = createSlice({
     },
     setReceipt: (state, action) => {
       const { receipt, index } = action.payload;
-      const receiptProperties = [
-        "optFeedback",
-        "eadFeedback",
-        "i983Feedback",
-        "i20Feedback",
-      ];
+
       if (index < receiptProperties.length) {
         const receiptToUpdate = receiptProperties[index];
         state.visa[receiptToUpdate] = receipt;
