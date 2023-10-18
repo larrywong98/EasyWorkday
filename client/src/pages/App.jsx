@@ -16,6 +16,7 @@ import Home from "./Home";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Register from "./Register";
 import SignIn from "./SignIn";
+import OnBoardingEmpById from "./OnBoardEmpById";
 
 const App = () => {
   return (
@@ -56,6 +57,7 @@ const App = () => {
               <Route path="profile" element={<ProfileEmp />}>
                 <Route path=":empId" element={<ProfileEmp />} />
               </Route>
+              <Route path="profileById" element={<OnBoardingEmpById />}></Route>
             </Route>
             <Route path="hr">
               <Route path="onboard" element={<OnBoardingHr />} />
