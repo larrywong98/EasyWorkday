@@ -72,9 +72,23 @@ const userSchema = new Schema(
     collection: "User",
   }
 );
-const User = mongoose.model("User", userSchema);
 
-export { User };
+const authSchema = new Schema(
+  {
+    userId: String,
+    userName: String,
+    email: String,
+    password: String,
+    role: String,
+  },
+  {
+    collection: "Auth",
+  }
+);
+const User = mongoose.model("User", userSchema);
+const Auth = mongoose.model("Auth", authSchema);
+
+export { User, Auth };
 
 // const { Schema } = mongoose;
 // const productSchema = new Schema(

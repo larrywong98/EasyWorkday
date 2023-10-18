@@ -21,7 +21,7 @@ import Feedback from "../../components/Feedback";
 
 const ProfileEmp = () => {
   const [form] = Form.useForm();
-  const [disabled, setDisabled] = useState();
+  const [disabled, setDisabled] = useState(false);
   const user = useSelector((state) => state.userReducer);
   const initialData = useMemo(() => {
     let tmp = { ...user.info };
@@ -60,19 +60,19 @@ const ProfileEmp = () => {
     newsectionClosed[i] = !newsectionClosed[i];
     setsectionClosed(newsectionClosed);
   };
-  const checkStatus = () => {
-    if (user.applicationStatus === status.rejected) {
-      return true;
-    }
-    if (user.applicationStatus === status.pending) {
-      return true;
-    }
-    return false;
-  };
+  // const checkStatus = () => {
+  //   if (user.applicationStatus === status.rejected) {
+  //     return true;
+  //   }
+  //   if (user.applicationStatus === status.pending) {
+  //     return true;
+  //   }
+  //   return false;
+  // };
 
-  useEffect(() => {
-    setDisabled(checkStatus());
-  }, []);
+  // useEffect(() => {
+  //   setDisabled(checkStatus());
+  // }, []);
   const onCancel = (e) => {
     setAction("cancel");
     // init files after discard

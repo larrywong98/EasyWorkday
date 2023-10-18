@@ -10,16 +10,20 @@ import FileSection from "../../components/FileSection";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
-import { fillInfo, updateUserId } from "../../reducer/userSlice";
+import { fillInfo, loadUser, updateUserId } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Feedback from "../../components/Feedback";
 import sendRequest from "../../services/sendRequest";
 import md5 from "md5";
+import { loadUserInfo } from "../../services/loadUserInfo";
 
 const OnBoardingEmp = () => {
   const [form] = Form.useForm();
-  const [disabled, setDisabled] = useState();
+
   const user = useSelector((state) => state.userReducer);
+  const [disabled, setDisabled] = useState(
+    user.applicationStatus === status.initial ? false : true
+  );
   const initialData = useMemo(() => {
     let tmp = { ...user.info };
     tmp.dob = dayjs(user.info.dob, "YYYY/MM/DD");
@@ -101,18 +105,22 @@ const OnBoardingEmp = () => {
     newsectionClosed[i] = !newsectionClosed[i];
     setsectionClosed(newsectionClosed);
   };
-  const checkStatus = () => {
-    if (user.applicationStatus === status.rejected) {
-      return true;
-    }
-    if (user.applicationStatus === status.pending) {
-      return true;
-    }
-    return false;
-  };
+  // const checkStatus = () => {
+  //   if (user.applicationStatus === status.rejected) {
+  //     return true;
+  //   }
+  //   if (user.applicationStatus === status.pending) {
+  //     return true;
+  //   }
+  //   return false;
+  // }; setDisabled(checkStatus());
 
   useEffect(() => {
-    setDisabled(checkStatus());
+    (async () => {
+      // modify
+      const response = await loadUserInfo("b43cdec15c14fa8815279ad53c1e1982");
+      dispatch(loadUser({ user: response }));
+    })();
   }, []);
   return (
     <>
@@ -211,6 +219,7 @@ const OnBoardingEmp = () => {
               type="primary"
               style={{ width: "100%" }}
               onClick={() => setDisabled(false)}
+              disabled={!disabled}
             >
               Edit
             </Button>

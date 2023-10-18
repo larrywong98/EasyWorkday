@@ -1,6 +1,7 @@
 import { Button, Card, Divider, Form, Input, List, Space, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  loadUser,
   setVisa,
   updateApplicationStatus,
   updateOnboardFeedback,
@@ -12,6 +13,8 @@ import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
 import { statusTrigger } from "../../reducer/statusSlice";
 import sendRequest from "../../services/sendRequest";
+import { useNavigate } from "react-router";
+import { loadUserInfo } from "../../services/loadUserInfo";
 const { TextArea } = Input;
 
 const OnBoardingHr = () => {
@@ -22,17 +25,18 @@ const OnBoardingHr = () => {
   const [token, setToken] = useState("");
   const [data, setData] = useState([]);
   const user = useSelector((state) => state.userReducer);
+  const navigate = useNavigate();
 
-  const approve = () => {
-    dispatch(updateOnboardFeedback({ onboardFeedback: "" }));
-    dispatch(updateApplicationStatus({ applicationStatus: status.approved }));
-    dispatch(setVisa({ status: "pending", index: 0 }));
-    dispatch(statusTrigger({ status: "pending" }));
-  };
-  const reject = () => {
-    dispatch(updateOnboardFeedback({ onboardFeedback: feedback }));
-    dispatch(updateApplicationStatus({ applicationStatus: status.rejected }));
-  };
+  // const approve = () => {
+  //   dispatch(updateOnboardFeedback({ onboardFeedback: "" }));
+  //   dispatch(updateApplicationStatus({ applicationStatus: status.approved }));
+  //   dispatch(setVisa({ status: "pending", index: 0 }));
+  //   dispatch(statusTrigger({ status: "pending" }));
+  // };
+  // const reject = () => {
+  //   dispatch(updateOnboardFeedback({ onboardFeedback: feedback }));
+  //   dispatch(updateApplicationStatus({ applicationStatus: status.rejected }));
+  // };
   const onChange = (e) => {
     setEmployeeEmail(e.target.value);
     if (checkEmail(e.target.value) === "error") {
@@ -75,13 +79,11 @@ const OnBoardingHr = () => {
   };
   const toUserDetail = async (userId) => {
     // console.log("http://127.0.0.1:4000/api/emp/" + userId);
-    const response = await sendRequest({
-      url: "http://127.0.0.1:4000/api/emp/" + userId,
-      method: "GET",
-    });
+    const response = await loadUserInfo(userId);
     // details
-    console.log(response);
-    // load to userSlice  disabled form
+    // console.log(response);
+    dispatch(loadUser({ user: response.status }));
+    navigate("/hr/decision");
     // back button
   };
   useEffect(() => {
@@ -154,19 +156,6 @@ const OnBoardingHr = () => {
             </List.Item>
           ))}
         </List>
-
-        <Space>
-          <TextArea
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
-          />
-          <Button type="primary" onClick={() => approve()}>
-            Approve
-          </Button>
-          <Button type="primary" onClick={() => reject()} danger>
-            Reject
-          </Button>
-        </Space>
       </Card>
     </>
   );

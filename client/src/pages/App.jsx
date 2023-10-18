@@ -16,6 +16,7 @@ import Home from "./Home";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Register from "./Register";
 import SignIn from "./SignIn";
+import HrDecision from "./HrDecision";
 
 const App = () => {
   return (
@@ -29,6 +30,10 @@ const App = () => {
         style={{
           padding: "50px 50px",
           backgroundColor: "#dddddd",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Routes>
@@ -61,6 +66,7 @@ const App = () => {
               <Route path="onboard" element={<OnBoardingHr />} />
               <Route path="visa" element={<VisaHr />} />
               <Route path="profile" element={<ProfileHr />} />
+              <Route path="decision" element={<HrDecision />}></Route>
             </Route>
             <Route path="success" element={<Success />} />
           </Route>
