@@ -1,5 +1,5 @@
 import express from "express";
-import { Auth } from "../models/schema.js";
+import { Auth, User } from "../models/schema.js";
 import jwt from "jsonwebtoken";
 import { auth } from "../utils/auth.js";
 import md5 from "md5";
@@ -65,14 +65,77 @@ router.post("/signup", async (req, res) => {
       res.json({ status: "exist" });
       return;
     }
-
+    const newUserId = md5(Date.now());
     const newUser = Auth({
-      userId: md5(Date.now()),
+      userId: newUserId,
       userName: req.body.userName,
       email: req.body.email,
       password: req.body.pwd,
       role: "emp",
     });
+    const newUserInfo = User({
+      userId: newUserId,
+      applicationStatus: "0",
+      visaStatus: "",
+      onboardFeedback: "",
+      info: {
+        firstName: "",
+        lastName: "",
+        middleName: "",
+        preferredName: "",
+        ssn: "",
+        dob: "",
+        gender: "",
+        address: "",
+        cellPhoneNumber: "",
+        workPhoneNumber: "",
+        email: "",
+        usCitizen: "",
+        visaTitle: "",
+        visaDate: ["", ""],
+        reference: [
+          {
+            firstName: "",
+            lastName: "",
+            middleName: "",
+            preferredName: "",
+            phone: "",
+            email: "",
+            relationship: "",
+          },
+        ],
+        emergency: [
+          {
+            firstName: "",
+            lastName: "",
+            middleName: "",
+            preferredName: "",
+            phone: "",
+            email: "",
+            relationship: "",
+          },
+        ],
+      },
+      visa: {
+        optStatus: "",
+        optFeedback: "",
+
+        eadStatus: "",
+        eadFeedback: "",
+
+        i983Status: "",
+        i983Feedback: "",
+
+        i20Status: "",
+        i20Feedback: "",
+      },
+      files: [[], [], [], [], [], [], []],
+      createDate: "",
+      lastUpdateDate: "",
+      deleteDate: "",
+    });
+    const newinfo = await newUserInfo.save();
+    console.log(newinfo);
     const success = await newUser.save();
     if (!success) res.json({ status: "create failed" });
     res.json({ status: "ok" });

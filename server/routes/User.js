@@ -2,6 +2,7 @@ import express from "express";
 import { User } from "../models/schema.js";
 
 const router = express.Router();
+// save employee information
 router.post("/save/:userId", async (req, res) => {
   let filter = { userId: req.params.userId };
   let update = {
@@ -27,22 +28,28 @@ router.post("/save/:userId", async (req, res) => {
     res.json({ status: "error" });
   }
 });
+
+// get all employee information
 router.get("/all", async (req, res) => {
   const result = await User.find({}, { _id: false });
-  res.json(result);
+  res.json({ status: result });
 });
+
+// get one employee information
 router.get("/:userId", async (req, res) => {
   try {
     const result = await User.findOne(
       { userId: req.params.userId },
       { _id: false }
     );
+    console.log(result);
     res.json({ status: result });
   } catch (err) {
     res.json({ status: "error" });
   }
 });
 
+// update employee application status
 router.post("/appstatus/:userId", async (req, res) => {
   let filter = { userId: req.params.userId };
   let update = {
@@ -51,7 +58,7 @@ router.post("/appstatus/:userId", async (req, res) => {
   };
   try {
     const response = await User.findOneAndUpdate(filter, update);
-    res.json(response);
+    res.json({ status: response });
   } catch (err) {
     res.json({ status: "error" });
   }

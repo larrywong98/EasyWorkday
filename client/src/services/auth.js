@@ -1,4 +1,6 @@
 import { signIn } from "../reducer/authSlice";
+import { loadUser } from "../reducer/userSlice";
+import { loadUserInfo } from "./loadUserInfo";
 import sendRequest from "./sendRequest";
 
 const getJwtToken = async (username, password, navigate) => {
@@ -41,6 +43,8 @@ const signInRequest = async (dispatch, navigate) => {
       role: response.status.role,
     })
   );
+  const response1 = await loadUserInfo(response.status.userId);
+  dispatch(loadUser({ user: response1 }));
   navigate("/success", { state: { message: "Login Successful" } });
   return "ok";
 };
