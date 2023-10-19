@@ -1,12 +1,13 @@
 import React from "react";
 import HRFeedback from "./HRFeedback";
+import { NextSteps } from "../../reducer/global";
 
 const OPT = ({ status }) => {
   const OPTReceipt = () => {
     if (status === "pending") {
-      return <p>Waiting for HR to approve your OPT Receipt</p>;
+      return <p>{NextSteps.opt[0]}</p>;
     } else if (status === "approved") {
-      return <p>Please upload a copy of your OPT EAD</p>;
+      return <p>{NextSteps.opt[1]}</p>;
     } else if (status === "rejected") {
       return <HRFeedback />;
     }

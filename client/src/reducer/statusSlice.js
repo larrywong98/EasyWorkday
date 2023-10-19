@@ -11,37 +11,17 @@ const statusSlice = createSlice({
   initialState,
   reducers: {
     statusTrigger: (state, action) => {
+      if (state.cur >= 4) {
+        return;
+      }
       const { status } = action.payload;
       state.arr[state.cur] = status;
       if (status === "approved") {
         state.cur++;
       }
     },
-    // // addInitialStatus to pending
-    // setPendingStatus: (state, action) => {
-    //   const { status } = action.payload;
-    //   const lastStatus = state.statusArray[state.statusArray.length - 1];
-    //   if (lastStatus === "approved") {
-    //     // previous status
-    //     state.statusArray.push(status);
-    //   } else if (lastStatus === "rejected") {
-    //     // current status
-    //     state.statusArray.pop();
-    //     state.statusArray.push(status);
-    //   } else {
-    //     return;
-    //   }
-    // },
-    // // setStatusTo Rejected, Approved
-    // changeStatus: (state, action) => {
-    //   const { status } = action.payload;
-    //   state.statusArray.pop();
-    //   state.statusArray.push(status);
-    // },
   },
 });
-
-// export const { setPendingStatus, changeStatus } = statusSlice.actions;
 
 export const { statusTrigger } = statusSlice.actions;
 

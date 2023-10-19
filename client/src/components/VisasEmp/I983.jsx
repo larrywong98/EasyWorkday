@@ -2,18 +2,14 @@ import React from "react";
 import HRFeedback from "./HRFeedback";
 import DownloadForm from "../VisaForms/DownloadForm";
 import UploadForm from "../VisaForms/UploadForm";
+import { NextSteps } from "../../reducer/global";
 
 const I983 = ({ status }) => {
   const I983Receipt = () => {
     if (status === "pending") {
-      return <p>Waiting for HR to approve your and sign your I-983</p>;
+      return <p>{NextSteps.i983[0]}</p>;
     } else if (status === "approved") {
-      return (
-        <p>
-          Please send the I-983 along with all necesseay documents to your
-          school and upload the new I-20
-        </p>
-      );
+      return <p>{NextSteps.i983[1]}</p>;
     } else if (status === "rejected") {
       return <HRFeedback />;
     }

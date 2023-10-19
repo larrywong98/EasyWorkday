@@ -23,7 +23,6 @@ import { useEffect, useMemo, useState } from "react";
 import validator from "validator";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
-import { statusTrigger } from "../../reducer/statusSlice";
 import sendRequest from "../../services/sendRequest";
 import { useNavigate } from "react-router";
 import { loadUserInfo } from "../../services/loadUserInfo";
@@ -33,13 +32,13 @@ const { TextArea } = Input;
 
 const OnBoardingHr = () => {
   const dispatch = useDispatch();
-  const [feedback, setFeedback] = useState("");
   const [employeeEmail, setEmployeeEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [token, setToken] = useState("");
   const [data, setData] = useState([]);
   const [initialData, setInitialData] = useState();
   const user = useSelector((state) => state.userReducer);
+
   const navigate = useNavigate();
 
   // const approve = () => {
