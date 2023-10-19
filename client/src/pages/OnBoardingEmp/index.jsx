@@ -10,7 +10,12 @@ import FileSection from "../../components/FileSection";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
-import { fillInfo, loadUser, updateUserId } from "../../reducer/userSlice";
+import {
+  fillInfo,
+  loadUser,
+  updateUserId,
+  updateVisaOptReceipt,
+} from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Feedback from "../../components/Feedback";
 import sendRequest from "../../services/sendRequest";
@@ -52,6 +57,7 @@ const OnBoardingEmp = () => {
       data.visaDate[0].format("YYYY/MM/DD"),
       data.visaDate[1].format("YYYY/MM/DD"),
     ];
+
     // console.log(data);
     // change to pending
     // const newData = { applicationStatus: status.pending, info: data };
@@ -67,6 +73,7 @@ const OnBoardingEmp = () => {
       deleteDate: user.deleteDate,
     };
     dispatch(fillInfo(newData));
+    dispatch(updateVisaOptReceipt({ status: "pending" }));
     // console.log(user);
     // mongodb save
     // generateUserId();

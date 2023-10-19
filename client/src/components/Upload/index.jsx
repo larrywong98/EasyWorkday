@@ -1,24 +1,62 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, message, Upload } from "antd";
 
-const Upload = () => {
-  const [fileName, setFileName] = useState("");
+const UploadForm = () => {
+  const [fileList, setFileList] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
-  const sendToBackend = async (e) => {
-    let formData = new FormData();
-    formData.append("file", e.target.files[0]);
-    formData.append("ext", "pdf");
-    const response = await fetch("http://144.202.42.97:8001/", {
+  const handleUpload = () => {
+    const formData = new FormData();
+
+    formData.append("file", fileList[0]);
+    setUploading(true);
+    // You can use any AJAX library you like
+    fetch("http://144.202.42.97:8001/api/upload", {
       method: "POST",
       body: formData,
-    });
-    const data = await response.json();
-    setFileName(data.name);
+    })
+      .then((res) => console.log(res.json()))
+      .then(() => {
+        setFileList([]);
+        message.success("upload successfully.");
+      })
+      .catch(() => {
+        message.error("upload failed.");
+      })
+      .finally(() => {
+        setUploading(false);
+      });
   };
+
+  const props = {
+    onRemove: (file) => {
+      const newFileList = fileList.filter((f) => f !== file);
+      setFileList(newFileList);
+    },
+    beforeUpload: (file) => {
+      setFileList([...fileList, file]);
+      return false;
+    },
+    fileList,
+  };
+
   return (
     <>
-      <input type="file" onChange={(e) => sendToBackend(e)} />
-      <p>{`http://144.202.42.97:8001/resources/${fileName}.pdf`}</p>
+      <Upload {...props}>
+        <Button icon={<UploadOutlined />}>Select File</Button>
+      </Upload>
+      <Button
+        type="primary"
+        onClick={handleUpload}
+        disabled={fileList.length === 0}
+        loading={uploading}
+        style={{ marginTop: 16 }}
+      >
+        {uploading ? "Uploading" : "Start Upload"}
+      </Button>
     </>
   );
 };
-export default Upload;
+
+export default UploadForm;

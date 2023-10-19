@@ -12,6 +12,10 @@
   min-width: 150px;
   margin: 0;
   color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding-left: 20px;
 }
 .header-menu {
   width: 40%;
