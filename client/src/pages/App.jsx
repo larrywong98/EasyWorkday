@@ -66,7 +66,10 @@ const App = () => {
               <Route path="onboard" element={<OnBoardingHr />} />
               <Route path="visa" element={<VisaHr />} />
               <Route path="profile" element={<ProfileHr />} />
-              <Route path="decision" element={<HrDecision />}></Route>
+              <Route
+                path="decision/:employeeId"
+                element={<HrDecision />}
+              ></Route>
             </Route>
             <Route path="success" element={<Success />} />
           </Route>

@@ -21,16 +21,19 @@ const OnBoardingEmp = () => {
   const [form] = Form.useForm();
 
   const user = useSelector((state) => state.userReducer);
+  const userInfo = useSelector((state) => state.authReducer);
   const [disabled, setDisabled] = useState(
     user.applicationStatus === status.initial ? false : true
   );
   const initialData = useMemo(() => {
     let tmp = { ...user.info };
-    tmp.dob = dayjs(user.info.dob, "YYYY/MM/DD");
-    tmp.visaDate = [
-      dayjs(user.info.visaDate[0], "YYYY/MM/DD"),
-      dayjs(user.info.visaDate[1], "YYYY/MM/DD"),
-    ];
+    if (user.info.dob !== "") tmp.dob = dayjs(user.info.dob, "YYYY/MM/DD");
+    if (user.info.visaDate[0] !== "" || user.info.visaDate[1] !== "") {
+      tmp.visaDate = [
+        dayjs(user.info.visaDate[0], "YYYY/MM/DD"),
+        dayjs(user.info.visaDate[1], "YYYY/MM/DD"),
+      ];
+    }
     return tmp;
   }, [user.info]);
   const navigate = useNavigate();
@@ -115,13 +118,6 @@ const OnBoardingEmp = () => {
   //   return false;
   // }; setDisabled(checkStatus());
 
-  useEffect(() => {
-    (async () => {
-      // modify
-      const response = await loadUserInfo("b43cdec15c14fa8815279ad53c1e1982");
-      dispatch(loadUser({ user: response }));
-    })();
-  }, []);
   return (
     <>
       <Card

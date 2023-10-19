@@ -1,4 +1,16 @@
-import { Button, Card, Divider, Form, Input, List, Space, Tooltip } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Divider,
+  Form,
+  Input,
+  List,
+  Row,
+  Space,
+  Table,
+  Tooltip,
+} from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
   loadUser,
@@ -7,7 +19,7 @@ import {
   updateOnboardFeedback,
 } from "../../reducer/userSlice";
 import { status } from "../../reducer/global";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import validator from "validator";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
@@ -15,6 +27,8 @@ import { statusTrigger } from "../../reducer/statusSlice";
 import sendRequest from "../../services/sendRequest";
 import { useNavigate } from "react-router";
 import { loadUserInfo } from "../../services/loadUserInfo";
+import loadAllUser from "../../services/loadAllUser";
+import Item from "antd/es/list/Item";
 const { TextArea } = Input;
 
 const OnBoardingHr = () => {
@@ -24,6 +38,7 @@ const OnBoardingHr = () => {
   const [emailError, setEmailError] = useState("");
   const [token, setToken] = useState("");
   const [data, setData] = useState([]);
+  const [initialData, setInitialData] = useState();
   const user = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
 
@@ -77,28 +92,79 @@ const OnBoardingHr = () => {
   const checkEmail = (email) => {
     return validator.isEmail(email) ? "" : "error";
   };
-  const toUserDetail = async (userId) => {
+  const toUserDetail = async (i) => {
     // console.log("http://127.0.0.1:4000/api/emp/" + userId);
-    const response = await loadUserInfo(userId);
+    const response = await loadUserInfo(data[i].userId);
     // details
-    // console.log(response);
-    dispatch(loadUser({ user: response.status }));
-    navigate("/hr/decision");
+    console.log(response);
+    dispatch(loadUser({ user: response }));
+    navigate("/hr/decision/" + data[i].userId);
     // back button
   };
   useEffect(() => {
     (async () => {
-      const response = await sendRequest({
-        url: "http://127.0.0.1:4000/api/emp/all",
-        method: "GET",
-      });
+      const response = await loadAllUser();
       setData(response);
+      setInitialData(response);
     })();
   }, []);
+  const dataSource = useMemo(() => {
+    return data.map((item, index) => {
+      return {
+        key: index,
+        firstName: item.info.firstName,
+        middleName: item.info.middleName,
+        lastName: item.info.lastName,
+        visaTitle: item.info.visaTitle,
+        cellPhone: item.info.cellPhoneNumber,
+        email: item.info.email,
+        detail: (
+          <Button onClick={() => toUserDetail(index)}>Go to Details</Button>
+        ),
+      };
+    });
+  }, [data]);
+
+  const columns = [
+    {
+      title: "First Name",
+      dataIndex: "firstName",
+      key: "firstName",
+    },
+    {
+      title: "Middle Name",
+      dataIndex: "middleName",
+      key: "middleName",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "lastName",
+      key: "lastName",
+    },
+    {
+      title: "Visa Title",
+      dataIndex: "visaTitle",
+      key: "visaTitle",
+    },
+    {
+      title: "Cell Phone",
+      dataIndex: "cellPhone",
+      key: "cellPhone",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Detail",
+      dataIndex: "detail",
+      key: "detail",
+    },
+  ];
   return (
     <>
-      Hiring Management page
-      <Card style={{ display: "flex", justifyContent: "center" }}>
+      <Card style={{ width: "100%" }} title=" Hiring Management page">
         <Space>
           <Space direction="vertical">
             <Form.Item label="Employee Email">
@@ -141,21 +207,9 @@ const OnBoardingHr = () => {
           </Space>
         </Space>
       </Card>
-      <Card style={{ display: "flex", justifyContent: "center" }}>
+      <Card style={{ width: "100%" }}>
         <Divider orientation="left">Default Size</Divider>
-        <List size="large" bordered header={<div>Header</div>}>
-          {data.map((item, index) => (
-            <List.Item key={index}>
-              {item.info.firstName} {item.info.middleName} {item.info.lastName}
-              <Divider type="vertical"></Divider>
-              {item.info.ssn} {item.info.visaTitle} {item.info.cellPhoneNumber}{" "}
-              {item.info.email}
-              <Button onClick={() => toUserDetail(item.userId)}>
-                Go to Details
-              </Button>
-            </List.Item>
-          ))}
-        </List>
+        <Table dataSource={dataSource} columns={columns} />;
       </Card>
     </>
   );

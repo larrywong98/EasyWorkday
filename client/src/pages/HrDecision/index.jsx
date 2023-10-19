@@ -7,23 +7,20 @@ import ContactSection from "../../components/ContactSection";
 import CitizenSection from "../../components/CitizenSection";
 import ReferenceSection from "../../components/ReferenceSection";
 import FileSection from "../../components/FileSection";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
 import { useDispatch, useSelector } from "react-redux";
-
-import {
-  setVisa,
-  updateApplicationStatus,
-  updateOnboardFeedback,
-} from "../../reducer/userSlice";
-import { statusTrigger } from "../../reducer/statusSlice";
 import { Input } from "antd";
 import sendRequest from "../../services/sendRequest";
+import { Link } from "react-router-dom";
+import { LeftOutlined } from "@ant-design/icons";
+import { Box } from "@mui/material";
 
 const HrDecision = () => {
   const [form] = Form.useForm();
   const user = useSelector((state) => state.userReducer);
+  const userInfo = useSelector((state) => state.authReducer);
   const initialData = useMemo(() => {
     let tmp = { ...user.info };
     tmp.dob = dayjs(user.info.dob, "YYYY/MM/DD");
@@ -39,6 +36,7 @@ const HrDecision = () => {
 
   const [feedback, setFeedback] = useState("");
   const [decisionStatus, setDecisionStatus] = useState("");
+  const employeeId = useLocation().pathname.split("/").slice(-1)[0];
 
   const { TextArea } = Input;
 
@@ -61,10 +59,16 @@ const HrDecision = () => {
 
   // Update application status
   const updateDecision = async (decision, reason) => {
-    if (decision === "approved") reason = "";
+    if (decision === "approved") {
+      reason = "";
+      setDecisionStatus("approved");
+    }
+    if (decision === "rejected") {
+      setDecisionStatus("rejected");
+    }
     // modify
     const response = await sendRequest({
-      url: "http://127.0.0.1:4000/api/emp/appstatus/" + user.userId,
+      url: "http://127.0.0.1:4000/api/emp/appstatus/" + employeeId,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -105,17 +109,30 @@ const HrDecision = () => {
           disabled={true}
           onSubmit={() => {}}
         >
-          <Title
-            level={2}
+          <Space
             style={{
-              width: "100%",
               display: "flex",
-              justifyContent: "center",
-              marginBottom: "50px",
+              justifyContent: "space-around",
+              width: "100%",
             }}
           >
-            Onboarding Application
-          </Title>
+            <Box></Box>
+            <Title
+              level={2}
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "50px",
+              }}
+            >
+              {user.info.firstName} {user.info.lastName}'s' Application
+            </Title>
+            <Link to="/hr/onboard">
+              <LeftOutlined />
+            </Link>
+          </Space>
+
           <Row
             style={{
               width: "100%",
