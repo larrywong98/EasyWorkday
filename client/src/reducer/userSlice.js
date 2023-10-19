@@ -10,57 +10,57 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     userId: "",
-    role: "emp",
+    // role: "emp",
     applicationStatus: status.initial,
     visaStatus: status.initial,
     onboardFeedback: "",
 
     info: {
       // section 1
-      firstName: "Xiaoyun",
-      lastName: "Wang",
-      middleName: "middle",
-      preferredName: "larry",
+      firstName: "",
+      lastName: "",
+      middleName: "",
+      preferredName: "",
 
-      ssn: "000000000",
+      ssn: "",
 
-      dob: "2014/01/01",
-      gender: "None",
+      dob: "",
+      gender: "",
 
       // section 2
-      address: "building apt street city state zip",
+      address: "",
 
       // section 3
-      cellPhoneNumber: "0000000000",
-      workPhoneNumber: "0000000000",
-      email: "xxx@gmail.com",
+      cellPhoneNumber: "",
+      workPhoneNumber: "",
+      email: "",
 
       // section 4
-      usCitizen: "No",
-      visaTitle: "F1(CPT/OPT)",
-      visaDate: ["2015/01/01", "2015/01/02"],
+      usCitizen: "",
+      visaTitle: "",
+      visaDate: ["", ""],
 
       // section 5
       reference: [
         {
-          firstName: "11",
-          lastName: "11",
-          middleName: "11",
-          preferredName: "11",
-          phone: "11",
-          email: "11",
-          relationship: "11",
+          firstName: "",
+          lastName: "",
+          middleName: "",
+          preferredName: "",
+          phone: "",
+          email: "",
+          relationship: "",
         },
       ],
       emergency: [
         {
-          firstName: "22",
-          lastName: "22",
-          middleName: "22",
-          preferredName: "22",
-          phone: "22",
-          email: "22",
-          relationship: "22",
+          firstName: "",
+          lastName: "",
+          middleName: "",
+          preferredName: "",
+          phone: "",
+          email: "",
+          relationship: "",
         },
       ],
     },

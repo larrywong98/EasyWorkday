@@ -7,22 +7,20 @@ import ContactSection from "../../components/ContactSection";
 import CitizenSection from "../../components/CitizenSection";
 import ReferenceSection from "../../components/ReferenceSection";
 import FileSection from "../../components/FileSection";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
 import { useDispatch, useSelector } from "react-redux";
-import md5 from "md5";
-import {
-  setVisa,
-  updateApplicationStatus,
-  updateOnboardFeedback,
-} from "../../reducer/userSlice";
-import { statusTrigger } from "../../reducer/statusSlice";
 import { Input } from "antd";
+import sendRequest from "../../services/sendRequest";
+import { Link } from "react-router-dom";
+import { LeftOutlined } from "@ant-design/icons";
+import { Box } from "@mui/material";
 
 const HrDecision = () => {
   const [form] = Form.useForm();
   const user = useSelector((state) => state.userReducer);
+  const userInfo = useSelector((state) => state.authReducer);
   const initialData = useMemo(() => {
     let tmp = { ...user.info };
     tmp.dob = dayjs(user.info.dob, "YYYY/MM/DD");
@@ -34,31 +32,54 @@ const HrDecision = () => {
   }, [user.info]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [sectionClosed, setsectionClosed] = useState(Array(6).fill(false));
   const { Title } = Typography;
 
   const [feedback, setFeedback] = useState("");
   const [decisionStatus, setDecisionStatus] = useState("");
+  const employeeId = useLocation().pathname.split("/").slice(-1)[0];
 
   const { TextArea } = Input;
 
-  const approve = () => {
-    dispatch(updateOnboardFeedback({ onboardFeedback: "" }));
-    dispatch(updateApplicationStatus({ applicationStatus: status.approved }));
-    dispatch(setVisa({ status: "pending", index: 0 }));
-    dispatch(statusTrigger({ status: "pending" }));
-    setDecisionStatus("approved");
-  };
-  const reject = () => {
-    dispatch(updateOnboardFeedback({ onboardFeedback: feedback }));
-    dispatch(updateApplicationStatus({ applicationStatus: status.rejected }));
-    setDecisionStatus("rejected");
-  };
+  // const approve = () => {
+  //   // db change
+  //   dispatch(updateOnboardFeedback({ onboardFeedback: "" }));
+  //   dispatch(updateApplicationStatus({ applicationStatus: status.approved }));
+  //   dispatch(setVisa({ status: "pending", index: 0 }));
+  //   dispatch(statusTrigger({ status: "pending" }));
 
-  const sectionControl = (i) => {
-    let newsectionClosed = [...sectionClosed];
-    newsectionClosed[i] = !newsectionClosed[i];
-    setsectionClosed(newsectionClosed);
+  //   setDecisionStatus("approved");
+  // };
+  // const reject = () => {
+  //   //db change
+  //   dispatch(updateOnboardFeedback({ onboardFeedback: feedback }));
+  //   dispatch(updateApplicationStatus({ applicationStatus: status.rejected }));
+
+  //   setDecisionStatus("rejected");
+  // };
+
+  // Update application status
+  const updateDecision = async (decision, reason) => {
+    if (decision === "approved") {
+      reason = "";
+      setDecisionStatus("approved");
+    }
+    if (decision === "rejected") {
+      setDecisionStatus("rejected");
+    }
+    // modify
+    const response = await sendRequest({
+      url: "http://127.0.0.1:4000/api/emp/appstatus/" + employeeId,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({
+        decision: status[decision],
+        reason: reason,
+      }),
+    });
+
+    console.log(response);
   };
 
   return (
@@ -88,17 +109,30 @@ const HrDecision = () => {
           disabled={true}
           onSubmit={() => {}}
         >
-          <Title
-            level={2}
+          <Space
             style={{
-              width: "100%",
               display: "flex",
-              justifyContent: "center",
-              marginBottom: "50px",
+              justifyContent: "space-around",
+              width: "100%",
             }}
           >
-            Onboarding Application
-          </Title>
+            <Box></Box>
+            <Title
+              level={2}
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "50px",
+              }}
+            >
+              {user.info.firstName} {user.info.lastName}'s' Application
+            </Title>
+            <Link to="/hr/onboard">
+              <LeftOutlined />
+            </Link>
+          </Space>
+
           <Row
             style={{
               width: "100%",
@@ -107,30 +141,12 @@ const HrDecision = () => {
               gap: "15px",
             }}
           >
-            <NameSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <AddressSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <ContactSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <CitizenSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <ReferenceSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <FileSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
+            <NameSection sectionClosed={false} sectionControl={() => {}} />
+            <AddressSection sectionClosed={false} sectionControl={() => {}} />
+            <ContactSection sectionClosed={false} sectionControl={() => {}} />
+            <CitizenSection sectionClosed={false} sectionControl={() => {}} />
+            <ReferenceSection sectionClosed={false} sectionControl={() => {}} />
+            <FileSection sectionClosed={false} sectionControl={() => {}} />
           </Row>
         </Form>
         <Space
@@ -149,10 +165,14 @@ const HrDecision = () => {
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
           />
-          <Button type="primary" onClick={() => approve()}>
+          <Button type="primary" onClick={() => updateDecision("approved", "")}>
             Approve
           </Button>
-          <Button type="primary" onClick={() => reject()} danger>
+          <Button
+            type="primary"
+            onClick={() => updateDecision("rejected", feedback)}
+            danger
+          >
             Reject
           </Button>
         </Space>
@@ -165,7 +185,19 @@ const HrDecision = () => {
             justifyContent: "center",
             alignItems: "center",
           }}
-        ></Space>
+        >
+          {decisionStatus === "approved" ? (
+            <Typography style={{ color: "green" }}>
+              Application Approved
+            </Typography>
+          ) : decisionStatus === "rejected" ? (
+            <Typography style={{ color: "red" }}>
+              Application Rejected: {feedback}
+            </Typography>
+          ) : (
+            ""
+          )}
+        </Space>
       </Card>
     </>
   );

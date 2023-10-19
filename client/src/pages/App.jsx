@@ -31,6 +31,10 @@ const App = () => {
         style={{
           padding: "50px 50px",
           backgroundColor: "#dddddd",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Routes>
@@ -64,7 +68,10 @@ const App = () => {
               <Route path="visa" element={<VisaHr />} />
               <Route path="visa/inprogress" element={<InProgress />} />
               <Route path="profile" element={<ProfileHr />} />
-              <Route path="decision" element={<HrDecision />}></Route>
+              <Route
+                path="decision/:employeeId"
+                element={<HrDecision />}
+              ></Route>
             </Route>
             <Route path="success" element={<Success />} />
           </Route>

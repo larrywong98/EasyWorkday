@@ -4,8 +4,15 @@ import { status } from "../../reducer/global";
 
 const ProtectedRoute = ({ children }) => {
   const user = useSelector((state) => state.userReducer);
+  const userInfo = useSelector((state) => state.authReducer);
   const location = useLocation();
-  if (user.role === "emp") {
+  if (userInfo.signedIn === false) {
+    return <Navigate to="/signin" />;
+  }
+  if (userInfo.signedIn && location.pathname.includes("signin")) {
+    return <Navigate to="/" />;
+  }
+  if (userInfo.role === "emp") {
     if (location.pathname.includes("onboard")) {
       if (user.applicationStatus === status.approved) {
         return <Navigate to="/" />;
@@ -37,7 +44,7 @@ const ProtectedRoute = ({ children }) => {
     }
   } else if (user.role === "hr") {
   } else {
-    return <Navigate to="error" />;
+    return <Navigate to="/error" />;
   }
 };
 export default ProtectedRoute;
