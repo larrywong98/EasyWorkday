@@ -50,17 +50,6 @@ const SignUp = () => {
     setPassword(e.target.value);
     setPasswordConfirm("");
     setPwdRepeat(false);
-<<<<<<< HEAD
-  };
-
-  const handlePwdConfirmChange = (e) => {
-    setPasswordConfirm(e.target.value);
-    // if (password === passwordConfirm)
-    //   setPwdRepeat(true);
-    // else
-    //   setPwdRepeat(false);
-=======
->>>>>>> d15112b25d44c967e2e0d02e26b2528def965f91
   };
 
   const handlePwdConfirmChange = (e) => {
@@ -73,23 +62,14 @@ const SignUp = () => {
 
   const submit = async (e) => {
     e.preventDefault();
-
-<<<<<<< HEAD
+    
     if (pwdRepeat || validateEmail(email) === false || password === "") {
       setFirstLoad(false);
       return;
     }
-    console.log();
-    /*
-    const status = await signUpRequest( email, password, navigate);
-    if (status === "exist") {
-      setUserExist(true);
-    }
-    */
-=======
+
     const response = await signUpRequest(username, password, email, navigate);
     console.log(response);
->>>>>>> d15112b25d44c967e2e0d02e26b2528def965f91
 
     setEmail("");
     setPassword("");
@@ -265,11 +245,7 @@ const SignUp = () => {
                   id="password"
                   name="password"
                   type={pwdShow ? "password" : "text"}
-<<<<<<< HEAD
-                  //onBlur={handlePwdRepeat}
-=======
                   // onBlur={handlePwdRepeat}
->>>>>>> d15112b25d44c967e2e0d02e26b2528def965f91
                   onChange={handlePwdChange}
                   value={password}
                   sx={{
@@ -351,15 +327,11 @@ const SignUp = () => {
                   }}
                 >
                   <Typography variant="p" sx={{ fontSize: "14px" }}>
-<<<<<<< HEAD
-                    {!firstLoad && passwordConfirm === "" ? "Filed Required" : pwdRepeat ? "Passwords Not Match " : ""}
-=======
                     {!firstLoad && passwordConfirm === ""
                       ? "Filed Required"
                       : pwdRepeat
                       ? "Passwords Not Match "
                       : ""}
->>>>>>> d15112b25d44c967e2e0d02e26b2528def965f91
                   </Typography>
                 </Box>
               </Box>
