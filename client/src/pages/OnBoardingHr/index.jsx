@@ -1,29 +1,36 @@
-import { Button, Card, Divider, Form, Input, List, Space, Tooltip } from "antd";
+import { Form, Button, Input, Space, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  loadUser,
-  setVisa,
-  updateApplicationStatus,
-  updateOnboardFeedback,
-} from "../../reducer/userSlice";
-import { status } from "../../reducer/global";
-import { useEffect, useState } from "react";
+import { loadUser } from "../../reducer/userSlice";
+import { useEffect, useMemo, useState } from "react";
 import validator from "validator";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
-import { statusTrigger } from "../../reducer/statusSlice";
-import sendRequest from "../../services/sendRequest";
 import { useNavigate } from "react-router";
+import { loadUserInfo } from "../../services/loadUserInfo";
+import loadAllUser from "../../services/loadAllUser";
+import Item from "antd/es/list/Item";
+import { Box, Paper } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 const { TextArea } = Input;
 
 const OnBoardingHr = () => {
   const dispatch = useDispatch();
-  const [feedback, setFeedback] = useState("");
   const [employeeEmail, setEmployeeEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [token, setToken] = useState("");
   const [data, setData] = useState([]);
+  // const [tableData, setTableData] = useState([]);
+  const tableData = useMemo(() => {
+    return data.map((item, index) => {
+      return {
+        id: index,
+        ...item.info,
+      };
+    });
+  }, [data]);
+  const [initialData, setInitialData] = useState();
   const user = useSelector((state) => state.userReducer);
+
   const navigate = useNavigate();
 
   // const approve = () => {
@@ -76,31 +83,76 @@ const OnBoardingHr = () => {
   const checkEmail = (email) => {
     return validator.isEmail(email) ? "" : "error";
   };
-  const toUserDetail = async (userId) => {
+  const toUserDetail = async (i) => {
+    console.log(i);
     // console.log("http://127.0.0.1:4000/api/emp/" + userId);
-    const response = await sendRequest({
-      url: "http://127.0.0.1:4000/api/emp/" + userId,
-      method: "GET",
-    });
+    const response = await loadUserInfo(data[i].userId);
     // details
     console.log(response);
     dispatch(loadUser({ user: response }));
-    navigate("/hr/decision");
+    navigate("/hr/decision/" + data[i].userId);
     // back button
   };
   useEffect(() => {
     (async () => {
-      const response = await sendRequest({
-        url: "http://127.0.0.1:4000/api/emp/all",
-        method: "GET",
-      });
+      let response = await loadAllUser();
       setData(response);
+
+      setInitialData(response);
     })();
   }, []);
+  // const dataSource = useMemo(() => {
+  //   return data.map((item, index) => {
+  //     return {
+  //       key: index,
+  //       firstName: item.info.firstName,
+  //       middleName: item.info.middleName,
+  //       lastName: item.info.lastName,
+  //       visaTitle: item.info.visaTitle,
+  //       cellPhone: item.info.cellPhoneNumber,
+  //       email: item.info.email,
+  //       detail: (
+  //         <Button onClick={() => toUserDetail(index)}>Go to Details</Button>
+  //       ),
+  //     };
+  //   });
+  // }, [data]);
+
+  const columns = [
+    {
+      headerName: "First Name",
+      field: "firstName",
+      width: 100,
+    },
+    {
+      headerName: "Middle Name",
+      field: "middleName",
+      width: 120,
+    },
+    {
+      headerName: "Last Name",
+      field: "lastName",
+      width: 100,
+    },
+    {
+      headerName: "Visa Title",
+      field: "visaTitle",
+      width: 150,
+    },
+    {
+      headerName: "Cell Phone",
+      field: "cellPhoneNumber",
+      width: 120,
+    },
+    {
+      headerName: "Email",
+      field: "email",
+      width: 180,
+    },
+  ];
   return (
     <>
-      Hiring Management page
-      <Card style={{ display: "flex", justifyContent: "center" }}>
+      {/* <Card style={{ width: "100%" }} title=" Hiring Management page">
         <Space>
           <Space direction="vertical">
             <Form.Item label="Employee Email">
@@ -142,23 +194,69 @@ const OnBoardingHr = () => {
             </Form.Item>
           </Space>
         </Space>
-      </Card>
-      <Card style={{ display: "flex", justifyContent: "center" }}>
-        <Divider orientation="left">Default Size</Divider>
-        <List size="large" bordered header={<div>Header</div>}>
-          {data.map((item, index) => (
-            <List.Item key={index}>
-              {item.info.firstName} {item.info.middleName} {item.info.lastName}
-              <Divider type="vertical"></Divider>
-              {item.info.ssn} {item.info.visaTitle} {item.info.cellPhoneNumber}{" "}
-              {item.info.email}
-              <Button onClick={() => toUserDetail(item.userId)}>
-                Go to Details
+      </Card> */}
+      <Paper title=" Hiring Management page" style={{ width: "100%" }}>
+        <Box>
+          <Box>
+            <Form.Item label="Employee Email">
+              <Input
+                status={emailError}
+                value={employeeEmail}
+                onChange={(e) => onChange(e)}
+                suffix={
+                  emailError === "error" ? (
+                    <Tooltip title="Wrong Email Format">
+                      <CloseCircleOutlined />
+                    </Tooltip>
+                  ) : emailError === "" ? (
+                    <></>
+                  ) : (
+                    <Tooltip title="Email Valid">
+                      <CheckCircleOutlined style={{ color: "green" }} />
+                    </Tooltip>
+                  )
+                }
+              />
+            </Form.Item>
+            <Form.Item>
+              <Space size="middle">
+                <Button type="primary" onClick={() => generateToken()}>
+                  GenerateToken
+                </Button>
+                {token}
+              </Space>
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                disabled={employeeEmail && token ? "" : "disabled"}
+                onClick={() => sendEmail()}
+              >
+                Send Invitation
               </Button>
-            </List.Item>
-          ))}
-        </List>
-      </Card>
+            </Form.Item>
+          </Box>
+        </Box>
+      </Paper>
+      <Paper style={{ width: "100%" }}>
+        <DataGrid
+          rows={tableData}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          onRowClick={(e) => toUserDetail(e.row.id)}
+          pageSizeOptions={[5, 10]}
+          sx={{
+            "& .MuiDataGrid-cell:hover": {
+              cursor: "pointer",
+            },
+          }}
+          // checkboxSelection
+        />
+      </Paper>
     </>
   );
 };

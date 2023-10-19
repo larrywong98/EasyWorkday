@@ -10,26 +10,35 @@ import FileSection from "../../components/FileSection";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
-import { fillInfo, updateUserId } from "../../reducer/userSlice";
+import {
+  fillInfo,
+  loadUser,
+  updateUserId,
+  updateVisaOptReceipt,
+} from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Feedback from "../../components/Feedback";
 import sendRequest from "../../services/sendRequest";
 import md5 from "md5";
+import { loadUserInfo } from "../../services/loadUserInfo";
 
 const OnBoardingEmp = () => {
   const [form] = Form.useForm();
 
   const user = useSelector((state) => state.userReducer);
+  const userInfo = useSelector((state) => state.authReducer);
   const [disabled, setDisabled] = useState(
     user.applicationStatus === status.initial ? false : true
   );
   const initialData = useMemo(() => {
     let tmp = { ...user.info };
-    tmp.dob = dayjs(user.info.dob, "YYYY/MM/DD");
-    tmp.visaDate = [
-      dayjs(user.info.visaDate[0], "YYYY/MM/DD"),
-      dayjs(user.info.visaDate[1], "YYYY/MM/DD"),
-    ];
+    if (user.info.dob !== "") tmp.dob = dayjs(user.info.dob, "YYYY/MM/DD");
+    if (user.info.visaDate[0] !== "" || user.info.visaDate[1] !== "") {
+      tmp.visaDate = [
+        dayjs(user.info.visaDate[0], "YYYY/MM/DD"),
+        dayjs(user.info.visaDate[1], "YYYY/MM/DD"),
+      ];
+    }
     return tmp;
   }, [user.info]);
   const navigate = useNavigate();
@@ -48,6 +57,7 @@ const OnBoardingEmp = () => {
       data.visaDate[0].format("YYYY/MM/DD"),
       data.visaDate[1].format("YYYY/MM/DD"),
     ];
+
     // console.log(data);
     // change to pending
     // const newData = { applicationStatus: status.pending, info: data };
@@ -63,6 +73,7 @@ const OnBoardingEmp = () => {
       deleteDate: user.deleteDate,
     };
     dispatch(fillInfo(newData));
+    dispatch(updateVisaOptReceipt({ status: "pending" }));
     // console.log(user);
     // mongodb save
     // generateUserId();
@@ -112,11 +123,8 @@ const OnBoardingEmp = () => {
   //     return true;
   //   }
   //   return false;
-  // };
+  // }; setDisabled(checkStatus());
 
-  // useEffect(() => {
-  //   setDisabled(checkStatus());
-  // }, []);
   return (
     <>
       <Card

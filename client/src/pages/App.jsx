@@ -16,6 +16,7 @@ import Home from "./Home";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Register from "./Register";
 import SignIn from "./SignIn";
+import InProgress from "./VisaHr/InProgress";
 import HrDecision from "./HrDecision";
 
 const App = () => {
@@ -30,6 +31,10 @@ const App = () => {
         style={{
           padding: "50px 50px",
           backgroundColor: "#dddddd",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Routes>
@@ -49,9 +54,9 @@ const App = () => {
               <Route
                 path="visa"
                 element={
-                  <ProtectedRoute>
-                    <VisaEmp />
-                  </ProtectedRoute>
+                  // <ProtectedRoute>
+                  <VisaEmp />
+                  // </ProtectedRoute>
                 }
               />
               <Route path="profile" element={<ProfileEmp />}>
@@ -61,8 +66,12 @@ const App = () => {
             <Route path="hr">
               <Route path="onboard" element={<OnBoardingHr />} />
               <Route path="visa" element={<VisaHr />} />
+              <Route path="visa/inprogress" element={<InProgress />} />
               <Route path="profile" element={<ProfileHr />} />
-              <Route path="decision" element={<HrDecision />}></Route>
+              <Route
+                path="decision/:employeeId"
+                element={<HrDecision />}
+              ></Route>
             </Route>
             <Route path="success" element={<Success />} />
           </Route>

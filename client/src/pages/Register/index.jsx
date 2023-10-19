@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 // import { getJwtToken, signInRequest, signUpRequest } from "../services/auth";
 import validateEmail from "../../utils/validateEmail";
+import { signUpRequest } from "../../services/auth";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -27,18 +28,18 @@ const SignUp = () => {
   const navigate = useNavigate();
   // const dispatch = useDispatch();
 
-  const initState = () => {
-    setEmail("");
-    setPassword("");
-    setUnauthorized(false);
-    setUserExist(false);
-    setFirstLoad(true);
-  };
-  useEffect(() => {
-    if (user.signedIn) {
-      navigate("/products");
-    }
-  }, []);
+  // const initState = () => {
+  // setEmail("");
+  // setPassword("");
+  // setUnauthorized(false);
+  // setUserExist(false);
+  // setFirstLoad(true);
+  // };
+  // useEffect(() => {
+  //   if (user.signedIn) {
+  //     navigate("/products");
+  //   }
+  // }, []);
 
   const handlePwdRepeat = () => {
     if (password !== passwordConfirm) setPwdRepeat(true);
@@ -49,6 +50,17 @@ const SignUp = () => {
     setPassword(e.target.value);
     setPasswordConfirm("");
     setPwdRepeat(false);
+<<<<<<< HEAD
+  };
+
+  const handlePwdConfirmChange = (e) => {
+    setPasswordConfirm(e.target.value);
+    // if (password === passwordConfirm)
+    //   setPwdRepeat(true);
+    // else
+    //   setPwdRepeat(false);
+=======
+>>>>>>> d15112b25d44c967e2e0d02e26b2528def965f91
   };
 
   const handlePwdConfirmChange = (e) => {
@@ -59,11 +71,10 @@ const SignUp = () => {
     //   setPwdRepeat(false);
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setUserExist(false);
-    setUnauthorized(false);
 
+<<<<<<< HEAD
     if (pwdRepeat || validateEmail(email) === false || password === "") {
       setFirstLoad(false);
       return;
@@ -75,6 +86,10 @@ const SignUp = () => {
       setUserExist(true);
     }
     */
+=======
+    const response = await signUpRequest(username, password, email, navigate);
+    console.log(response);
+>>>>>>> d15112b25d44c967e2e0d02e26b2528def965f91
 
     setEmail("");
     setPassword("");
@@ -229,9 +244,7 @@ const SignUp = () => {
                   }}
                 >
                   <Typography variant="p" sx={{ fontSize: "14px" }}>
-                    {!firstLoad && !validateEmail(email)
-                      ? "Invalid Email Input"
-                      : ""}
+                    {!firstLoad && username === "" ? "Field Required" : ""}
                   </Typography>
                 </Box>
               </Box>
@@ -252,7 +265,11 @@ const SignUp = () => {
                   id="password"
                   name="password"
                   type={pwdShow ? "password" : "text"}
+<<<<<<< HEAD
                   //onBlur={handlePwdRepeat}
+=======
+                  // onBlur={handlePwdRepeat}
+>>>>>>> d15112b25d44c967e2e0d02e26b2528def965f91
                   onChange={handlePwdChange}
                   value={password}
                   sx={{
@@ -334,7 +351,15 @@ const SignUp = () => {
                   }}
                 >
                   <Typography variant="p" sx={{ fontSize: "14px" }}>
+<<<<<<< HEAD
                     {!firstLoad && passwordConfirm === "" ? "Filed Required" : pwdRepeat ? "Passwords Not Match " : ""}
+=======
+                    {!firstLoad && passwordConfirm === ""
+                      ? "Filed Required"
+                      : pwdRepeat
+                      ? "Passwords Not Match "
+                      : ""}
+>>>>>>> d15112b25d44c967e2e0d02e26b2528def965f91
                   </Typography>
                 </Box>
               </Box>
@@ -352,7 +377,7 @@ const SignUp = () => {
                   },
                 }}
               >
-                {"Sign In"}
+                Sign Up
               </Button>
             </Box>
 
@@ -374,7 +399,7 @@ const SignUp = () => {
                 </Typography>
                 <Link
                   to="/signin"
-                  onClick={initState}
+                  // onClick={initState}
                   style={{ color: "#5048e5" }}
                 >
                   Sign in
