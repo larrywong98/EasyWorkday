@@ -81,8 +81,7 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   });
 });
 app.post("/api/emp/save/:userId", async (req, res) => {
-  // console.log(req.params.userId);
-  const filter = { _id: req.params.userId, userId: req.params.userId };
+  const filter = { userId: req.params.userId };
   const update = {
     role: req.body.role,
     applicationStatus: req.body.applicationStatus,
@@ -100,6 +99,7 @@ app.post("/api/emp/save/:userId", async (req, res) => {
     console.log(result);
     res.json({ status: result });
   } catch (err) {
+    console.log(err);
     res.json({ status: "error" });
   }
 });

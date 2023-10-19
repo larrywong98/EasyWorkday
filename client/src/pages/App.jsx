@@ -50,9 +50,9 @@ const App = () => {
               <Route
                 path="visa"
                 element={
-                  <ProtectedRoute>
-                    <VisaEmp />
-                  </ProtectedRoute>
+                  // <ProtectedRoute>
+                  <VisaEmp />
+                  // </ProtectedRoute>
                 }
               />
               <Route path="profile" element={<ProfileEmp />}>
@@ -62,7 +62,7 @@ const App = () => {
             <Route path="hr">
               <Route path="onboard" element={<OnBoardingHr />} />
               <Route path="visa" element={<VisaHr />} />
-              <Route path="visa/inProgress" element={<InProgress />} />
+              <Route path="visa/inprogress" element={<InProgress />} />
               <Route path="profile" element={<ProfileHr />} />
               <Route path="decision" element={<HrDecision />}></Route>
             </Route>

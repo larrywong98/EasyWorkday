@@ -12,7 +12,7 @@ const feedbackSlice = createSlice({
       const { visaFeedback } = action.payload;
       state.feedback = visaFeedback;
     },
-    clearVisaFeedback: (state, action) => {
+    clearVisaFeedback: (state) => {
       state.feedback = "";
     },
   },

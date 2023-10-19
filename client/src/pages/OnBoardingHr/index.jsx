@@ -1,29 +1,20 @@
 import { Button, Card, Divider, Form, Input, List, Space, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  loadUser,
-  setVisa,
-  updateApplicationStatus,
-  updateOnboardFeedback,
-} from "../../reducer/userSlice";
-import { status } from "../../reducer/global";
+import { loadUser } from "../../reducer/userSlice";
 import { useEffect, useState } from "react";
 import validator from "validator";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
-import { statusTrigger } from "../../reducer/statusSlice";
 import sendRequest from "../../services/sendRequest";
 import { useNavigate } from "react-router";
 const { TextArea } = Input;
 
 const OnBoardingHr = () => {
   const dispatch = useDispatch();
-  const [feedback, setFeedback] = useState("");
   const [employeeEmail, setEmployeeEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [token, setToken] = useState("");
   const [data, setData] = useState([]);
-  const user = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
 
   // const approve = () => {

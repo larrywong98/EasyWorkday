@@ -67,6 +67,7 @@ const userSlice = createSlice({
     // const user = useselector (state=>  state.userReducer)
     // user.visa
     visa: {
+      cur: 0,
       optStatus: "",
       optFeedback: "",
 
@@ -101,21 +102,24 @@ const userSlice = createSlice({
   reducers: {
     setVisa: (state, action) => {
       const { status, index } = action.payload;
-      // Create an array of the status property names
-
+      if (state.visa.cur > 3) {
+        return;
+      }
       // Update the status property in the visa object using the index
-      if (index < statusProperties.length) {
-        const propertyToUpdate = statusProperties[index];
-        state.visa[propertyToUpdate] = status;
+      const propertyToUpdate = statusProperties[index];
+      state.visa[propertyToUpdate] = status;
+
+      if (status === "approved") {
+        state.visa.cur++;
       }
     },
     setReceipt: (state, action) => {
       const { receipt, index } = action.payload;
-
-      if (index < receiptProperties.length) {
-        const receiptToUpdate = receiptProperties[index];
-        state.visa[receiptToUpdate] = receipt;
+      const receiptToUpdate = receiptProperties[index];
+      if (!receiptToUpdate) {
+        return;
       }
+      state.visa[receiptToUpdate] = receipt;
     },
     loadUser: (state, action) => {
       state = action.payload.user;

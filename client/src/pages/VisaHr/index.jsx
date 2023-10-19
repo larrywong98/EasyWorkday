@@ -2,7 +2,6 @@ import { Breadcrumb } from "antd";
 import { Button, Card, Input, Space } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { statusTrigger } from "../../reducer/statusSlice";
 import {
   setVisaFeedback,
   clearVisaFeedback,
@@ -14,13 +13,12 @@ const { TextArea } = Input;
 
 const VisaHr = () => {
   const dispatch = useDispatch();
-  const curIdx = useSelector((state) => state.statusReducer.cur);
+  const curIdx = useSelector((state) => state.userReducer.visa.cur);
   const [feedback, setFeedback] = useState("");
+  console.log(curIdx);
   const approve = () => {
-    // dispatch(changeStatus({ status: "approved" }));
-    dispatch(statusTrigger({ status: "approved" }));
     dispatch(setVisa({ status: "approved", index: curIdx }));
-    dispatch(setReceipt({ receipt: "approved", index: curIdx }));
+    dispatch(setReceipt({ receipt: "Approved", index: curIdx }));
     dispatch(clearVisaFeedback());
     setFeedback("");
 
@@ -29,8 +27,6 @@ const VisaHr = () => {
     }
   };
   const reject = () => {
-    // dispatch(changeStatus({ status: "rejected" }));
-    dispatch(statusTrigger({ status: "rejected" }));
     dispatch(setVisa({ status: "rejected", index: curIdx }));
     dispatch(setVisaFeedback({ visaFeedback: feedback }));
     dispatch(setReceipt({ receipt: feedback, index: curIdx }));
@@ -65,7 +61,6 @@ const VisaHr = () => {
           </Space>
         </Card>
       </div>
-      {/* <Outlet /> */}
     </>
   );
 };

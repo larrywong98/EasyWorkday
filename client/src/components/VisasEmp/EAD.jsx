@@ -1,13 +1,14 @@
 import React from "react";
 import HRFeedback from "./HRFeedback";
 import UploadForm from "../VisaForms/UploadForm";
+import { NextSteps } from "../../reducer/global";
 
 const EAD = ({ status }) => {
   const EADReceipt = () => {
     if (status === "pending") {
-      return <p>Waiting for HR to approve your OPT EAD</p>;
+      return <p>{NextSteps.ead[0]}</p>;
     } else if (status === "approved") {
-      return <p>Please download and fill out the I-983 form</p>;
+      return <p>{NextSteps.ead[1]}</p>;
     } else if (status === "rejected") {
       return <HRFeedback />;
     }
