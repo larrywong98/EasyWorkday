@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Layout, Menu } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineUser } from "react-icons/ai";
 import { Typography } from "antd";
@@ -28,9 +28,9 @@ const HeaderComp = () => {
 
   return (
     <Header className={styles["header"]}>
-      <Text level={3} className={styles["header-title"]}>
+      <Link className={styles["header-title"]} to="/">
         EasyWorkday
-      </Text>
+      </Link>
       <Menu
         theme="dark"
         mode="horizontal"

@@ -52,7 +52,7 @@ router.post("/signin", auth, async (req, res) => {
       { email: req.user.name },
       { password: false }
     );
-
+    console.log(userInfo);
     res.json({ status: userInfo });
   } catch (err) {
     res.json({ status: "error" });
@@ -117,6 +117,7 @@ router.post("/signup", async (req, res) => {
         ],
       },
       visa: {
+        cur: 0,
         optStatus: "",
         optFeedback: "",
 
