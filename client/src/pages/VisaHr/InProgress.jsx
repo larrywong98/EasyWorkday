@@ -2,18 +2,16 @@ import React from "react";
 import { Descriptions } from "antd";
 import { useEffect, useState } from "react";
 import { List } from "antd";
-import sendRequest from "../../services/sendRequest";
+import loadAllUser from "../../services/loadAllUser";
 import NextSteps from "../../components/VisaHr/NextSteps";
 
 const InProgress = () => {
   const [employees, setEmp] = useState([]);
   useEffect(() => {
     (async () => {
-      const response = await sendRequest({
-        url: "http://127.0.0.1:4000/api/emp/all",
-        method: "GET",
-      });
-      setEmp(response);
+      const response = await loadAllUser();
+      setData(response);
+      setInitialData(response);
     })();
   }, []);
 
