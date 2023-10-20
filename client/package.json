@@ -19,6 +19,7 @@
     "antd": "^5.9.4",
     "axios": "^1.5.1",
     "cloudinary-react": "^1.8.1",
+    "clsx": "^2.0.0",
     "emailjs": "^4.0.3",
     "framer-motion": "^10.16.4",
     "lodash": "^4.17.21",

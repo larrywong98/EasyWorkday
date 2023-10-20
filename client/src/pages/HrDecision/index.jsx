@@ -126,7 +126,7 @@ const HrDecision = () => {
                 marginBottom: "50px",
               }}
             >
-              {user.info.firstName} {user.info.lastName}'s' Application
+              {user.info.firstName} {user.info.lastName}'s Application
             </Title>
             <Link to="/hr/onboard">
               <LeftOutlined />

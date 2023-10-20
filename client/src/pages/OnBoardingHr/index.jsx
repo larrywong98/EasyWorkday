@@ -8,10 +8,11 @@ import emailjs from "@emailjs/browser";
 import { useNavigate } from "react-router";
 import { loadUserInfo } from "../../services/loadUserInfo";
 import loadAllUser from "../../services/loadAllUser";
-import Item from "antd/es/list/Item";
 import { Box, Paper, Typography, TextField } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import md5 from "md5";
+import { status } from "../../reducer/global";
+import clsx from "clsx";
 const { TextArea } = Input;
 
 const OnBoardingHr = () => {
@@ -22,10 +23,15 @@ const OnBoardingHr = () => {
   const [data, setData] = useState([]);
   const [emailSent, setEmailSent] = useState(false);
   // const [tableData, setTableData] = useState([]);
+  const valueToStatus = (value) => {
+    const statusText = Object.keys(status).find((key) => status[key] === value);
+    return statusText;
+  };
   const tableData = useMemo(() => {
     return data.map((item, index) => {
       return {
         id: index,
+        status: valueToStatus(item.applicationStatus),
         ...item.info,
       };
     });
@@ -156,6 +162,21 @@ const OnBoardingHr = () => {
       field: "email",
       width: 180,
     },
+    {
+      headerName: "Status",
+      field: "status",
+      width: 100,
+      cellClassName: (params) => {
+        if (params.value == null) {
+          return "";
+        }
+        return clsx("app-status", {
+          pending: params.value === "pending",
+          approved: params.value === "approved",
+          rejected: params.value === "rejected",
+        });
+      },
+    },
   ];
   return (
     <Box
@@ -163,13 +184,14 @@ const OnBoardingHr = () => {
         display: "flex",
         flexDirection: "column",
         gap: "20px",
-        width: "80%",
+        width: "100%",
+        alignItems: "center",
       }}
     >
       <Paper
         elevation={3}
         title=" Hiring Management page"
-        style={{ width: "100%" }}
+        style={{ width: "900px" }}
       >
         <Box
           sx={{
@@ -232,7 +254,18 @@ const OnBoardingHr = () => {
       </Paper>
       <Paper
         elevation={3}
-        style={{ width: "100%", display: "flex", justifyContent: "center" }}
+        title=" Hiring Management page"
+        style={{ width: "900px" }}
+      >
+        History
+      </Paper>
+      <Paper
+        elevation={3}
+        sx={{
+          width: { md: "900px" },
+          display: "flex",
+          justifyContent: "center",
+        }}
       >
         <DataGrid
           rows={tableData}
@@ -245,11 +278,21 @@ const OnBoardingHr = () => {
           onRowClick={(e) => toUserDetail(e.row.id)}
           pageSizeOptions={[5, 10]}
           sx={{
-            width: "800px",
+            width: "100%",
             "& .MuiDataGrid-cell:hover": {
               cursor: "pointer",
             },
+            "& .app-status.pending": {
+              color: "#ff9800",
+            },
+            "& .app-status.approved": {
+              color: "green",
+            },
+            "& .app-status.rejected": {
+              color: "red",
+            },
           }}
+          slots={{ toolbar: GridToolbar }}
           // checkboxSelection
         />
       </Paper>
