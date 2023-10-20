@@ -129,6 +129,10 @@ const userSlice = createSlice({
       state.userId = action.payload.userId;
       return state;
     },
+    updateVisaOptReceipt: (state, action) => {
+      state.visa.optStatus = action.payload.status;
+      return state;
+    },
     updateFile: (state, action) => {
       const name = action.payload.name;
       if (state.files[fileName[name]].length !== 0)
@@ -181,14 +185,15 @@ const userSlice = createSlice({
 export const {
   loadUser,
   updateUserId,
+  updateApplicationStatus,
   updateFile,
   removeFile,
   updateDriverLicense,
   updateUsCitizen,
-  updateApplicationStatus,
-  updateVisaStatus,
   updateOnboardFeedback,
+  updateVisaStatus,
   updateVisaTitle,
+  updateVisaOptReceipt,
   fillInfo,
   discardFiles,
   setReceipt,

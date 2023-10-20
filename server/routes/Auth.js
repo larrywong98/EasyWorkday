@@ -25,6 +25,7 @@ router.post("/token", async (req, res) => {
   try {
     console.log(req.body);
     const { name, pwd } = req.body;
+    //bug
     const user = await Auth.findOne({ userName: name, password: pwd });
     if (!user) {
       res.json({ status: "unauthorized" });
@@ -118,6 +119,7 @@ router.post("/signup", async (req, res) => {
         ],
       },
       visa: {
+        cur: 0,
         optStatus: "",
         optFeedback: "",
 

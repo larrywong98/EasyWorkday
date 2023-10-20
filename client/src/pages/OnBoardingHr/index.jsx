@@ -1,41 +1,41 @@
-import {
-  Button,
-  Card,
-  Col,
-  Divider,
-  Form,
-  Input,
-  List,
-  Row,
-  Space,
-  Table,
-  Tooltip,
-} from "antd";
+import { Form, Button, Input, Space, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  loadUser,
-  setVisa,
-  updateApplicationStatus,
-  updateOnboardFeedback,
-} from "../../reducer/userSlice";
-import { status } from "../../reducer/global";
+import { loadUser } from "../../reducer/userSlice";
 import { useEffect, useMemo, useState } from "react";
 import validator from "validator";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
-import sendRequest from "../../services/sendRequest";
 import { useNavigate } from "react-router";
 import { loadUserInfo } from "../../services/loadUserInfo";
 import loadAllUser from "../../services/loadAllUser";
-import Item from "antd/es/list/Item";
+import { Box, Paper, Typography, TextField } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import md5 from "md5";
+import { status } from "../../reducer/global";
+import clsx from "clsx";
 const { TextArea } = Input;
 
 const OnBoardingHr = () => {
   const dispatch = useDispatch();
   const [employeeEmail, setEmployeeEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [token, setToken] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [regToken, setRegToken] = useState("");
   const [data, setData] = useState([]);
+  const [emailSent, setEmailSent] = useState(false);
+  // const [tableData, setTableData] = useState([]);
+  const valueToStatus = (value) => {
+    const statusText = Object.keys(status).find((key) => status[key] === value);
+    return statusText;
+  };
+  const tableData = useMemo(() => {
+    return data.map((item, index) => {
+      return {
+        id: index,
+        status: valueToStatus(item.applicationStatus),
+        ...item.info,
+      };
+    });
+  }, [data]);
   const [initialData, setInitialData] = useState();
   const user = useSelector((state) => state.userReducer);
 
@@ -53,18 +53,24 @@ const OnBoardingHr = () => {
   // };
   const onChange = (e) => {
     setEmployeeEmail(e.target.value);
-    if (checkEmail(e.target.value) === "error") {
-      setEmailError("error");
-      return;
-    }
-    setEmailError("noError");
+    if (emailSent === true) setEmailSent(false);
+    if (regToken !== "") setRegToken("");
+    if (emailError === true) setEmailError(false);
+  };
+  const checkEmail = (email) => {
+    return validator.isEmail(email) ? true : false;
   };
   const generateToken = () => {
     if (employeeEmail === "") {
-      setEmailError("error");
+      setEmailError(true);
       return;
     }
-    setToken("1");
+    if (!checkEmail(employeeEmail)) {
+      setEmailError(true);
+      return;
+    }
+
+    setRegToken(md5(employeeEmail));
     //gen token
   };
   const sendEmail = () => {
@@ -72,7 +78,7 @@ const OnBoardingHr = () => {
     var templateParams = {
       email: employeeEmail,
       name: "Xiaoyun Wang",
-      registerUrl: "http://127.0.0.1:3000/register/" + token,
+      registerUrl: "http://127.0.0.1:3000/register/" + regToken,
     };
     emailjs
       .send(
@@ -87,11 +93,11 @@ const OnBoardingHr = () => {
           console.log(err);
         }
       );
+    setEmailSent(true);
   };
-  const checkEmail = (email) => {
-    return validator.isEmail(email) ? "" : "error";
-  };
+
   const toUserDetail = async (i) => {
+    console.log(i);
     // console.log("http://127.0.0.1:4000/api/emp/" + userId);
     const response = await loadUserInfo(data[i].userId);
     // details
@@ -102,115 +108,195 @@ const OnBoardingHr = () => {
   };
   useEffect(() => {
     (async () => {
-      const response = await loadAllUser();
+      let response = await loadAllUser();
       setData(response);
+
       setInitialData(response);
     })();
   }, []);
-  const dataSource = useMemo(() => {
-    return data.map((item, index) => {
-      return {
-        key: index,
-        firstName: item.info.firstName,
-        middleName: item.info.middleName,
-        lastName: item.info.lastName,
-        visaTitle: item.info.visaTitle,
-        cellPhone: item.info.cellPhoneNumber,
-        email: item.info.email,
-        detail: (
-          <Button onClick={() => toUserDetail(index)}>Go to Details</Button>
-        ),
-      };
-    });
-  }, [data]);
+  // const dataSource = useMemo(() => {
+  //   return data.map((item, index) => {
+  //     return {
+  //       key: index,
+  //       firstName: item.info.firstName,
+  //       middleName: item.info.middleName,
+  //       lastName: item.info.lastName,
+  //       visaTitle: item.info.visaTitle,
+  //       cellPhone: item.info.cellPhoneNumber,
+  //       email: item.info.email,
+  //       detail: (
+  //         <Button onClick={() => toUserDetail(index)}>Go to Details</Button>
+  //       ),
+  //     };
+  //   });
+  // }, [data]);
 
   const columns = [
     {
-      title: "First Name",
-      dataIndex: "firstName",
-      key: "firstName",
+      headerName: "First Name",
+      field: "firstName",
+      width: 100,
     },
     {
-      title: "Middle Name",
-      dataIndex: "middleName",
-      key: "middleName",
+      headerName: "Middle Name",
+      field: "middleName",
+      width: 120,
     },
     {
-      title: "Last Name",
-      dataIndex: "lastName",
-      key: "lastName",
+      headerName: "Last Name",
+      field: "lastName",
+      width: 100,
     },
     {
-      title: "Visa Title",
-      dataIndex: "visaTitle",
-      key: "visaTitle",
+      headerName: "Visa Title",
+      field: "visaTitle",
+      width: 150,
     },
     {
-      title: "Cell Phone",
-      dataIndex: "cellPhone",
-      key: "cellPhone",
+      headerName: "Cell Phone",
+      field: "cellPhoneNumber",
+      width: 120,
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      headerName: "Email",
+      field: "email",
+      width: 180,
     },
     {
-      title: "Detail",
-      dataIndex: "detail",
-      key: "detail",
+      headerName: "Status",
+      field: "status",
+      width: 100,
+      cellClassName: (params) => {
+        if (params.value == null) {
+          return "";
+        }
+        return clsx("app-status", {
+          pending: params.value === "pending",
+          approved: params.value === "approved",
+          rejected: params.value === "rejected",
+        });
+      },
     },
   ];
   return (
-    <>
-      <Card style={{ width: "100%" }} title=" Hiring Management page">
-        <Space>
-          <Space direction="vertical">
-            <Form.Item label="Employee Email">
-              <Input
-                status={emailError}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        width: "100%",
+        alignItems: "center",
+      }}
+    >
+      <Paper
+        elevation={3}
+        title=" Hiring Management page"
+        style={{ width: "900px" }}
+      >
+        <Box
+          sx={{
+            padding: "20px",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+            }}
+          >
+            <Box>
+              <TextField
+                label="Email"
+                size="small"
+                error={emailError}
                 value={employeeEmail}
                 onChange={(e) => onChange(e)}
-                suffix={
-                  emailError === "error" ? (
-                    <Tooltip title="Wrong Email Format">
-                      <CloseCircleOutlined />
-                    </Tooltip>
-                  ) : emailError === "" ? (
-                    <></>
-                  ) : (
-                    <Tooltip title="Email Valid">
-                      <CheckCircleOutlined style={{ color: "green" }} />
-                    </Tooltip>
-                  )
-                }
+                sx={{ width: "100%", height: "30px" }}
               />
-            </Form.Item>
-            <Form.Item>
-              <Space size="middle">
+            </Box>
+            <Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <Typography>{regToken}</Typography>
                 <Button type="primary" onClick={() => generateToken()}>
                   GenerateToken
                 </Button>
-                {token}
-              </Space>
-            </Form.Item>
-            <Form.Item>
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "20px",
+              }}
+            >
+              <Typography sx={{ color: "green" }}>
+                {emailSent ? "Email Sent!" : ""}
+              </Typography>
+
               <Button
                 type="primary"
-                disabled={employeeEmail && token ? "" : "disabled"}
+                disabled={employeeEmail && regToken ? "" : "disabled"}
                 onClick={() => sendEmail()}
               >
                 Send Invitation
               </Button>
-            </Form.Item>
-          </Space>
-        </Space>
-      </Card>
-      <Card style={{ width: "100%" }}>
-        <Divider orientation="left">Default Size</Divider>
-        <Table dataSource={dataSource} columns={columns} />;
-      </Card>
-    </>
+            </Box>
+          </Box>
+        </Box>
+      </Paper>
+      <Paper
+        elevation={3}
+        title=" Hiring Management page"
+        style={{ width: "900px" }}
+      >
+        History
+      </Paper>
+      <Paper
+        elevation={3}
+        sx={{
+          width: { md: "900px" },
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <DataGrid
+          rows={tableData}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 5 },
+            },
+          }}
+          onRowClick={(e) => toUserDetail(e.row.id)}
+          pageSizeOptions={[5, 10]}
+          sx={{
+            width: "100%",
+            "& .MuiDataGrid-cell:hover": {
+              cursor: "pointer",
+            },
+            "& .app-status.pending": {
+              color: "#ff9800",
+            },
+            "& .app-status.approved": {
+              color: "green",
+            },
+            "& .app-status.rejected": {
+              color: "red",
+            },
+          }}
+          slots={{ toolbar: GridToolbar }}
+          // checkboxSelection
+        />
+      </Paper>
+    </Box>
   );
 };
 export default OnBoardingHr;

@@ -15,6 +15,7 @@ const InProgress = () => {
     (async () => {
       const response = await loadAllUser();
       setEmp(response);
+
     })();
   }, []);
 

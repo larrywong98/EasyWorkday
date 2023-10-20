@@ -2,6 +2,7 @@ import React from "react";
 import HRFeedback from "./HRFeedback";
 import { nextSteps } from "../../reducer/global";
 import UploadForm from "../VisaForms/UploadForm";
+
 const OPT = ({ status }) => {
   const OPTReceipt = () => {
     if (status === "pending") {
