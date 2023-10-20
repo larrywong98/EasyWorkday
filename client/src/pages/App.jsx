@@ -8,7 +8,7 @@ import { Route, Routes } from "react-router";
 import VisaEmp from "./VisaEmp";
 import ProfileEmp from "./ProfileEmp";
 import OnBoardingHr from "./OnBoardingHr";
-import VisaHr from "./VisaHr";
+// import VisaHr from "./VisaHr";
 import ProfileHr from "./ProfileHr";
 import { Content } from "antd/es/layout/layout";
 import Success from "./Success";
@@ -33,7 +33,7 @@ const App = () => {
           backgroundColor: "#dddddd",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          // justifyContent: "center",
           alignItems: "center",
         }}
       >
@@ -65,7 +65,7 @@ const App = () => {
             </Route>
             <Route path="hr">
               <Route path="onboard" element={<OnBoardingHr />} />
-              <Route path="visa" element={<VisaHr />} />
+              {/* <Route path="visa" element={<VisaHr />} /> */}
               <Route path="visa/inprogress" element={<InProgress />} />
               <Route path="profile" element={<ProfileHr />} />
               <Route

@@ -23,6 +23,7 @@ const router = express.Router();
 
 router.post("/token", async (req, res) => {
   try {
+    console.log(req.body);
     const { name, pwd } = req.body;
     //bug
     const user = await Auth.findOne({ userName: name, password: pwd });
