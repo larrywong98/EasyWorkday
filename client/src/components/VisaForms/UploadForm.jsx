@@ -1,86 +1,88 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { setVisa } from "../../reducer/userSlice";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, message, Upload } from "antd";
+import { useDispatch } from "react-redux";
+import { removeFile, updateFile } from "../../reducer/userSlice";
 
-const UploadForm = () => {
+const UploadForm = ({ name }) => {
+  const [fileList, setFileList] = useState([]);
+  const [fileUrl, setFileUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [uploading, setUploading] = useState(false);
   const dispatch = useDispatch();
-  const curIdx = useSelector((state) => state.userReducer.visa.cur);
-  const [file, setFile] = useState(null);
-  const [progress, setProgress] = useState({ started: false, pc: 0 });
-  const [msg, setMsg] = useState(null);
-  const [fileInfo, setFileInfo] = useState(null);
-  const [pdfUrl, setPdfUrl] = useState(null); // Added to store the PDF URL
 
-  function handleUpload() {
-    if (!file) {
-      setMsg("No file selected");
-      return;
-    }
-    const fd = new FormData();
-    fd.append("file", file);
+  const handleUpload = () => {
+    const formData = new FormData();
 
-    setMsg("Uploading...");
-    setProgress((prevState) => ({
-      ...prevState,
-      started: true,
-    }));
-    axios
-      .post("http://127.0.0.1:4000/api/upload", fd, {
-        onUploadProgress: (ProgressEvent) => {
-          setProgress((prevState) => ({
-            ...prevState,
-            pc: (ProgressEvent.loaded / ProgressEvent.total) * 100,
-          }));
-        },
-        headers: {
-          "Custom-header": "value",
-        },
+    formData.append("file", fileList[0]);
+    setFileName(fileList[0].name);
+    // console.log(file);
+    setUploading(true); // You can use any AJAX library you like
+    fetch("http://144.202.42.97:8001/api/upload", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => {
+        const result = res.json();
+        console.log(result);
+        return result;
       })
       .then((res) => {
-        setMsg("Upload Successful");
-        console.log(res.data);
-        setFileInfo(res.data.fileInfo);
-        setPdfUrl(res.data.pdfUrl); // Set the PDF URL received from the server
-        // dispatch(statusTrigger({ status: "pending" }));
-        dispatch(setVisa({ status: "pending", index: curIdx }));
+        setFileList([]);
+        setFileUrl(res.fileUrl);
+        message.success("upload successfully.");
+        dispatch(
+          updateFile({
+            name: name,
+            fileInfo: {
+              name: name,
+              status: "done",
+              url: res.fileUrl,
+            },
+          })
+        );
       })
-      .catch((err) => {
-        setMsg("Upload Failed");
-        console.error(err);
+      .catch(() => {
+        message.error("upload failed.");
+      })
+      .finally(() => {
+        setUploading(false);
       });
-  }
+  };
+
+  const props = {
+    onRemove: (file) => {
+      setFileList([]);
+      dispatch(removeFile({ name: name }));
+    },
+    beforeUpload: (file) => {
+      setFileList([file]);
+      return false;
+    },
+  };
 
   return (
-    <div>
-      <p>Upload File:</p>
-      <input onChange={(e) => setFile(e.target.files[0])} type="file" />
-      <button onClick={handleUpload}>Upload</button>
+    <>
+      <Upload {...props} fileList={fileList}>
+        <Button icon={<UploadOutlined />}>Select File</Button>
+      </Upload>
+      <Button
+        type="primary"
+        onClick={handleUpload}
+        disabled={fileList.length === 0}
+        loading={uploading}
+        style={{ marginTop: 16 }}
+      >
+        {uploading ? "Uploading" : "Start Upload"}
+      </Button>
       <div>
-        {progress.started && (
-          <progress max="100" value={progress.pc}></progress>
-        )}
-        {msg && <span>{msg}</span>}
-        {fileInfo && (
-          <div>
-            <h3>File Information:</h3>
-            <ul>
-              <li>Filename: {fileInfo.filename}</li>
-              <li>Original Name: {fileInfo.originalname}</li>
-              <li>Size: {fileInfo.size} bytes</li>
-              <li>MIME Type: {fileInfo.mimetype}</li>
-            </ul>
-          </div>
-        )}
-        {pdfUrl && (
-          <div>
-            <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
-              Open PDF
-            </a>
-          </div>
+        {fileUrl && (
+          <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+            {fileName}
+          </a>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

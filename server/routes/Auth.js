@@ -23,6 +23,7 @@ const router = express.Router();
 
 router.post("/token", async (req, res) => {
   try {
+    console.log(req.body);
     const { name, pwd } = req.body;
     const user = await Auth.findOne({ userName: name, password: pwd });
     if (!user) {
@@ -52,7 +53,7 @@ router.post("/signin", auth, async (req, res) => {
       { email: req.user.name },
       { password: false }
     );
-
+    console.log(userInfo);
     res.json({ status: userInfo });
   } catch (err) {
     res.json({ status: "error" });

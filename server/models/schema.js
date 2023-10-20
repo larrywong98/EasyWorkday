@@ -46,6 +46,7 @@ const userSchema = new Schema(
       ],
     },
     visa: {
+      cur: Number,
       optStatus: String,
       optFeedback: String,
       eadStatus: String,

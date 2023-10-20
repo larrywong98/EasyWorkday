@@ -4,12 +4,15 @@ import { loadUserInfo } from "./loadUserInfo";
 import sendRequest from "./sendRequest";
 
 const getJwtToken = async (username, password, navigate) => {
+  console.log(username);
+  console.log(password);
   const response = await sendRequest({
     url: "http://127.0.0.1:4000/api/auth/token",
     method: "POST",
     data: JSON.stringify({ name: username, pwd: password }),
     headers: { "Content-Type": "application/json" },
   });
+  console.log(response);
   if (response.status === "ok") {
     localStorage.setItem("token", response.token);
     return "ok";

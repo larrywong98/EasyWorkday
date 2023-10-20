@@ -1,14 +1,14 @@
 import React from "react";
 import HRFeedback from "./HRFeedback";
 import UploadForm from "../VisaForms/UploadForm";
-import { NextSteps } from "../../reducer/global";
+import { nextSteps } from "../../reducer/global";
 
 const EAD = ({ status }) => {
   const EADReceipt = () => {
     if (status === "pending") {
-      return <p>{NextSteps.ead[0]}</p>;
+      return <p>{nextSteps.ead[0]}</p>;
     } else if (status === "approved") {
-      return <p>{NextSteps.ead[1]}</p>;
+      return <p>{nextSteps.ead[1]}</p>;
     } else if (status === "rejected") {
       return <HRFeedback />;
     }

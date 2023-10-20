@@ -2,14 +2,14 @@ import React from "react";
 import HRFeedback from "./HRFeedback";
 import DownloadForm from "../VisaForms/DownloadForm";
 import UploadForm from "../VisaForms/UploadForm";
-import { NextSteps } from "../../reducer/global";
+import { nextSteps } from "../../reducer/global";
 
 const I983 = ({ status }) => {
   const I983Receipt = () => {
     if (status === "pending") {
-      return <p>{NextSteps.i983[0]}</p>;
+      return <p>{nextSteps.i983[0]}</p>;
     } else if (status === "approved") {
-      return <p>{NextSteps.i983[1]}</p>;
+      return <p>{nextSteps.i983[1]}</p>;
     } else if (status === "rejected") {
       return <HRFeedback />;
     }
