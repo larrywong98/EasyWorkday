@@ -56,6 +56,7 @@ router.post("/regtoken", async (req, res) => {
 
 router.post("/token", async (req, res) => {
   try {
+    console.log(req.body);
     const { name, pwd } = req.body;
     const user = await Auth.findOne({ userName: name, password: pwd });
     if (!user) {

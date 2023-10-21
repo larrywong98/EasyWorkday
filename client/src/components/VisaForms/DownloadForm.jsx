@@ -1,9 +1,16 @@
 import React from "react";
+import { Button } from "antd";
+// ex:
+/* <DownloadForm
+        url="http://localhost:4000/uploads/file-1697161233298.pdf"
+        text="form"
+      /> */
 
-const form_url = "http://localhost:4000/uploads/file-1697161233298.pdf";
-const template_url = "http://localhost:4000/uploads/file-1697162266407.pdf";
+// need mdify download function
+// download two templates
+// dowload visas
 
-const DownloadForm = () => {
+const DownloadForm = ({ url, text }) => {
   const downloadFileAtUrl = (url) => {
     const filename = url.split("/").pop();
     const aTag = document.createElement("a");
@@ -16,15 +23,12 @@ const DownloadForm = () => {
   };
   return (
     <div>
-      <button
-        onClick={() => downloadFileAtUrl(form_url)}
+      <Button
+        onClick={() => downloadFileAtUrl(url)}
         style={{ marginRight: "5%" }}
       >
-        Download Form
-      </button>
-      <button onClick={() => downloadFileAtUrl(template_url)}>
-        Download Template
-      </button>
+        Download{` ${text}`}
+      </Button>
     </div>
   );
 };
