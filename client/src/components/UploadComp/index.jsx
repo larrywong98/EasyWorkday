@@ -1,26 +1,13 @@
 import { Button, Space, Upload } from "antd";
-// import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { removeFile, updateFile } from "../../reducer/userSlice";
 import { fileName } from "../../reducer/global";
 import { useEffect, useState } from "react";
 
-//<UploadComp name='OptReceipt' />
-//<UploadComp name='OptEad' />
-//<UploadComp name='I983' />
-//<UploadComp name='I20' />
-// After Upload
-// <a href={user.visa.optReceipt.url} />
-// user.visa.optEad
-// user.visa.i983
-// user.visa.i20
-
 const UploadComp = (props) => {
-  // const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.userReducer);
-  // const fileList = [user.profilePicture];
   const [showUploadList, setShowUploadList] = useState(false);
   const beforeUpload = (file) => {
     const isLt2M = file.size / 1024 / 1024 < 2;
@@ -33,11 +20,7 @@ const UploadComp = (props) => {
     dispatch(removeFile({ name: props.name }));
   };
   const handleChange = (info) => {
-    // if (info.file.status === "uploading") {
-    //   setLoading(true);
-    // }
     if (info.file.status === "done") {
-      // setShowUploadList(true);
       dispatch(
         updateFile({
           name: props.name,
@@ -69,7 +52,6 @@ const UploadComp = (props) => {
           onRemove={handleRemove}
           beforeUpload={beforeUpload}
           showUploadList={showUploadList}
-
           // antd bug not fixed infinite loading if filelist get a value
           // defaultFileList={}
           // fileList = {}

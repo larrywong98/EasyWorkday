@@ -35,109 +35,53 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Serve static files
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Define the storage and file upload settings for Multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "uploads")); // Use path.join to construct the directory path
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, path.join(__dirname, "uploads")); // Use path.join to construct the directory path
+//   },
+//   filename: (req, file, cb) => {
+//     cb(
+//       null,
+//       `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+//     );
+//   },
+// });
 
-const upload = multer({ storage });
+// const upload = multer({ storage });
 
 // Define a route for handling file uploads
-app.post("/api/upload", upload.single("file"), (req, res) => {
-  // The uploaded file can be accessed via req.file
-  const uploadedFile = req.file;
-  if (!uploadedFile) {
-    return res.status(400).json({ message: "No file uploaded" });
-  }
-  const fileInfo = {
-    filename: uploadedFile.filename,
-    originalname: uploadedFile.originalname,
-    size: uploadedFile.size,
-    mimetype: uploadedFile.mimetype,
-  };
+// app.post("/api/upload", upload.single("file"), (req, res) => {
+//   // The uploaded file can be accessed via req.file
+//   const uploadedFile = req.file;
+//   if (!uploadedFile) {
+//     return res.status(400).json({ message: "No file uploaded" });
+//   }
+//   const fileInfo = {
+//     filename: uploadedFile.filename,
+//     originalname: uploadedFile.originalname,
+//     size: uploadedFile.size,
+//     mimetype: uploadedFile.mimetype,
+//   };
 
-  const BASE_URL = `http://localhost:${port}`;
-  // Generate the URL for the uploaded file
-  const fileUrl = `${BASE_URL}/uploads/${uploadedFile.filename}`;
+//   const BASE_URL = `http://localhost:${port}`;
+//   // Generate the URL for the uploaded file
+//   const fileUrl = `${BASE_URL}/uploads/${uploadedFile.filename}`;
 
-  res.json({
-    message: "File uploaded successfully",
-    fileInfo,
-    pdfUrl: fileUrl,
-  });
-});
+//   res.json({
+//     message: "File uploaded successfully",
+//     fileInfo,
+//     pdfUrl: fileUrl,
+//   });
+// });
 
 import userRoute from "./routes/User.js";
 import authRoute from "./routes/Auth.js";
 
-// app.use("/api/user", userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/emp", userRoute);
-
-// app.post("/api/emp/save/:userId", async (req, res) => {
-//   let filter = { userId: req.params.userId };
-//   let update = {
-//     role: req.body.role,
-//     applicationStatus: req.body.applicationStatus,
-//     onboardFeedback: req.body.onboardFeedback,
-//     info: req.body.info,
-//     visa: req.body.visa,
-//     files: req.body.files,
-//     createDate: req.body.createDate,
-//     lastUpdateDate: req.body.lastUpdateDate,
-//     deleteDate: req.body.deleteDate,
-//   };
-
-//   try {
-//     const result = await User.findOneAndUpdate(filter, update, {
-//       upsert: true,
-//       new: true,
-//     });
-//     console.log(result);
-//     res.json({ status: result });
-//   } catch (err) {
-//     res.json({ status: "error" });
-//   }
-// });
-// app.get("/api/emp/all", async (req, res) => {
-//   const result = await User.find({}, { _id: false });
-//   res.json(result);
-// });
-// app.get("/api/emp/:userId", async (req, res) => {
-//   try {
-//     const result = await User.findOne(
-//       { userId: req.params.userId },
-//       { _id: false }
-//     );
-//     res.json({ status: result });
-//   } catch (err) {
-//     res.json({ status: "error" });
-//   }
-// });
-
-// app.post("/api/emp/appstatus/:userId", async (req, res) => {
-//   let filter = { userId: req.params.userId };
-//   let update = {
-//     applicationStatus: req.body.decision,
-//     onboardFeedback: req.body.reason,
-//   };
-//   try {
-//     const response = await User.findOneAndUpdate(filter, update);
-//     res.json(response);
-//   } catch (err) {
-//     res.json({ status: "error" });
-//   }
-// });
 
 app.listen(port, () =>
   console.info(`Server is up on http://localhost:${port}`)

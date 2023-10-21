@@ -1,10 +1,6 @@
-import { Breadcrumb } from "antd";
-import { Content } from "antd/es/layout/layout";
 import { Space, Card, Row, Col } from "antd";
-
 import { Button, Form, Typography } from "antd";
-
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
 import ContactSection from "../../components/ContactSection";
@@ -16,8 +12,6 @@ import dayjs from "dayjs";
 import { status } from "../../reducer/global";
 import { fillInfo, discardFiles } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Input } from "antd";
-import Feedback from "../../components/Feedback";
 
 const ProfileEmp = () => {
   const [form] = Form.useForm();

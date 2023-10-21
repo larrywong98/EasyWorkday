@@ -1,5 +1,5 @@
 import { Box, InputAdornment, Paper, TextField } from "@mui/material";
-import { DataGrid, GridLogicOperator, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import { status } from "../../reducer/global";
@@ -8,7 +8,6 @@ import { loadUser } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import SearchIcon from "@mui/icons-material/Search";
-import { ConsoleSqlOutlined } from "@ant-design/icons";
 
 const ProfileHr = () => {
   const [data, setData] = useState([]);
@@ -126,7 +125,7 @@ const ProfileHr = () => {
       .filter((item) => item.info.firstName !== "null");
   };
 
-  const [filterModel, setFilterModel] = useState();
+  // const [filterModel, setFilterModel] = useState();
   const searchOnChange = (e) => {
     let newData = filterData(e.target.value);
     setData(newData);
@@ -200,7 +199,7 @@ const ProfileHr = () => {
               paginationModel: { page: 0, pageSize: 5 },
             },
           }}
-          filterModel={filterModel}
+          // filterModel={filterModel}
           onRowClick={(e) => toUserProfileDetail(e.row.id)}
           pageSizeOptions={[5, 10]}
           sx={{

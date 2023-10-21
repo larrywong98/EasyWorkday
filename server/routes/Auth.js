@@ -6,20 +6,6 @@ import md5 from "md5";
 
 const router = express.Router();
 
-// router.put("/reset", async (req, res) => {
-//   try {
-//     let filter = { userName: req.body.username };
-//     let update = { password: req.body.password };
-//     const response = await User.findOneAndUpdate(filter, update);
-//     if (response) {
-//       res.json({ status: "ok" });
-//     } else {
-//       res.json({ status: "not ok" });
-//     }
-//   } catch (err) {
-//     res.json({ status: "not ok" });
-//   }
-// });
 router.get("/regtoken/all", async (req, res) => {
   try {
     const response = await Register.find();
@@ -36,13 +22,14 @@ router.post("/regtoken", async (req, res) => {
         email: email,
       },
     };
+    // generate registration token
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "3d",
     });
 
     let filter = { email: email };
     let update = { regToken: token, regStatus: "initial" };
-    // save to register
+    // save to register history
     const response = await Register.findOneAndUpdate(filter, update, {
       upsert: true,
       new: true,
@@ -90,6 +77,7 @@ router.post("/signin", auth, async (req, res) => {
     res.json({ status: "error" });
   }
 });
+
 router.post("/signup", async (req, res) => {
   try {
     const exist = await Auth.findOne({ email: req.body.email });
@@ -98,6 +86,7 @@ router.post("/signup", async (req, res) => {
       return;
     }
     const newUserId = md5(Date.now());
+    // new user
     const newUser = Auth({
       userId: newUserId,
       userName: req.body.userName,
@@ -105,6 +94,8 @@ router.post("/signup", async (req, res) => {
       password: req.body.pwd,
       role: "emp",
     });
+
+    // new user application
     const newUserInfo = User({
       userId: newUserId,
       applicationStatus: "0",

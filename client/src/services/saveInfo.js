@@ -10,17 +10,6 @@ const saveInfo = async (user, newData) => {
       "Content-Type": "application/json",
     },
     data: JSON.stringify(newData),
-    // {
-    // role: user.role,
-    // applicationStatus: status.pending,
-    // onboardFeedback: user.onboardFeedback,
-    // info: data,
-    // visa: user.visa,
-    // files: user.files,
-    // createDate: user.createDate,
-    // lastUpdateDate: user.lastUpdateDate,
-    // deleteDate: user.deleteDate,
-    // }),
   });
   return response.status;
 };

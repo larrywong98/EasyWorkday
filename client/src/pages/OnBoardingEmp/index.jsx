@@ -1,6 +1,6 @@
 import { Space, Card, Row, Col } from "antd";
 import { Button, Form, Typography } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
 import ContactSection from "../../components/ContactSection";
@@ -57,7 +57,6 @@ const OnBoardingEmp = () => {
       }
     }
 
-    // console.log(data);
     // change to pending
     // const newData = { applicationStatus: status.pending, info: data };
     const newData = {
@@ -73,20 +72,10 @@ const OnBoardingEmp = () => {
     };
     dispatch(fillInfo(newData));
     dispatch(updateVisaOptReceipt({ status: "pending" }));
-    // console.log(user);
-    // mongodb save
-    // generateUserId();
 
+    // save user
     const response = await saveInfo(user, newData);
     dispatch(updateUserId({ userId: response.userId }));
-
-    console.log(response);
-    // console.log(
-    //   await sendRequest({
-    //     url: "http://127.0.0.1:4000/api/emp/md5",
-    //     method: "GET",
-    //   })
-    // );
     navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {
@@ -94,15 +83,6 @@ const OnBoardingEmp = () => {
     newsectionClosed[i] = !newsectionClosed[i];
     setsectionClosed(newsectionClosed);
   };
-  // const checkStatus = () => {
-  //   if (user.applicationStatus === status.rejected) {
-  //     return true;
-  //   }
-  //   if (user.applicationStatus === status.pending) {
-  //     return true;
-  //   }
-  //   return false;
-  // }; setDisabled(checkStatus());
 
   return (
     <>

@@ -1,6 +1,5 @@
-import { Button, Card, Col, DatePicker, Form, Input, Radio } from "antd";
+import { Button, Card, Col, Form, Input } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
-import { useState } from "react";
 
 const AddressSection = (props) => {
   const sectionClosed = props.sectionClosed;

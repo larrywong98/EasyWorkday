@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loadUser } from "../../reducer/userSlice";
 import { useEffect, useMemo, useState } from "react";
 import emailjs from "@emailjs/browser";
@@ -51,9 +51,6 @@ const OnBoardingHr = () => {
       };
     });
   }, [data]);
-
-  const [initialData, setInitialData] = useState();
-  const user = useSelector((state) => state.userReducer);
 
   const navigate = useNavigate();
 
@@ -125,26 +122,8 @@ const OnBoardingHr = () => {
 
       setData(response);
       setRegisterData(regResponse);
-      setInitialData(response);
     })();
   }, []);
-  // const dataSource = useMemo(() => {
-  //   return data.map((item, index) => {
-  //     return {
-  //       key: index,
-  //       firstName: item.info.firstName,
-  //       middleName: item.info.middleName,
-  //       lastName: item.info.lastName,
-  //       visaTitle: item.info.visaTitle,
-  //       cellPhone: item.info.cellPhoneNumber,
-  //       email: item.info.email,
-  //       detail: (
-  //         <Button onClick={() => toUserDetail(index)}>Go to Details</Button>
-  //       ),
-  //     };
-  //   });
-  // }, [data]);
-
   const columns = [
     {
       headerName: "First Name",
