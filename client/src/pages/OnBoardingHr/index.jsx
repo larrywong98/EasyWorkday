@@ -360,7 +360,6 @@ const OnBoardingHr = () => {
             },
           }}
           slots={{ toolbar: GridToolbar }}
-          // checkboxSelection
         />
       </Paper>
     </Box>
