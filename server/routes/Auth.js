@@ -1,5 +1,5 @@
 import express from "express";
-import { Auth, User } from "../models/schema.js";
+import { Auth, Register, User } from "../models/schema.js";
 import jwt from "jsonwebtoken";
 import { auth } from "../utils/auth.js";
 import md5 from "md5";
@@ -20,11 +20,43 @@ const router = express.Router();
 //     res.json({ status: "not ok" });
 //   }
 // });
+router.get("/regtoken/all", async (req, res) => {
+  try {
+    const response = await Register.find();
+    res.json({ status: "ok", regToken: response });
+  } catch (err) {
+    res.json({ status: err.message });
+  }
+});
+router.post("/regtoken", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const payload = {
+      user: {
+        email: email,
+      },
+    };
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "3d",
+    });
+
+    let filter = { email: email };
+    let update = { regToken: token, regStatus: "initial" };
+    // save to register
+    const response = await Register.findOneAndUpdate(filter, update, {
+      upsert: true,
+      new: true,
+    });
+
+    res.json({ status: "ok", token: token });
+  } catch (err) {
+    res.json({ status: err.message });
+  }
+});
 
 router.post("/token", async (req, res) => {
   try {
     const { name, pwd } = req.body;
-    //bug
     const user = await Auth.findOne({ userName: name, password: pwd });
     if (!user) {
       res.json({ status: "unauthorized" });
@@ -39,7 +71,7 @@ router.post("/token", async (req, res) => {
       },
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "30d",
+      expiresIn: "3h",
     });
     res.json({ status: "ok", name: name, token: token });
   } catch (err) {
@@ -53,7 +85,6 @@ router.post("/signin", auth, async (req, res) => {
       { email: req.user.name },
       { password: false }
     );
-    console.log(userInfo);
     res.json({ status: userInfo });
   } catch (err) {
     res.json({ status: "error" });
@@ -90,7 +121,7 @@ router.post("/signup", async (req, res) => {
         address: "",
         cellPhoneNumber: "",
         workPhoneNumber: "",
-        email: "",
+        email: req.body.email,
         usCitizen: "",
         visaTitle: "",
         visaDate: ["", ""],

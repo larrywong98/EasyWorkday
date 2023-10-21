@@ -1,7 +1,9 @@
 import { Button, Card, Col, Form, Input, Radio } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router";
 
 const ContactSection = (props) => {
+  const location = useLocation();
   const sectionClosed = props.sectionClosed;
   const sectionControl = props.sectionControl;
   const requiredItem = [
@@ -29,12 +31,16 @@ const ContactSection = (props) => {
         {inputFields.map((item, index) => (
           <Form.Item
             key={index}
+            hidden={sectionClosed[2]}
             label={item.label}
             name={item.name}
-            hidden={sectionClosed[2]}
             rules={item.rules}
           >
-            <Input />
+            {item.name === "email" && location.pathname.includes("onboard") ? (
+              <Input disabled={true} />
+            ) : (
+              <Input />
+            )}
           </Form.Item>
         ))}
       </Card>
