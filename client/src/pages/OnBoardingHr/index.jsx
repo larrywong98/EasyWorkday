@@ -1,70 +1,94 @@
-import { Form, Button, Input, Space, Tooltip } from "antd";
+import { Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "../../reducer/userSlice";
 import { useEffect, useMemo, useState } from "react";
-import validator from "validator";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
 import { useNavigate } from "react-router";
 import { loadUserInfo } from "../../services/loadUserInfo";
 import loadAllUser from "../../services/loadAllUser";
-import Item from "antd/es/list/Item";
-import { Box, Paper } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-const { TextArea } = Input;
+import {
+  Box,
+  Paper,
+  TextField,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+} from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { status } from "../../reducer/global";
+import clsx from "clsx";
+import { setRegToken, getAllRegToken } from "../../services/regToken";
+import validateEmail from "../../utils/validateEmail";
 
 const OnBoardingHr = () => {
   const dispatch = useDispatch();
   const [employeeEmail, setEmployeeEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [token, setToken] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [regToken, setLocalRegToken] = useState("");
   const [data, setData] = useState([]);
+  const [registerData, setRegisterData] = useState([]);
+  const [emailSent, setEmailSent] = useState(false);
   // const [tableData, setTableData] = useState([]);
+  const valueToStatus = (value) => {
+    const statusText = Object.keys(status).find((key) => status[key] === value);
+    return statusText;
+  };
   const tableData = useMemo(() => {
     return data.map((item, index) => {
+      if (item.info.firstName === "") item.info.firstName = "null";
+      if (item.info.middleName === "") item.info.middleName = "null";
+      if (item.info.lastName === "") item.info.lastName = "null";
+      if (item.info.visaTitle === "") item.info.visaTitle = "null";
+      if (item.info.cellPhoneNumber === "") item.info.cellPhoneNumber = "null";
+      if (item.info.email === "") item.info.email = "null";
       return {
         id: index,
+        status: valueToStatus(item.applicationStatus),
         ...item.info,
       };
     });
   }, [data]);
+
   const [initialData, setInitialData] = useState();
   const user = useSelector((state) => state.userReducer);
 
   const navigate = useNavigate();
 
-  // const approve = () => {
-  //   dispatch(updateOnboardFeedback({ onboardFeedback: "" }));
-  //   dispatch(updateApplicationStatus({ applicationStatus: status.approved }));
-  //   dispatch(setVisa({ status: "pending", index: 0 }));
-  //   dispatch(statusTrigger({ status: "pending" }));
-  // };
-  // const reject = () => {
-  //   dispatch(updateOnboardFeedback({ onboardFeedback: feedback }));
-  //   dispatch(updateApplicationStatus({ applicationStatus: status.rejected }));
   // };
   const onChange = (e) => {
     setEmployeeEmail(e.target.value);
-    if (checkEmail(e.target.value) === "error") {
-      setEmailError("error");
-      return;
-    }
-    setEmailError("noError");
+    if (emailSent === true) setEmailSent(false);
+    if (regToken !== "") setLocalRegToken("");
+    if (emailError === true) setEmailError(false);
   };
-  const generateToken = () => {
+
+  const generateToken = async () => {
     if (employeeEmail === "") {
-      setEmailError("error");
+      setEmailError(true);
       return;
     }
-    setToken("1");
-    //gen token
+    if (!validateEmail(employeeEmail)) {
+      setEmailError(true);
+      return;
+    }
+
+    //generate registration token
+    const response = await setRegToken(employeeEmail, navigate);
+    setLocalRegToken(response);
+
+    //save to history
+    const response1 = await getAllRegToken(navigate);
+    setRegisterData(response1);
   };
-  const sendEmail = () => {
+  const sendEmail = async () => {
     //emailjs
     var templateParams = {
       email: employeeEmail,
       name: "Xiaoyun Wang",
-      registerUrl: "http://127.0.0.1:3000/register/" + token,
+      registerUrl: "http://127.0.0.1:3000/register/" + regToken,
     };
     emailjs
       .send(
@@ -79,12 +103,13 @@ const OnBoardingHr = () => {
           console.log(err);
         }
       );
+    setEmailSent(true);
   };
-  const checkEmail = (email) => {
-    return validator.isEmail(email) ? "" : "error";
-  };
+
   const toUserDetail = async (i) => {
-    console.log(i);
+    if (data[i].applicationStatus === "0") {
+      return;
+    }
     // console.log("http://127.0.0.1:4000/api/emp/" + userId);
     const response = await loadUserInfo(data[i].userId);
     // details
@@ -96,8 +121,10 @@ const OnBoardingHr = () => {
   useEffect(() => {
     (async () => {
       let response = await loadAllUser();
-      setData(response);
+      let regResponse = await getAllRegToken(navigate);
 
+      setData(response);
+      setRegisterData(regResponse);
       setInitialData(response);
     })();
   }, []);
@@ -149,96 +176,165 @@ const OnBoardingHr = () => {
       field: "email",
       width: 180,
     },
+    {
+      headerName: "Status",
+      field: "status",
+      width: 100,
+      cellClassName: (params) => {
+        if (params.value == null) {
+          return "";
+        }
+        return clsx("app-status", {
+          pending: params.value === "pending",
+          approved: params.value === "approved",
+          rejected: params.value === "rejected",
+        });
+      },
+    },
   ];
   return (
-    <>
-      {/* <Card style={{ width: "100%" }} title=" Hiring Management page">
-        <Space>
-          <Space direction="vertical">
-            <Form.Item label="Employee Email">
-              <Input
-                status={emailError}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px",
+        width: "100%",
+        alignItems: "center",
+      }}
+    >
+      <Paper
+        elevation={3}
+        title=" Hiring Management page"
+        style={{ width: "1000px" }}
+      >
+        <Box
+          sx={{
+            padding: "20px",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+            }}
+          >
+            <Box component="h2">Invite new Employee</Box>
+            <Box>
+              <TextField
+                label="Email"
+                size="small"
+                error={emailError}
                 value={employeeEmail}
                 onChange={(e) => onChange(e)}
-                suffix={
-                  emailError === "error" ? (
-                    <Tooltip title="Wrong Email Format">
-                      <CloseCircleOutlined />
-                    </Tooltip>
-                  ) : emailError === "" ? (
-                    <></>
-                  ) : (
-                    <Tooltip title="Email Valid">
-                      <CheckCircleOutlined style={{ color: "green" }} />
-                    </Tooltip>
-                  )
-                }
+                sx={{ width: "100%", height: "30px" }}
               />
-            </Form.Item>
-            <Form.Item>
-              <Space size="middle">
+            </Box>
+            <Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "20px",
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    textWrap: "nowrap",
+                  }}
+                >
+                  {regToken}
+                </Box>
+
                 <Button type="primary" onClick={() => generateToken()}>
                   GenerateToken
                 </Button>
-                {token}
-              </Space>
-            </Form.Item>
-            <Form.Item>
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "20px",
+              }}
+            >
+              <Box component="span" sx={{ color: "green" }}>
+                {emailSent ? "Email Sent!" : ""}
+              </Box>
+
               <Button
                 type="primary"
-                disabled={employeeEmail && token ? "" : "disabled"}
+                disabled={employeeEmail && regToken ? "" : "disabled"}
                 onClick={() => sendEmail()}
               >
                 Send Invitation
               </Button>
-            </Form.Item>
-          </Space>
-        </Space>
-      </Card> */}
-      <Paper title=" Hiring Management page" style={{ width: "100%" }}>
-        <Box>
-          <Box>
-            <Form.Item label="Employee Email">
-              <Input
-                status={emailError}
-                value={employeeEmail}
-                onChange={(e) => onChange(e)}
-                suffix={
-                  emailError === "error" ? (
-                    <Tooltip title="Wrong Email Format">
-                      <CloseCircleOutlined />
-                    </Tooltip>
-                  ) : emailError === "" ? (
-                    <></>
-                  ) : (
-                    <Tooltip title="Email Valid">
-                      <CheckCircleOutlined style={{ color: "green" }} />
-                    </Tooltip>
-                  )
-                }
-              />
-            </Form.Item>
-            <Form.Item>
-              <Space size="middle">
-                <Button type="primary" onClick={() => generateToken()}>
-                  GenerateToken
-                </Button>
-                {token}
-              </Space>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                disabled={employeeEmail && token ? "" : "disabled"}
-                onClick={() => sendEmail()}
-              >
-                Send Invitation
-              </Button>
-            </Form.Item>
+            </Box>
           </Box>
         </Box>
       </Paper>
-      <Paper style={{ width: "100%" }}>
+      <Paper
+        elevation={3}
+        title=" Hiring Management page"
+        style={{ width: "1000px", padding: "20px" }}
+      >
+        <Box component="h2">Registration History</Box>
+        <TableContainer component={Paper} sx={{ maxHeight: "500px" }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Email</TableCell>
+                <TableCell>Registration Token</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {registerData.map((row, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                  }}
+                >
+                  <TableCell component="th" scope="row">
+                    {row.email}
+                  </TableCell>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        width: "500px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        textWrap: "nowrap",
+                      }}
+                    >
+                      {row.regToken}
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Box sx={{ width: "100px" }}>{row.regStatus}</Box>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+      <Paper
+        elevation={3}
+        sx={{
+          width: { md: "1000px" },
+          display: "flex",
+          flexDirection: "column",
+          padding: "20px",
+        }}
+      >
+        <Box component="h2">Application Status</Box>
         <DataGrid
           rows={tableData}
           columns={columns}
@@ -250,14 +346,24 @@ const OnBoardingHr = () => {
           onRowClick={(e) => toUserDetail(e.row.id)}
           pageSizeOptions={[5, 10]}
           sx={{
+            width: "100%",
             "& .MuiDataGrid-cell:hover": {
               cursor: "pointer",
             },
+            "& .app-status.pending": {
+              color: "#ff9800",
+            },
+            "& .app-status.approved": {
+              color: "green",
+            },
+            "& .app-status.rejected": {
+              color: "red",
+            },
           }}
-          // checkboxSelection
+          slots={{ toolbar: GridToolbar }}
         />
       </Paper>
-    </>
+    </Box>
   );
 };
 export default OnBoardingHr;

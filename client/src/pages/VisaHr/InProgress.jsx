@@ -2,20 +2,42 @@ import React from "react";
 import { Descriptions } from "antd";
 import { useEffect, useState } from "react";
 import { List } from "antd";
-import sendRequest from "../../services/sendRequest";
+import loadAllUser from "../../services/loadAllUser";
+import { statusProperties } from "../../reducer/global";
 import NextSteps from "../../components/VisaHr/NextSteps";
+import Action from "../../components/VisaHr/Action";
 
 const InProgress = () => {
   const [employees, setEmp] = useState([]);
+  // const [index, setIndex] = useState(0);
+  // const [latestStatus, setLatestStatus] = useState("");
   useEffect(() => {
     (async () => {
-      const response = await sendRequest({
-        url: "http://127.0.0.1:4000/api/emp/all",
-        method: "GET",
-      });
-      setEmp(response.status);
+      const response = await loadAllUser();
+      setEmp(response);
+
     })();
   }, []);
+
+  const findLatestVisa = (visaInfo) => {
+    const index = visaInfo.cur;
+    const latestStatus = visaInfo[statusProperties[index]];
+    console.log(`inprogress: ${index}`);
+    console.log(`inprogress: ${latestStatus}`);
+    return { status: latestStatus, idx: index };
+  };
+  const daysRemain = (visaEndDate) => {
+    const date1 = new Date();
+    const date2 = new Date(visaEndDate);
+
+    // To calculate the time difference of two dates
+    const Difference_In_Time = date2.getTime() - date1.getTime();
+
+    // To calculate the no. of days between two dates
+    const Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+    return Difference_In_Days.toFixed(0);
+  };
 
   return (
     <div>
@@ -37,12 +59,14 @@ const InProgress = () => {
                 {employee.info.visaDate[0]} {employee.info.visaDate[1]}
               </Descriptions.Item>
               <Descriptions.Item label="Number of Days Remaining">
-                empty
+                {daysRemain(employee.info.visaDate[1])}
               </Descriptions.Item>
               <Descriptions.Item label="Next Steps">
-                <NextSteps />
+                <NextSteps {...findLatestVisa(employee.visa)} />
               </Descriptions.Item>
-              <Descriptions.Item label="Actions">empty</Descriptions.Item>
+              <Descriptions.Item label="Actions">
+                <Action />
+              </Descriptions.Item>
             </Descriptions>
           </List.Item>
         )}

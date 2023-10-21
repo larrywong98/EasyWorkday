@@ -46,6 +46,7 @@ const userSchema = new Schema(
       ],
     },
     visa: {
+      cur: Number,
       optStatus: String,
       optFeedback: String,
       eadStatus: String,
@@ -85,41 +86,19 @@ const authSchema = new Schema(
     collection: "Auth",
   }
 );
+
+const registerSchema = new Schema(
+  {
+    email: String,
+    regToken: String,
+    regStatus: String,
+  },
+  {
+    collection: "Register",
+  }
+);
 const User = mongoose.model("User", userSchema);
 const Auth = mongoose.model("Auth", authSchema);
+const Register = mongoose.model("Register", registerSchema);
 
-export { User, Auth };
-
-// const { Schema } = mongoose;
-// const productSchema = new Schema(
-//   {
-//     id: String,
-//     imgPath: String,
-//     volume: Number,
-//     category: String,
-//     desp: String,
-//     price: Number,
-//     content: String,
-//     timestamp: String,
-//   },
-//   {
-//     collection: "Product",
-//   }
-// );
-
-// const cartSchema = new Schema(
-//   {
-//     userId: String,
-//     addedProducts: [{ id: String, added: Number }],
-//   },
-//   {
-//     collection: "Cart",
-//   }
-// );
-// );
-
-// const Product = mongoose.model("Product", productSchema);
-// const Cart = mongoose.model("Cart", cartSchema);
-// const User = mongoose.model("User", userSchema);
-
-// export { Product, Cart, User };
+export { User, Auth, Register };

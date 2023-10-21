@@ -69,7 +69,10 @@ const SignUp = () => {
     }
 
     const response = await signUpRequest(username, password, email, navigate);
-    console.log(response);
+    // console.log(response);
+    if (response === "exist") {
+      setUserExist(true);
+    }
 
     setEmail("");
     setPassword("");
@@ -332,6 +335,7 @@ const SignUp = () => {
                       : pwdRepeat
                       ? "Passwords Not Match "
                       : ""}
+                    {userExist ? "Account already exists" : ""}
                   </Typography>
                 </Box>
               </Box>

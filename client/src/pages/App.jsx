@@ -8,7 +8,7 @@ import { Route, Routes } from "react-router";
 import VisaEmp from "./VisaEmp";
 import ProfileEmp from "./ProfileEmp";
 import OnBoardingHr from "./OnBoardingHr";
-import VisaHr from "./VisaHr";
+// import VisaHr from "./VisaHr";
 import ProfileHr from "./ProfileHr";
 import { Content } from "antd/es/layout/layout";
 import Success from "./Success";
@@ -18,6 +18,7 @@ import Register from "./Register";
 import SignIn from "./SignIn";
 import InProgress from "./VisaHr/InProgress";
 import HrDecision from "./HrDecision";
+import ProfileHrView from "./ProfileHrView";
 
 const App = () => {
   return (
@@ -33,7 +34,7 @@ const App = () => {
           backgroundColor: "#dddddd",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          // justifyContent: "center",
           alignItems: "center",
         }}
       >
@@ -51,6 +52,7 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
+
               <Route
                 path="visa"
                 element={
@@ -59,13 +61,14 @@ const App = () => {
                   // </ProtectedRoute>
                 }
               />
-              <Route path="profile" element={<ProfileEmp />}>
-                <Route path=":empId" element={<ProfileEmp />} />
+              <Route path="profile">
+                <Route index element={<ProfileEmp />} />
+                <Route path="view" element={<ProfileHrView />} />
               </Route>
             </Route>
             <Route path="hr">
               <Route path="onboard" element={<OnBoardingHr />} />
-              <Route path="visa" element={<VisaHr />} />
+              {/* <Route path="visa" element={<VisaHr />} /> */}
               <Route path="visa/inprogress" element={<InProgress />} />
               <Route path="profile" element={<ProfileHr />} />
               <Route

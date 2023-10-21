@@ -33,7 +33,12 @@ const VisaEmp = () => {
           height: "800px",
         }}
       >
-        <Collapse accordion>
+        <Collapse
+          accordion
+          style={{
+            width: "80em",
+          }}
+        >
           <Panel header="OPT" key="OPT">
             <p>OPT status: {statusArray[0]}</p>
             <OPT status={statusArray[0]} />

@@ -1,13 +1,14 @@
 import React from "react";
 import HRFeedback from "./HRFeedback";
-import { NextSteps } from "../../reducer/global";
-import UploadForm from "../Upload";
+import { nextSteps } from "../../reducer/global";
+import UploadForm from "../VisaForms/UploadForm";
+
 const OPT = ({ status }) => {
   const OPTReceipt = () => {
     if (status === "pending") {
-      return <p>{NextSteps.opt[0]}</p>;
+      return <p>{nextSteps.opt[0]}</p>;
     } else if (status === "approved") {
-      return <p>{NextSteps.opt[1]}</p>;
+      return <p>{nextSteps.opt[1]}</p>;
     } else if (status === "rejected") {
       return <HRFeedback />;
     }

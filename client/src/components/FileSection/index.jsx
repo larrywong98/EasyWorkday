@@ -32,10 +32,9 @@ const FileSection = (props) => {
     },
     {
       name: "OPT Receipt",
-      linkName: "OptReceipt",
+      linkName: "Opt",
     },
   ];
-
   return (
     <Col span={16}>
       <Card
