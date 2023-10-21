@@ -40,23 +40,6 @@ const HrDecision = () => {
 
   const { TextArea } = Input;
 
-  // const approve = () => {
-  //   // db change
-  //   dispatch(updateOnboardFeedback({ onboardFeedback: "" }));
-  //   dispatch(updateApplicationStatus({ applicationStatus: status.approved }));
-  //   dispatch(setVisa({ status: "pending", index: 0 }));
-  //   dispatch(statusTrigger({ status: "pending" }));
-
-  //   setDecisionStatus("approved");
-  // };
-  // const reject = () => {
-  //   //db change
-  //   dispatch(updateOnboardFeedback({ onboardFeedback: feedback }));
-  //   dispatch(updateApplicationStatus({ applicationStatus: status.rejected }));
-
-  //   setDecisionStatus("rejected");
-  // };
-
   // Update application status
   const updateDecision = async (decision, reason) => {
     if (decision === "approved") {

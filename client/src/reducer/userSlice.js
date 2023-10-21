@@ -21,9 +21,7 @@ const userSlice = createSlice({
       lastName: "",
       middleName: "",
       preferredName: "",
-
       ssn: "",
-
       dob: "",
       gender: "",
 
@@ -64,8 +62,7 @@ const userSlice = createSlice({
         },
       ],
     },
-    // const user = useselector (state=>  state.userReducer)
-    // user.visa
+
     visa: {
       cur: 0,
       optStatus: "",
@@ -81,16 +78,7 @@ const userSlice = createSlice({
       i20Feedback: "",
     },
 
-    //const fileName = {
-    //   profilePicture: 0,
-    //   driverLicense: 1,
-    //   workAuthorization: 2,
-    //   optReceipt: 3,
-    //   optEad: 4,
-    //   i983: 5,
-    //   i20: 6,
-    // };
-    // profilePicture driverLicense workAuthorization optReceipt optEad i983 i20
+    // profilePicture, driverLicense, workAuthorization, optReceipt, optEad, i983, i20
     files: [[], [], [], [], [], [], []],
 
     // dates

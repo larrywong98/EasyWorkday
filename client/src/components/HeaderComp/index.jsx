@@ -3,10 +3,8 @@ import { Button, Layout, Menu } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineUser } from "react-icons/ai";
-import { Typography } from "antd";
 import styles from "./index.module.css";
 import { signOut } from "../../reducer/authSlice";
-const { Text } = Typography;
 const { Header } = Layout;
 
 const HeaderComp = () => {

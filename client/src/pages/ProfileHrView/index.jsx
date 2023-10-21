@@ -1,5 +1,5 @@
-import { Space, Card, Row, Col } from "antd";
-import { Button, Form, Typography } from "antd";
+import { Space, Card, Row } from "antd";
+import { Form, Typography } from "antd";
 import { useMemo } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";

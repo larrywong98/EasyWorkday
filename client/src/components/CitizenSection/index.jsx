@@ -1,6 +1,5 @@
 import { Button, Card, Col, DatePicker, Form, Input, Radio, Space } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUsCitizen, updateVisaTitle } from "../../reducer/userSlice";
 import UploadComp from "../UploadComp";
