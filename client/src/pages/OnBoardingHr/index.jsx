@@ -1,26 +1,35 @@
-import { Form, Button, Input, Space, Tooltip } from "antd";
+import { Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { loadUser } from "../../reducer/userSlice";
 import { useEffect, useMemo, useState } from "react";
-import validator from "validator";
-import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import emailjs from "@emailjs/browser";
 import { useNavigate } from "react-router";
 import { loadUserInfo } from "../../services/loadUserInfo";
 import loadAllUser from "../../services/loadAllUser";
-import { Box, Paper, Typography, TextField } from "@mui/material";
+import {
+  Box,
+  Paper,
+  TextField,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+} from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import md5 from "md5";
 import { status } from "../../reducer/global";
 import clsx from "clsx";
-const { TextArea } = Input;
+import { setRegToken, getAllRegToken } from "../../services/regToken";
+import validateEmail from "../../utils/validateEmail";
 
 const OnBoardingHr = () => {
   const dispatch = useDispatch();
   const [employeeEmail, setEmployeeEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
-  const [regToken, setRegToken] = useState("");
+  const [regToken, setLocalRegToken] = useState("");
   const [data, setData] = useState([]);
+  const [registerData, setRegisterData] = useState([]);
   const [emailSent, setEmailSent] = useState(false);
   // const [tableData, setTableData] = useState([]);
   const valueToStatus = (value) => {
@@ -29,6 +38,12 @@ const OnBoardingHr = () => {
   };
   const tableData = useMemo(() => {
     return data.map((item, index) => {
+      if (item.info.firstName === "") item.info.firstName = "null";
+      if (item.info.middleName === "") item.info.middleName = "null";
+      if (item.info.lastName === "") item.info.lastName = "null";
+      if (item.info.visaTitle === "") item.info.visaTitle = "null";
+      if (item.info.cellPhoneNumber === "") item.info.cellPhoneNumber = "null";
+      if (item.info.email === "") item.info.email = "null";
       return {
         id: index,
         status: valueToStatus(item.applicationStatus),
@@ -36,44 +51,39 @@ const OnBoardingHr = () => {
       };
     });
   }, [data]);
+
   const [initialData, setInitialData] = useState();
   const user = useSelector((state) => state.userReducer);
 
   const navigate = useNavigate();
 
-  // const approve = () => {
-  //   dispatch(updateOnboardFeedback({ onboardFeedback: "" }));
-  //   dispatch(updateApplicationStatus({ applicationStatus: status.approved }));
-  //   dispatch(setVisa({ status: "pending", index: 0 }));
-  //   dispatch(statusTrigger({ status: "pending" }));
-  // };
-  // const reject = () => {
-  //   dispatch(updateOnboardFeedback({ onboardFeedback: feedback }));
-  //   dispatch(updateApplicationStatus({ applicationStatus: status.rejected }));
   // };
   const onChange = (e) => {
     setEmployeeEmail(e.target.value);
     if (emailSent === true) setEmailSent(false);
-    if (regToken !== "") setRegToken("");
+    if (regToken !== "") setLocalRegToken("");
     if (emailError === true) setEmailError(false);
   };
-  const checkEmail = (email) => {
-    return validator.isEmail(email) ? true : false;
-  };
-  const generateToken = () => {
+
+  const generateToken = async () => {
     if (employeeEmail === "") {
       setEmailError(true);
       return;
     }
-    if (!checkEmail(employeeEmail)) {
+    if (!validateEmail(employeeEmail)) {
       setEmailError(true);
       return;
     }
 
-    setRegToken(md5(employeeEmail));
-    //gen token
+    //generate registration token
+    const response = await setRegToken(employeeEmail, navigate);
+    setLocalRegToken(response);
+
+    //save to history
+    const response1 = await getAllRegToken(navigate);
+    setRegisterData(response1);
   };
-  const sendEmail = () => {
+  const sendEmail = async () => {
     //emailjs
     var templateParams = {
       email: employeeEmail,
@@ -109,8 +119,10 @@ const OnBoardingHr = () => {
   useEffect(() => {
     (async () => {
       let response = await loadAllUser();
-      setData(response);
+      let regResponse = await getAllRegToken(navigate);
 
+      setData(response);
+      setRegisterData(regResponse);
       setInitialData(response);
     })();
   }, []);
@@ -191,7 +203,7 @@ const OnBoardingHr = () => {
       <Paper
         elevation={3}
         title=" Hiring Management page"
-        style={{ width: "900px" }}
+        style={{ width: "1000px" }}
       >
         <Box
           sx={{
@@ -205,6 +217,7 @@ const OnBoardingHr = () => {
               gap: "20px",
             }}
           >
+            <Box component="h2">Invite new Employee</Box>
             <Box>
               <TextField
                 label="Email"
@@ -221,9 +234,20 @@ const OnBoardingHr = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  gap: "20px",
                 }}
               >
-                <Typography>{regToken}</Typography>
+                <Box
+                  sx={{
+                    width: "100%",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    textWrap: "nowrap",
+                  }}
+                >
+                  {regToken}
+                </Box>
+
                 <Button type="primary" onClick={() => generateToken()}>
                   GenerateToken
                 </Button>
@@ -237,9 +261,9 @@ const OnBoardingHr = () => {
                 gap: "20px",
               }}
             >
-              <Typography sx={{ color: "green" }}>
+              <Box component="span" sx={{ color: "green" }}>
                 {emailSent ? "Email Sent!" : ""}
-              </Typography>
+              </Box>
 
               <Button
                 type="primary"
@@ -255,18 +279,61 @@ const OnBoardingHr = () => {
       <Paper
         elevation={3}
         title=" Hiring Management page"
-        style={{ width: "900px" }}
+        style={{ width: "1000px", padding: "20px" }}
       >
-        History
+        <Box component="h2">Registration History</Box>
+        <TableContainer component={Paper} sx={{ maxHeight: "500px" }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Email</TableCell>
+                <TableCell>Registration Token</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {registerData.map((row, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                  }}
+                >
+                  <TableCell component="th" scope="row">
+                    {row.email}
+                  </TableCell>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        width: "500px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        textWrap: "nowrap",
+                      }}
+                    >
+                      {row.regToken}
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Box sx={{ width: "100px" }}>{row.regStatus}</Box>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Paper>
       <Paper
         elevation={3}
         sx={{
-          width: { md: "900px" },
+          width: { md: "1000px" },
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
+          padding: "20px",
+          // justifyContent: "center",
         }}
       >
+        <Box component="h2">Application Status</Box>
         <DataGrid
           rows={tableData}
           columns={columns}
@@ -293,7 +360,6 @@ const OnBoardingHr = () => {
             },
           }}
           slots={{ toolbar: GridToolbar }}
-          // checkboxSelection
         />
       </Paper>
     </Box>

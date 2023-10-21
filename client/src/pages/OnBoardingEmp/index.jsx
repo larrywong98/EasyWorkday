@@ -46,14 +46,15 @@ const OnBoardingEmp = () => {
   const onSubmit = async (data) => {
     data.profilePicture = "http://";
     data.dob = data.dob.format("YYYY/MM/DD");
-
     if (data.visaDate === undefined) {
       data.visaDate = ["", ""];
     } else {
-      data.visaDate = [
-        data.visaDate[0].format("YYYY/MM/DD"),
-        data.visaDate[1].format("YYYY/MM/DD"),
-      ];
+      if (data.visaDate[0] !== "" && data.visaDate[1] !== "") {
+        data.visaDate = [
+          data.visaDate[0].format("YYYY/MM/DD"),
+          data.visaDate[1].format("YYYY/MM/DD"),
+        ];
+      }
     }
 
     // console.log(data);
