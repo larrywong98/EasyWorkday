@@ -18,6 +18,7 @@ import Register from "./Register";
 import SignIn from "./SignIn";
 import InProgress from "./VisaHr/InProgress";
 import HrDecision from "./HrDecision";
+import ProfileHrView from "./ProfileHrView";
 
 const App = () => {
   return (
@@ -51,6 +52,7 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
+
               <Route
                 path="visa"
                 element={
@@ -59,8 +61,9 @@ const App = () => {
                   // </ProtectedRoute>
                 }
               />
-              <Route path="profile" element={<ProfileEmp />}>
-                <Route path=":empId" element={<ProfileEmp />} />
+              <Route path="profile">
+                <Route index element={<ProfileEmp />} />
+                <Route path="view" element={<ProfileHrView />} />
               </Route>
             </Route>
             <Route path="hr">

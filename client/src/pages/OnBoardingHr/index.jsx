@@ -107,7 +107,9 @@ const OnBoardingHr = () => {
   };
 
   const toUserDetail = async (i) => {
-    console.log(i);
+    if (data[i].applicationStatus === "0") {
+      return;
+    }
     // console.log("http://127.0.0.1:4000/api/emp/" + userId);
     const response = await loadUserInfo(data[i].userId);
     // details
@@ -330,7 +332,6 @@ const OnBoardingHr = () => {
           display: "flex",
           flexDirection: "column",
           padding: "20px",
-          // justifyContent: "center",
         }}
       >
         <Box component="h2">Application Status</Box>

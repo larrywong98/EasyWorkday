@@ -58,7 +58,8 @@ const UploadComp = (props) => {
 
   return (
     <>
-      {user.files[fileName[props.name]].length === 0 ? (
+      {console.log(fileName[props.name])}
+      {user.files && user.files[fileName[props.name]].length === 0 ? (
         <Upload
           name="file"
           action="http://144.202.42.97:8001/api/upload"
