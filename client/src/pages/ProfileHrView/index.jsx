@@ -59,7 +59,7 @@ const ProfileHrView = () => {
               marginBottom: "50px",
             }}
           >
-            {user.info.firstName} {user.info.lastName}'s Application
+            {user.info.firstName} {user.info.lastName}'s Profile
           </Title>
           <Link to="/hr/profile">
             <LeftOutlined />

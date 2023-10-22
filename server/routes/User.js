@@ -1,5 +1,5 @@
 import express from "express";
-import { User } from "../models/schema.js";
+import { Register, User } from "../models/schema.js";
 
 const router = express.Router();
 // save employee information
@@ -22,7 +22,11 @@ router.post("/save/:userId", async (req, res) => {
       upsert: true,
       new: true,
     });
-    console.log(result);
+    const historyResult = await Register.findOneAndUpdate(
+      { email: req.body.info.email },
+      { regStatus: req.body.applicationStatus }
+    );
+    console.log(historyResult);
     res.json({ status: result });
   } catch (err) {
     res.json({ status: "error" });

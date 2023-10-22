@@ -41,7 +41,6 @@ const UploadComp = (props) => {
 
   return (
     <>
-      {console.log(fileName[props.name])}
       {user.files && user.files[fileName[props.name]].length === 0 ? (
         <Upload
           name="file"

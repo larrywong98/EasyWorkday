@@ -16,7 +16,7 @@ router.get("/regtoken/all", async (req, res) => {
 });
 router.post("/regtoken", async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, fullName } = req.body;
     const payload = {
       user: {
         email: email,
@@ -24,11 +24,14 @@ router.post("/regtoken", async (req, res) => {
     };
     // generate registration token
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "3d",
+      expiresIn: "3h",
     });
 
+    const user = await User.findOne({ info: { email: email } });
+    // const regStatus = user.applicationStatus;
+
     let filter = { email: email };
-    let update = { regToken: token, regStatus: "initial" };
+    let update = { fullName: fullName, regToken: token, regStatus: "initial" };
     // save to register history
     const response = await Register.findOneAndUpdate(filter, update, {
       upsert: true,
@@ -40,6 +43,14 @@ router.post("/regtoken", async (req, res) => {
     res.json({ status: err.message });
   }
 });
+
+// router.get("/checkexp", auth, (req, res) => {
+//   if (Date.now() <= req.exp) {
+//     res.json({ status: "valid" });
+//   } else {
+//     res.json({ status: "expired" });
+//   }
+// });
 
 router.post("/token", async (req, res) => {
   try {

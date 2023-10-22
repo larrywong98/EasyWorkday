@@ -9,7 +9,7 @@ const { Header } = Layout;
 
 const HeaderComp = () => {
   const [current, setCurrent] = useState("");
-  // const user = useSelector((state) => state.userReducer);
+  const user = useSelector((state) => state.userReducer);
   const userInfo = useSelector((state) => state.authReducer);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,6 +17,17 @@ const HeaderComp = () => {
     if (e.key === "0") navigate(`/${userInfo.role}/onboard`);
     if (e.key === "1") navigate(`/${userInfo.role}/visa`);
     if (e.key === "2") navigate(`/${userInfo.role}/profile`);
+    if (userInfo.role === "emp") {
+      if (e.key === "0" && user.applicationStatus === "approved") {
+        setCurrent("");
+        return;
+      }
+      if (e.key === "2" && user.applicationStatus !== "approved") {
+        setCurrent("0");
+        return;
+      }
+    }
+
     setCurrent(e.key);
   };
   const headerText = {

@@ -1,4 +1,4 @@
-import { Button, Card, Col, Input, Space, Typography, Upload } from "antd";
+import { Button, Card, Col, Form, Space } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import UploadComp from "../UploadComp";
 
@@ -40,27 +40,14 @@ const FileSection = (props) => {
           <></>
         ) : (
           <>
-            <Space direction="vertical">
-              {fileFields.map((item, index) => (
-                <Space key={index} size="middle">
-                  <Space
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      width: "150px",
-                    }}
-                  >
-                    <Typography>{item.name}</Typography>
-                  </Space>
-                  <Space style={{ display: "flex", alignItems: "center" }}>
-                    <UploadComp
-                      name={item.linkName}
-                      listType={item.listType || "picture-card"}
-                    />
-                  </Space>
-                </Space>
-              ))}
-            </Space>
+            {fileFields.map((item, index) => (
+              <Form.Item label={item.name}>
+                <UploadComp
+                  name={item.linkName}
+                  listType={item.listType || "picture-card"}
+                />
+              </Form.Item>
+            ))}
           </>
         )}
       </Card>
