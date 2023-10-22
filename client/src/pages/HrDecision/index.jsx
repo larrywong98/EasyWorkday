@@ -7,10 +7,10 @@ import ContactSection from "../../components/ContactSection";
 import CitizenSection from "../../components/CitizenSection";
 import ReferenceSection from "../../components/ReferenceSection";
 import FileSection from "../../components/FileSection";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Input } from "antd";
 import sendRequest from "../../services/sendRequest";
 import { Link } from "react-router-dom";
@@ -20,7 +20,6 @@ import { Box } from "@mui/material";
 const HrDecision = () => {
   const [form] = Form.useForm();
   const user = useSelector((state) => state.userReducer);
-  const userInfo = useSelector((state) => state.authReducer);
   const initialData = useMemo(() => {
     let tmp = { ...user.info };
     tmp.dob = dayjs(user.info.dob, "YYYY/MM/DD");
@@ -30,8 +29,6 @@ const HrDecision = () => {
     ];
     return tmp;
   }, [user.info]);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { Title } = Typography;
 
   const [feedback, setFeedback] = useState("");

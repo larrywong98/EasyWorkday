@@ -32,7 +32,7 @@ const FileSection = (props) => {
     },
     {
       name: "OPT Receipt",
-      linkName: "OptReceipt",
+      linkName: "Opt",
     },
   ];
 

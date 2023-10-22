@@ -56,9 +56,11 @@ router.post("/regtoken", async (req, res) => {
 
 router.post("/token", async (req, res) => {
   try {
-    console.log(req.body);
+    // name is email!!!!
     const { name, pwd } = req.body;
-    const user = await Auth.findOne({ userName: name, password: pwd });
+    console.log(`req.body: ${name} ${pwd}`);
+    const user = await Auth.findOne({ email: name, password: pwd });
+    console.log(`user: ${user}`);
     if (!user) {
       res.json({ status: "unauthorized" });
       return;
@@ -66,7 +68,7 @@ router.post("/token", async (req, res) => {
     const payload = {
       user: {
         id: user.userId,
-        name: user.userName,
+        name: user.email,
         password: user.password,
         admin: user.admin,
       },
@@ -86,6 +88,7 @@ router.post("/signin", auth, async (req, res) => {
       { email: req.user.name },
       { password: false }
     );
+    console.log(`/signin: ${userInfo}`);
     res.json({ status: userInfo });
   } catch (err) {
     res.json({ status: "error" });

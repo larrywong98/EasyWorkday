@@ -64,4 +64,21 @@ router.post("/appstatus/:userId", async (req, res) => {
   }
 });
 
+// update feedback & visa status
+router.post("/visastatus/:userId", async (req, res) => {
+  let filter = { userId: req.params.userId };
+  const { visa, status, receipt, feedback } = req.body;
+  let update = {
+    [`visa.${visa}`]: status,
+    [`visa.${receipt}`]: feedback,
+  };
+  console.log(update);
+  try {
+    const response = await User.findOneAndUpdate(filter, update);
+    res.json({ status: response });
+  } catch (err) {
+    res.json({ status: "error" });
+  }
+});
+
 export default router;

@@ -12,6 +12,7 @@ const getJwtToken = async (username, password, navigate) => {
     data: JSON.stringify({ name: username, pwd: password }),
     headers: { "Content-Type": "application/json" },
   });
+  console.log(response);
   if (response.status === "ok") {
     localStorage.setItem("token", response.token);
     return "ok";
