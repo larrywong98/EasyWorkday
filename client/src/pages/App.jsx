@@ -19,6 +19,7 @@ import SignIn from "./SignIn";
 import InProgress from "./VisaHr/InProgress";
 import HrDecision from "./HrDecision";
 import ProfileHrView from "./ProfileHrView";
+import Error from "./Error";
 
 const App = () => {
   return (
@@ -69,7 +70,14 @@ const App = () => {
                 }
               />
               <Route path="profile">
-                <Route index element={<ProfileEmp />} />
+                <Route
+                  index
+                  element={
+                    <ProtectedRoute>
+                      <ProfileEmp />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="view" element={<ProfileHrView />} />
               </Route>
             </Route>
@@ -84,6 +92,8 @@ const App = () => {
               ></Route>
             </Route>
             <Route path="success" element={<Success />} />
+            <Route path="error" element={<Error />} />
+            <Route path="*" element={<Error />} />
           </Route>
         </Routes>
       </Content>

@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ProfileEmp = () => {
   const [form] = Form.useForm();
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   const user = useSelector((state) => state.userReducer);
   const initialData = useMemo(() => {
     let tmp = { ...user.info };
