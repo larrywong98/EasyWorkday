@@ -18,6 +18,8 @@ import Register from "./Register";
 import SignIn from "./SignIn";
 import InProgress from "./VisaHr/InProgress";
 import HrDecision from "./HrDecision";
+import ProfileHrView from "./ProfileHrView";
+import Error from "./Error";
 
 const App = () => {
   return (
@@ -40,7 +42,14 @@ const App = () => {
         <Routes>
           <Route path="/">
             <Route index element={<Home />} />
-            <Route path="register/:regToken" element={<Register />} />
+            <Route
+              path="register/:regToken"
+              element={
+                <ProtectedRoute>
+                  <Register />
+                </ProtectedRoute>
+              }
+            />
             <Route path="signin" element={<SignIn />} />
             <Route path="emp">
               <Route
@@ -51,6 +60,7 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
+
               <Route
                 path="visa"
                 element={
@@ -59,8 +69,16 @@ const App = () => {
                   // </ProtectedRoute>
                 }
               />
-              <Route path="profile" element={<ProfileEmp />}>
-                <Route path=":empId" element={<ProfileEmp />} />
+              <Route path="profile">
+                <Route
+                  index
+                  element={
+                    <ProtectedRoute>
+                      <ProfileEmp />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="view" element={<ProfileHrView />} />
               </Route>
             </Route>
             <Route path="hr">
@@ -74,6 +92,8 @@ const App = () => {
               ></Route>
             </Route>
             <Route path="success" element={<Success />} />
+            <Route path="error" element={<Error />} />
+            <Route path="*" element={<Error />} />
           </Route>
         </Routes>
       </Content>

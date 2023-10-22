@@ -7,9 +7,9 @@ import {
   InputAdornment,
   Button,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 // import { getJwtToken, signInRequest, signUpRequest } from "../services/auth";
 import validateEmail from "../../utils/validateEmail";
 import { signUpRequest } from "../../services/auth";
@@ -21,25 +21,10 @@ const SignUp = () => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [pwdShow, setPwdShow] = useState(true);
   const [firstLoad, setFirstLoad] = useState(true);
-  const [unauthorized, setUnauthorized] = useState(false);
   const [userExist, setUserExist] = useState(false);
   const [pwdRepeat, setPwdRepeat] = useState(false);
   const user = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
-
-  // const initState = () => {
-  // setEmail("");
-  // setPassword("");
-  // setUnauthorized(false);
-  // setUserExist(false);
-  // setFirstLoad(true);
-  // };
-  // useEffect(() => {
-  //   if (user.signedIn) {
-  //     navigate("/products");
-  //   }
-  // }, []);
 
   const handlePwdRepeat = () => {
     if (password !== passwordConfirm) setPwdRepeat(true);

@@ -89,6 +89,7 @@ const authSchema = new Schema(
 
 const registerSchema = new Schema(
   {
+    fullName: String,
     email: String,
     regToken: String,
     regStatus: String,

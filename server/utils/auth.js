@@ -8,6 +8,7 @@ const auth = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded.user;
+    req.exp = decoded.exp;
     next();
   } catch (err) {
     res.json({ status: "unauthorized" });

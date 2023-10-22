@@ -1,6 +1,6 @@
 import { Space, Card, Row, Col } from "antd";
 import { Button, Form, Typography } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
 import ContactSection from "../../components/ContactSection";
@@ -57,7 +57,6 @@ const OnBoardingEmp = () => {
       }
     }
 
-    // console.log(data);
     // change to pending
     // const newData = { applicationStatus: status.pending, info: data };
     const newData = {
@@ -73,20 +72,10 @@ const OnBoardingEmp = () => {
     };
     dispatch(fillInfo(newData));
     dispatch(updateVisaOptReceipt({ status: "pending" }));
-    // console.log(user);
-    // mongodb save
-    // generateUserId();
 
+    // save user
     const response = await saveInfo(user, newData);
     dispatch(updateUserId({ userId: response.userId }));
-
-    console.log(response);
-    // console.log(
-    //   await sendRequest({
-    //     url: "http://127.0.0.1:4000/api/emp/md5",
-    //     method: "GET",
-    //   })
-    // );
     navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {
@@ -94,122 +83,124 @@ const OnBoardingEmp = () => {
     newsectionClosed[i] = !newsectionClosed[i];
     setsectionClosed(newsectionClosed);
   };
-  // const checkStatus = () => {
-  //   if (user.applicationStatus === status.rejected) {
-  //     return true;
-  //   }
-  //   if (user.applicationStatus === status.pending) {
-  //     return true;
-  //   }
-  //   return false;
-  // }; setDisabled(checkStatus());
+  const itemLayout = {
+    labelCol: {
+      sm: { span: 24 },
+      md: { span: 8 },
+    },
+    wrapperCol: { sm: { span: 24 }, md: { span: 14 } },
+  };
+  const formLayout = {
+    layout: { sm: "vertical", md: "horizontal" },
+  };
 
   return (
     <>
-      <Card
+      {/* <Card
         style={{
           display: "flex",
           justifyContent: "center",
-          minWidth: 800,
+          // width: { xs: "100%", md: "800px" },
         }}
+      > */}
+      <Form
+        {...itemLayout}
+        style={{
+          width: "100%",
+          minWidth: 580,
+          maxWidth: 1600,
+        }}
+        {...formLayout}
+        initialValues={initialData}
+        form={form}
+        onFinish={onSubmit}
+        disabled={disabled}
       >
-        <Form
-          labelCol={{
-            span: 6,
-          }}
-          wrapperCol={{
-            span: 14,
-          }}
+        <Title
+          level={2}
           style={{
             width: "100%",
-            minWidth: 1000,
-            maxWidth: 1600,
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "50px",
           }}
-          layout="horizontal"
-          initialValues={initialData}
-          form={form}
-          onFinish={onSubmit}
-          disabled={disabled}
         >
-          <Title
-            level={2}
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: "50px",
-            }}
-          >
-            Onboarding Application
-          </Title>
-          <Row
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              gap: "15px",
-            }}
-          >
-            <NameSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <AddressSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <ContactSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <CitizenSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <ReferenceSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <FileSection
-              sectionClosed={sectionClosed}
-              sectionControl={sectionControl}
-            />
-            <Col span={16}>
-              <Space style={{ width: "100%" }} align="end" direction="vertical">
-                <Space size="middle">
-                  {user.applicationStatus === status.pending ? (
-                    <Typography style={{ color: "#ff9800" }}>
-                      Please wait for HR to review your application
-                    </Typography>
-                  ) : (
-                    <></>
-                  )}
-                  <Button type="primary" htmlType="submit">
-                    submit
-                  </Button>
-                </Space>
-              </Space>
-            </Col>
-            <Col span={16}>
-              <Feedback feedback="onboard" />
-            </Col>
-          </Row>
-        </Form>
-        <Space style={{ width: "100%" }} align="center" direction="vertical">
-          {user.applicationStatus === status.rejected ? (
-            <Button
-              type="primary"
-              style={{ width: "100%" }}
-              onClick={() => setDisabled(false)}
-              disabled={!disabled}
+          Onboarding Application
+        </Title>
+        <Row
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            gap: "15px",
+          }}
+        >
+          <NameSection
+            sectionClosed={sectionClosed}
+            sectionControl={sectionControl}
+          />
+          <AddressSection
+            sectionClosed={sectionClosed}
+            sectionControl={sectionControl}
+          />
+          <ContactSection
+            sectionClosed={sectionClosed}
+            sectionControl={sectionControl}
+          />
+          <CitizenSection
+            sectionClosed={sectionClosed}
+            sectionControl={sectionControl}
+          />
+          <ReferenceSection
+            sectionClosed={sectionClosed}
+            sectionControl={sectionControl}
+          />
+          <FileSection
+            sectionClosed={sectionClosed}
+            sectionControl={sectionControl}
+          />
+          <Col span={16}>
+            <Space
+              size="middle"
+              style={{
+                width: "98%",
+                marginLeft: "1%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
             >
-              Edit
-            </Button>
-          ) : (
-            <></>
-          )}
-        </Space>
-      </Card>
+              {user.applicationStatus === status.pending ? (
+                <Typography style={{ color: "#ff9800" }}>
+                  Please wait for HR to review your application
+                </Typography>
+              ) : (
+                <></>
+              )}
+              <Button type="primary" htmlType="submit">
+                submit
+              </Button>
+            </Space>
+          </Col>
+          <Col span={16}>
+            <Feedback feedback="onboard" />
+          </Col>
+        </Row>
+      </Form>
+      <Space style={{ width: "100%" }} align="center" direction="vertical">
+        {user.applicationStatus === status.rejected ? (
+          <Button
+            type="primary"
+            style={{ width: "100%" }}
+            onClick={() => setDisabled(false)}
+            disabled={!disabled}
+          >
+            Edit
+          </Button>
+        ) : (
+          <></>
+        )}
+      </Space>
+      {/* </Card> */}
     </>
   );
 };

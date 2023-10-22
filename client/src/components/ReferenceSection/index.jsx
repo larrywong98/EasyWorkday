@@ -9,12 +9,9 @@ import {
   Typography,
 } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
-import { status } from "../../reducer/global";
-import { useSelector } from "react-redux";
 const ReferenceSection = (props) => {
   const sectionClosed = props.sectionClosed;
   const sectionControl = props.sectionControl;
-  const user = useSelector((state) => state.userReducer);
   const requiredItem = [
     {
       required: true,

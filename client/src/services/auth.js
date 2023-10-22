@@ -4,8 +4,6 @@ import { loadUserInfo } from "./loadUserInfo";
 import sendRequest from "./sendRequest";
 
 const getJwtToken = async (username, password, navigate) => {
-  console.log(username);
-  console.log(password);
   const response = await sendRequest({
     url: "http://127.0.0.1:4000/api/auth/token",
     method: "POST",

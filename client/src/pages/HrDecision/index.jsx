@@ -37,23 +37,6 @@ const HrDecision = () => {
 
   const { TextArea } = Input;
 
-  // const approve = () => {
-  //   // db change
-  //   dispatch(updateOnboardFeedback({ onboardFeedback: "" }));
-  //   dispatch(updateApplicationStatus({ applicationStatus: status.approved }));
-  //   dispatch(setVisa({ status: "pending", index: 0 }));
-  //   dispatch(statusTrigger({ status: "pending" }));
-
-  //   setDecisionStatus("approved");
-  // };
-  // const reject = () => {
-  //   //db change
-  //   dispatch(updateOnboardFeedback({ onboardFeedback: feedback }));
-  //   dispatch(updateApplicationStatus({ applicationStatus: status.rejected }));
-
-  //   setDecisionStatus("rejected");
-  // };
-
   // Update application status
   const updateDecision = async (decision, reason) => {
     if (decision === "approved") {
@@ -161,13 +144,19 @@ const HrDecision = () => {
             style={{ width: "300px" }}
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
+            disabled={user.applicationStatus !== "pending"}
           />
-          <Button type="primary" onClick={() => updateDecision("approved", "")}>
+          <Button
+            type="primary"
+            onClick={() => updateDecision("approved", "")}
+            disabled={user.applicationStatus !== "pending"}
+          >
             Approve
           </Button>
           <Button
             type="primary"
             onClick={() => updateDecision("rejected", feedback)}
+            disabled={user.applicationStatus !== "pending"}
             danger
           >
             Reject
@@ -190,6 +179,17 @@ const HrDecision = () => {
           ) : decisionStatus === "rejected" ? (
             <Typography style={{ color: "red" }}>
               Application Rejected: {feedback}
+            </Typography>
+          ) : (
+            ""
+          )}
+          {user.applicationStatus === "approved" ? (
+            <Typography style={{ color: "green" }}>
+              Application Approved
+            </Typography>
+          ) : user.applicationStatus === "rejected" ? (
+            <Typography style={{ color: "red" }}>
+              Application Rejected: {user.onboardFeedback}
             </Typography>
           ) : (
             ""

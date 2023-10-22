@@ -1,11 +1,12 @@
 import { Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { loadUser } from "../../reducer/userSlice";
 import { useEffect, useMemo, useState } from "react";
 import emailjs from "@emailjs/browser";
 import { useNavigate } from "react-router";
 import { loadUserInfo } from "../../services/loadUserInfo";
 import loadAllUser from "../../services/loadAllUser";
+import styles from "./index.module.css";
 import {
   Box,
   Paper,
@@ -31,11 +32,12 @@ const OnBoardingHr = () => {
   const [data, setData] = useState([]);
   const [registerData, setRegisterData] = useState([]);
   const [emailSent, setEmailSent] = useState(false);
+  const [fullName, setFullName] = useState("");
   // const [tableData, setTableData] = useState([]);
-  const valueToStatus = (value) => {
-    const statusText = Object.keys(status).find((key) => status[key] === value);
-    return statusText;
-  };
+  // const valueToStatus = (value) => {
+  //   const statusText = Object.keys(status).find((key) => status[key] === value);
+  //   return statusText;
+  // };
   const tableData = useMemo(() => {
     return data.map((item, index) => {
       if (item.info.firstName === "") item.info.firstName = "null";
@@ -46,37 +48,36 @@ const OnBoardingHr = () => {
       if (item.info.email === "") item.info.email = "null";
       return {
         id: index,
-        status: valueToStatus(item.applicationStatus),
+        status: item.applicationStatus,
         ...item.info,
       };
     });
   }, [data]);
 
-  const [initialData, setInitialData] = useState();
-  const user = useSelector((state) => state.userReducer);
-
   const navigate = useNavigate();
 
-  // };
-  const onChange = (e) => {
-    setEmployeeEmail(e.target.value);
+  const init = () => {
     if (emailSent === true) setEmailSent(false);
     if (regToken !== "") setLocalRegToken("");
     if (emailError === true) setEmailError(false);
   };
+  const nameOnChange = (e) => {
+    setFullName(e.target.value);
+    init();
+  };
+  const emailOnChange = (e) => {
+    setEmployeeEmail(e.target.value);
+    init();
+  };
 
   const generateToken = async () => {
-    if (employeeEmail === "") {
-      setEmailError(true);
-      return;
-    }
     if (!validateEmail(employeeEmail)) {
       setEmailError(true);
       return;
     }
 
     //generate registration token
-    const response = await setRegToken(employeeEmail, navigate);
+    const response = await setRegToken(employeeEmail, fullName, navigate);
     setLocalRegToken(response);
 
     //save to history
@@ -107,14 +108,14 @@ const OnBoardingHr = () => {
   };
 
   const toUserDetail = async (i) => {
-    console.log(i);
-    // console.log("http://127.0.0.1:4000/api/emp/" + userId);
+    if (data[i].applicationStatus === "0") {
+      return;
+    }
     const response = await loadUserInfo(data[i].userId);
     // details
     console.log(response);
     dispatch(loadUser({ user: response }));
     navigate("/hr/decision/" + data[i].userId);
-    // back button
   };
   useEffect(() => {
     (async () => {
@@ -123,26 +124,8 @@ const OnBoardingHr = () => {
 
       setData(response);
       setRegisterData(regResponse);
-      setInitialData(response);
     })();
   }, []);
-  // const dataSource = useMemo(() => {
-  //   return data.map((item, index) => {
-  //     return {
-  //       key: index,
-  //       firstName: item.info.firstName,
-  //       middleName: item.info.middleName,
-  //       lastName: item.info.lastName,
-  //       visaTitle: item.info.visaTitle,
-  //       cellPhone: item.info.cellPhoneNumber,
-  //       email: item.info.email,
-  //       detail: (
-  //         <Button onClick={() => toUserDetail(index)}>Go to Details</Button>
-  //       ),
-  //     };
-  //   });
-  // }, [data]);
-
   const columns = [
     {
       headerName: "First Name",
@@ -220,11 +203,23 @@ const OnBoardingHr = () => {
             <Box component="h2">Invite new Employee</Box>
             <Box>
               <TextField
+                label="Name"
+                size="small"
+                error={emailError}
+                value={fullName}
+                onChange={(e) => nameOnChange(e)}
+                required
+                sx={{ width: "100%", height: "30px" }}
+              />
+            </Box>
+            <Box>
+              <TextField
                 label="Email"
                 size="small"
                 error={emailError}
                 value={employeeEmail}
-                onChange={(e) => onChange(e)}
+                onChange={(e) => emailOnChange(e)}
+                required
                 sx={{ width: "100%", height: "30px" }}
               />
             </Box>
@@ -286,6 +281,7 @@ const OnBoardingHr = () => {
           <Table stickyHeader>
             <TableHead>
               <TableRow>
+                <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Registration Token</TableCell>
                 <TableCell>Status</TableCell>
@@ -300,12 +296,15 @@ const OnBoardingHr = () => {
                   }}
                 >
                   <TableCell component="th" scope="row">
+                    {row.fullName}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
                     {row.email}
                   </TableCell>
                   <TableCell>
                     <Box
                       sx={{
-                        width: "500px",
+                        width: "300px",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         textWrap: "nowrap",
@@ -315,7 +314,21 @@ const OnBoardingHr = () => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Box sx={{ width: "100px" }}>{row.regStatus}</Box>
+                    {console.log(row.regStatus)}
+                    <Box
+                      className={
+                        row.regStatus === "pending"
+                          ? styles["yellow"]
+                          : row.regStatus === "rejected"
+                          ? styles["red"]
+                          : row.regStatus === "approved"
+                          ? styles["green"]
+                          : ""
+                      }
+                      sx={{ width: "100px" }}
+                    >
+                      {row.regStatus}
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
@@ -330,7 +343,6 @@ const OnBoardingHr = () => {
           display: "flex",
           flexDirection: "column",
           padding: "20px",
-          // justifyContent: "center",
         }}
       >
         <Box component="h2">Application Status</Box>

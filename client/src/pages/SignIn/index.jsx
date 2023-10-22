@@ -8,8 +8,6 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import { getJwtToken, signInRequest, signUpRequest } from "../../services/auth";
-import validateEmail from "../../utils/validateEmail";
 import { getJwtToken, signInRequest } from "../../services/auth";
 import { useDispatch, useSelector } from "react-redux";
 

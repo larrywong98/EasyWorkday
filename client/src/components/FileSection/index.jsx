@@ -1,21 +1,10 @@
-import { Button, Card, Col, Input, Space, Typography, Upload } from "antd";
+import { Button, Card, Col, Form, Space } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
-import { UploadOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  removeFile,
-  updateDriverLicense,
-  updateFile,
-} from "../../reducer/userSlice";
-import { useEffect, useState } from "react";
 import UploadComp from "../UploadComp";
-import { fileName } from "../../reducer/global";
 
 const FileSection = (props) => {
   const sectionClosed = props.sectionClosed;
   const sectionControl = props.sectionControl;
-  const user = useSelector((state) => state.userReducer);
-  const dispatch = useDispatch();
   const fileFields = [
     {
       name: "Profile Picture",
@@ -35,7 +24,6 @@ const FileSection = (props) => {
       linkName: "Opt",
     },
   ];
-
   return (
     <Col span={16}>
       <Card
@@ -52,27 +40,14 @@ const FileSection = (props) => {
           <></>
         ) : (
           <>
-            <Space direction="vertical">
-              {fileFields.map((item, index) => (
-                <Space key={index} size="middle">
-                  <Space
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      width: "150px",
-                    }}
-                  >
-                    <Typography>{item.name}</Typography>
-                  </Space>
-                  <Space style={{ display: "flex", alignItems: "center" }}>
-                    <UploadComp
-                      name={item.linkName}
-                      listType={item.listType || "picture-card"}
-                    />
-                  </Space>
-                </Space>
-              ))}
-            </Space>
+            {fileFields.map((item, index) => (
+              <Form.Item label={item.name}>
+                <UploadComp
+                  name={item.linkName}
+                  listType={item.listType || "picture-card"}
+                />
+              </Form.Item>
+            ))}
           </>
         )}
       </Card>

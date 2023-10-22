@@ -6,20 +6,6 @@ import md5 from "md5";
 
 const router = express.Router();
 
-// router.put("/reset", async (req, res) => {
-//   try {
-//     let filter = { userName: req.body.username };
-//     let update = { password: req.body.password };
-//     const response = await User.findOneAndUpdate(filter, update);
-//     if (response) {
-//       res.json({ status: "ok" });
-//     } else {
-//       res.json({ status: "not ok" });
-//     }
-//   } catch (err) {
-//     res.json({ status: "not ok" });
-//   }
-// });
 router.get("/regtoken/all", async (req, res) => {
   try {
     const response = await Register.find();
@@ -30,19 +16,23 @@ router.get("/regtoken/all", async (req, res) => {
 });
 router.post("/regtoken", async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, fullName } = req.body;
     const payload = {
       user: {
         email: email,
       },
     };
+    // generate registration token
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "3d",
+      expiresIn: "3h",
     });
 
+    const user = await User.findOne({ info: { email: email } });
+    // const regStatus = user.applicationStatus;
+
     let filter = { email: email };
-    let update = { regToken: token, regStatus: "initial" };
-    // save to register
+    let update = { fullName: fullName, regToken: token, regStatus: "initial" };
+    // save to register history
     const response = await Register.findOneAndUpdate(filter, update, {
       upsert: true,
       new: true,
@@ -54,13 +44,18 @@ router.post("/regtoken", async (req, res) => {
   }
 });
 
+// router.get("/checkexp", auth, (req, res) => {
+//   if (Date.now() <= req.exp) {
+//     res.json({ status: "valid" });
+//   } else {
+//     res.json({ status: "expired" });
+//   }
+// });
+
 router.post("/token", async (req, res) => {
   try {
-    // name is email!!!!
     const { name, pwd } = req.body;
-    console.log(`req.body: ${name} ${pwd}`);
     const user = await Auth.findOne({ email: name, password: pwd });
-    console.log(`user: ${user}`);
     if (!user) {
       res.json({ status: "unauthorized" });
       return;
@@ -94,6 +89,7 @@ router.post("/signin", auth, async (req, res) => {
     res.json({ status: "error" });
   }
 });
+
 router.post("/signup", async (req, res) => {
   try {
     const exist = await Auth.findOne({ email: req.body.email });
@@ -102,6 +98,7 @@ router.post("/signup", async (req, res) => {
       return;
     }
     const newUserId = md5(Date.now());
+    // new user
     const newUser = Auth({
       userId: newUserId,
       userName: req.body.userName,
@@ -109,6 +106,8 @@ router.post("/signup", async (req, res) => {
       password: req.body.pwd,
       role: "emp",
     });
+
+    // new user application
     const newUserInfo = User({
       userId: newUserId,
       applicationStatus: "0",
