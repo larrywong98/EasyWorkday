@@ -1,11 +1,21 @@
 import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
 import { status } from "../../reducer/global";
+import { isExpired } from "react-jwt";
+// import checkExp from "../../services/checkExp";
 
 const ProtectedRoute = ({ children }) => {
   const user = useSelector((state) => state.userReducer);
   const userInfo = useSelector((state) => state.authReducer);
   const location = useLocation();
+  if (location.pathname.includes("register")) {
+    const token = location.pathname.split("/").splice(-1)[0];
+    if (isExpired(token)) {
+      return <>Expired</>;
+    } else {
+      return <>{children}</>;
+    }
+  }
   if (userInfo.signedIn === false) {
     return <Navigate to="/signin" />;
   }

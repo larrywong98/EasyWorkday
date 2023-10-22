@@ -12,10 +12,10 @@ import SearchIcon from "@mui/icons-material/Search";
 const ProfileHr = () => {
   const [data, setData] = useState([]);
   const [initialData, setInitialData] = useState([]);
-  const valueToStatus = (value) => {
-    const statusText = Object.keys(status).find((key) => status[key] === value);
-    return statusText;
-  };
+  // const valueToStatus = (value) => {
+  //   const statusText = Object.keys(status).find((key) => status[key] === value);
+  //   return statusText;
+  // };
   const tableData = useMemo(() => {
     return data.map((item, index) => {
       let fullName = "null";
@@ -33,7 +33,7 @@ const ProfileHr = () => {
       return {
         id: index,
         fullName: fullName,
-        status: valueToStatus(item.applicationStatus),
+        status: item.applicationStatus,
         ...item.info,
       };
     });
@@ -168,9 +168,10 @@ const ProfileHr = () => {
       <Paper
         elevation={3}
         sx={{
-          width: { md: "1100px" },
+          width: { xs: "100%", sm: "100%", md: "1100px" },
           display: "flex",
           flexDirection: "column",
+          alignItems: { xs: "center", sm: "center", md: "start" },
           padding: "20px",
           // justifyContent: "center",
         }}

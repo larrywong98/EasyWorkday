@@ -41,7 +41,14 @@ const App = () => {
         <Routes>
           <Route path="/">
             <Route index element={<Home />} />
-            <Route path="register/:regToken" element={<Register />} />
+            <Route
+              path="register/:regToken"
+              element={
+                <ProtectedRoute>
+                  <Register />
+                </ProtectedRoute>
+              }
+            />
             <Route path="signin" element={<SignIn />} />
             <Route path="emp">
               <Route
