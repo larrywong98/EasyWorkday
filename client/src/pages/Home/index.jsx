@@ -11,6 +11,9 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import saveIncoming from "../../services/saveIncoming";
+import { useEffect } from "react";
+import getIncoming from "../../services/getIncoming";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -21,8 +24,8 @@ const Home = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const response = await saveIncoming(data.email, data.fullName, navigate);
     navigate("/success", {
       state: { message: "Wait for Hr to send the registration link" },
     });

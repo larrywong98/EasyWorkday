@@ -1,5 +1,5 @@
 import express from "express";
-import { Auth, Register, User } from "../models/schema.js";
+import { Auth, Incoming, Register, User } from "../models/schema.js";
 import jwt from "jsonwebtoken";
 import { auth } from "../utils/auth.js";
 import md5 from "md5";

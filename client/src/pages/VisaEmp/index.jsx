@@ -38,9 +38,11 @@ const VisaEmp = () => {
     if (statusArray[index] === "pending") {
       return <p>{nextStep[index][0]}</p>;
     } else if (statusArray[index] === "approved") {
+      if (statusArray[index + 1] === "approved") {
+        return <></>;
+      }
       return <p>{nextStep[index][1]}</p>;
     } else if (statusArray[index] === "rejected") {
-      console.log(feedbackKey[index]);
       return <p>{user.visa[feedbackKey[index]]}</p>;
     }
   };
