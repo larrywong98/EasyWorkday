@@ -7,20 +7,14 @@ import {
   visas,
 } from "../../reducer/global";
 import DownloadForm from "../../components/VisaForms/DownloadForm";
-import Notification from "./Notification";
-
+import { changeResponse, updateTime } from "../../reducer/hrSlice";
+import { useDispatch, useSelector } from "react-redux";
 const { TextArea } = Input;
 
-const Action = ({
-  employeeId,
-  curIdx,
-  curStatus,
-  visaUrl,
-  userName,
-  userEmail,
-  nextstep,
-}) => {
-  const [change, setChange] = useState(false);
+const Action = ({ index, employeeId }) => {
+  const curIdx = useSelector((state) => state.hrReducer.curIndex[index]);
+  const visaUrl = useSelector((state) => state.hrReducer.latestVisaUrl[index]);
+  const dispatch = useDispatch();
   const [visaName, setVisaName] = useState("");
   const [feedback, setFeedback] = useState("");
   const [visaStatusName, setVisaStatusName] = useState("");
@@ -56,54 +50,33 @@ const Action = ({
 
     console.log(response);
     setFeedback("");
-    setChange(true);
+    dispatch(changeResponse(index));
+    dispatch(updateTime(index));
   };
-  // const approve = () => {
-  //   dispatch(setVisa({ status: "approved", index: curIdx }));
-  //   dispatch(setReceipt({ receipt: "Approved", index: curIdx }));
-  //   dispatch(clearVisaFeedback());
-  //   setFeedback("");
-  // };
-  // const reject = () => {
-  //   dispatch(setVisa({ status: "rejected", index: curIdx }));
-  //   dispatch(setVisaFeedback({ visaFeedback: feedback }));
-  //   dispatch(setReceipt({ receipt: feedback, index: curIdx }));
-  //   setFeedback("");
-  // };
   return (
     <>
-      {!approve(curStatus) && !change && (
-        <Space direction="vertical">
-          <DownloadForm url={visaUrl} text={visaName} />
-          <Space wrap>
-            <TextArea
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-            />
-            <Button
-              type="primary"
-              onClick={() => updateDecision("approved", feedback)}
-            >
-              Approve
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => updateDecision("rejected", feedback)}
-              danger
-            >
-              Reject
-            </Button>
-          </Space>
+      <Space direction="vertical">
+        <DownloadForm url={visaUrl} text={visaName} />
+        <Space wrap>
+          <TextArea
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+          />
+          <Button
+            type="primary"
+            onClick={() => updateDecision("approved", feedback)}
+          >
+            Approve
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => updateDecision("rejected", feedback)}
+            danger
+          >
+            Reject
+          </Button>
         </Space>
-      )}
-      {approve(curStatus) && (
-        <Notification
-          emailAddress={userEmail}
-          message={nextstep}
-          userName={userName}
-        />
-      )}
-      {change && <div>Already take actions</div>}
+      </Space>
     </>
   );
 };

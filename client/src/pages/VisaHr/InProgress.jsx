@@ -2,69 +2,67 @@ import React from "react";
 import { Descriptions } from "antd";
 import { useEffect, useState } from "react";
 import { List } from "antd";
-import loadAllUser from "../../services/loadAllUser";
+import loadInProgressUser from "../../services/loadInProgressUser";
 import { statusProperties, visas, nextSteps } from "../../reducer/global";
-// import NextSteps from "../../components/VisaHr/NextSteps";
 import Action from "../../components/VisaHr/Action";
+import Notification from "../../components/VisaHr/Notification";
+import { useSelector } from "react-redux";
+import { initialHrSlice, clearHrSlice } from "../../reducer/hrSlice";
+import { useDispatch } from "react-redux";
 
 const InProgress = () => {
   const [employees, setEmp] = useState([]);
-  // const [nextstep, setNextStep] = useState("");
-  // const [index, setIndex] = useState(0);
-  // const [latestStatus, setLatestStatus] = useState("");
+  const change = useSelector((state) => state.hrReducer.response);
+  const curStatus = useSelector((state) => state.hrReducer.empStatus);
+  const time = useSelector((state) => state.hrReducer.time);
+  const nextStep = useSelector((state) => state.hrReducer.nextStep);
+  const dispatch = useDispatch();
+
+  const findLatestStatus = (visaInfo, fileInfo) => {
+    let index = visaInfo.cur;
+    let latestStatus = visaInfo[statusProperties[index]];
+    let latestvisaUrl = fileInfo[index].url;
+    if (index > 0 && latestStatus === "") {
+      latestStatus = visaInfo[statusProperties[index - 1]];
+      latestvisaUrl = fileInfo[index - 1];
+      index = index - 1;
+    }
+    console.log(`inprogress: ${index} ${latestStatus} ${latestvisaUrl}`);
+    const message = generateNextStep(latestStatus, index);
+    // status, index, url
+    dispatch(
+      initialHrSlice({
+        status: latestStatus,
+        url: latestvisaUrl,
+        index: index,
+        message: message,
+      })
+    );
+  };
+
   useEffect(() => {
     (async () => {
-      const response = await loadAllUser();
+      const response = await loadInProgressUser();
       setEmp(response);
+      dispatch(clearHrSlice());
+      response.forEach((employee) => {
+        findLatestStatus(employee.visa, employee.files);
+      });
     })();
   }, []);
 
-  const findLatestVisa = (visaInfo) => {
-    // setIndex(visaInfo.cur);
-    // setLatestStatus(visaInfo[statusProperties[index]]);
-    let index = visaInfo.cur;
-    let latestStatus = visaInfo[statusProperties[index]];
-    if (index > 0 && latestStatus === "") {
-      latestStatus = visaInfo[statusProperties[index - 1]];
-      index = index - 1;
-    }
-    console.log(`inprogress: ${index} ${latestStatus}`);
-    return { curStatus: latestStatus, curIdx: index };
-  };
+  const approve = (st) => st === "approved";
 
-  const generateNextStep = (visaInfo) => {
+  const generateNextStep = (latestStatus, index) => {
     let nextstep = "";
-    let index = visaInfo.cur;
-    let latestStatus = visaInfo[statusProperties[index]];
-    if (index > 0 && latestStatus === "") {
-      latestStatus = visaInfo[statusProperties[index - 1]];
-      index = index - 1;
-    }
     if (latestStatus === "pending") {
       nextstep = nextSteps[visas[index]][0];
-      // setNextStep(nextSteps[visas[index]][0]);
     } else if (latestStatus === "approved") {
       nextstep = nextSteps[visas[index]][1];
-      // setNextStep(nextSteps[visas[index]][1]);
     } else if (latestStatus === "rejected") {
       nextstep = nextSteps[visas[index]][0];
-      // setNextStep(nextSteps[visas[index]][0]);
     }
-    // else if (curIdx > 0) {
-    //   setNextStep(nextSteps[visas[curIdx - 1]][1]);
-    // }
     return nextstep;
-  };
-
-  const findLatestVisaFile = (visaInfo, fileInfo) => {
-    const index = visaInfo.cur;
-    let visaUrl = fileInfo[index];
-    let latestStatus = visaInfo[statusProperties[index]];
-    if (index > 0 && latestStatus === "") {
-      visaUrl = fileInfo[index - 1];
-    }
-
-    return { visaUrl: visaUrl };
   };
 
   const daysRemain = (visaEndDate) => {
@@ -87,10 +85,9 @@ const InProgress = () => {
         header={<div>Employee</div>}
         bordered
         dataSource={employees}
-        renderItem={(employee) => (
+        renderItem={(employee, index) => (
           <>
-            {/* {console.log(employee.info.firstName)} */}
-            <List.Item>
+            <List.Item key={index}>
               <Descriptions title="Employee Info">
                 <Descriptions.Item label="Name">
                   {employee.info.firstName} {employee.info.lastName}
@@ -105,17 +102,23 @@ const InProgress = () => {
                   {daysRemain(employee.info.visaDate[1])}
                 </Descriptions.Item>
                 <Descriptions.Item label="Next Steps" span={2}>
-                  {generateNextStep(employee.visa)}
+                  {nextStep[index]}
                 </Descriptions.Item>
                 <Descriptions.Item label="Actions">
-                  <Action
-                    employeeId={employee.userId}
-                    {...findLatestVisa(employee.visa)}
-                    {...findLatestVisaFile(employee.visa, employee.files)}
-                    userEmail={employee.info.email}
-                    userName={employee.info.firstName}
-                    nextstep={generateNextStep(employee.visa)}
-                  />
+                  {!approve(curStatus[index]) && !change[index] && (
+                    <Action index={index} employeeId={employee.userId} />
+                  )}
+                  {approve(curStatus[index]) && !change[index] && (
+                    <Notification
+                      index={index}
+                      emailAddress={employee.info.email}
+                      userName={employee.info.firstName}
+                    />
+                  )}
+                  {change[index] && <div>Already take actions</div>}
+                </Descriptions.Item>
+                <Descriptions.Item label="Last Response">
+                  {time[index] && <div>Take Actions on {time[index]}</div>}
                 </Descriptions.Item>
               </Descriptions>
             </List.Item>
