@@ -42,6 +42,7 @@ const App = () => {
         <Routes>
           <Route path="/">
             <Route index element={<Home />} />
+            <Route path="home" element={<Home />} />
             <Route
               path="register/:regToken"
               element={
@@ -64,9 +65,9 @@ const App = () => {
               <Route
                 path="visa"
                 element={
-                  // <ProtectedRoute>
-                  <VisaEmp />
-                  // </ProtectedRoute>
+                  <ProtectedRoute>
+                    <VisaEmp />
+                  </ProtectedRoute>
                 }
               />
               <Route path="profile">
@@ -90,7 +91,6 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              {/* <Route path="visa" element={<VisaHr />} /> */}
               <Route
                 path="visa"
                 element={

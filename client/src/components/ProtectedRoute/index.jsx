@@ -27,6 +27,7 @@ const ProtectedRoute = ({ children }) => {
   if (userInfo.signedIn === false) {
     return <Navigate to="/signin" />;
   }
+
   // already signed in
   if (userInfo.signedIn && location.pathname.includes("signin")) {
     return <Navigate to="/" />;
@@ -62,6 +63,16 @@ const ProtectedRoute = ({ children }) => {
       }
     }
   } else if (userInfo.role === "hr") {
+    console.log(userInfo.role);
+    console.log(location.pathname === "/emp/visa");
+    if (
+      location.pathname === "/emp/onboard" ||
+      location.pathname === "/emp/visa" ||
+      location.pathname === "/emp/profile"
+    ) {
+      return <Navigate to="/home" />;
+    }
+
     return <>{children}</>;
   } else {
     return <Navigate to="/error" />;

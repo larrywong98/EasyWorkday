@@ -12,8 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import saveIncoming from "../../services/saveIncoming";
-import { useEffect } from "react";
-import getIncoming from "../../services/getIncoming";
+import validateEmail from "../../utils/validateEmail";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -21,16 +20,21 @@ const Home = () => {
   const {
     register,
     handleSubmit,
+    setError,
     watch,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
+    if (!validateEmail(data.email)) {
+      setError("email", { type: "custom", message: "Email not valid" });
+      return;
+    }
+
     const response = await saveIncoming(data.email, data.fullName, navigate);
     navigate("/success", {
       state: { message: "Wait for Hr to send the registration link" },
     });
   };
-
   return (
     <Paper
       elevation={3}

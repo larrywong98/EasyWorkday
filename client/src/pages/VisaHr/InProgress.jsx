@@ -21,7 +21,7 @@ const InProgress = () => {
   const findLatestVisa = (visaInfo) => {
     const index = visaInfo.cur;
     const latestStatus = visaInfo[statusProperties[index]];
-    console.log(`inprogress: ${index} ${latestStatus}`);
+    // console.log(`inprogress: ${index} ${latestStatus}`);
     return { status: latestStatus, idx: index };
   };
   const daysRemain = (visaEndDate) => {
