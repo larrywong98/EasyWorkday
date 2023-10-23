@@ -83,7 +83,7 @@ router.post("/signin", auth, async (req, res) => {
       { email: req.user.name },
       { password: false }
     );
-    console.log(`/signin: ${userInfo}`);
+    // console.log(`/signin: ${userInfo}`);
     res.json({ status: userInfo });
   } catch (err) {
     res.json({ status: "error" });
@@ -171,12 +171,12 @@ router.post("/signup", async (req, res) => {
       deleteDate: "",
     });
     const newinfo = await newUserInfo.save();
-    console.log(newinfo);
+    // console.log(newinfo);
     const success = await newUser.save();
     if (!success) res.json({ status: "create failed" });
     res.json({ status: "ok" });
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.json({ status: err.message });
   }
 });

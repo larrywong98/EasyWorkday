@@ -92,7 +92,7 @@ const App = () => {
               />
               {/* <Route path="visa" element={<VisaHr />} /> */}
               <Route
-                path="visa/inprogress"
+                path="visa"
                 element={
                   <ProtectedRoute>
                     <InProgress />
