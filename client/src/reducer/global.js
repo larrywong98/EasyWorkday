@@ -1,3 +1,8 @@
+const temps = [
+  "http://144.202.42.97:8001/resources/file1697694755133.pdf",
+  "http://144.202.42.97:8001/resources/file1697754845740.pdf",
+];
+
 const statusProperties = ["optStatus", "eadStatus", "i983Status", "i20Status"];
 
 const receiptProperties = [
@@ -54,4 +59,5 @@ export {
   receiptProperties,
   nextSteps,
   visas,
+  temps,
 };

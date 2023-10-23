@@ -83,6 +83,7 @@ router.post("/signin", auth, async (req, res) => {
       { email: req.user.name },
       { password: false }
     );
+    console.log(`/signin: ${userInfo}`);
     res.json({ status: userInfo });
   } catch (err) {
     res.json({ status: "error" });

@@ -1,53 +1,73 @@
-import { Button, Card, Input, Space } from "antd";
-import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
-import {
-  setVisaFeedback,
-  clearVisaFeedback,
-} from "../../reducer/feedbackSlice";
-
-import { setVisa, setReceipt, updateVisaStatus } from "../../reducer/userSlice";
-
+import { Button, Input, Space } from "antd";
+import { useEffect, useState } from "react";
+import sendRequest from "../../services/sendRequest";
+import { statusProperties, receiptProperties } from "../../reducer/global";
 const { TextArea } = Input;
 
-const Action = () => {
-  const dispatch = useDispatch();
-  const curIdx = useSelector((state) => state.userReducer.visa.cur);
+const Action = ({ employeeId, curIdx }) => {
   const [feedback, setFeedback] = useState("");
-  console.log(curIdx);
-  const approve = () => {
-    dispatch(setVisa({ status: "approved", index: curIdx }));
-    dispatch(setReceipt({ receipt: "Approved", index: curIdx }));
-    dispatch(clearVisaFeedback());
-    setFeedback("");
+  const [visaName, setVisaName] = useState("");
+  const [receiptName, setReceiptName] = useState("");
+  console.log(`Action: ${curIdx}`);
+  useEffect(() => {
+    setVisaName(statusProperties[curIdx]);
+    setReceiptName(receiptProperties[curIdx]);
+  }, [curIdx]);
 
-    if (curIdx === 4) {
-      dispatch(updateVisaStatus({ visaStatus: "4" }));
-    }
-  };
-  const reject = () => {
-    dispatch(setVisa({ status: "rejected", index: curIdx }));
-    dispatch(setVisaFeedback({ visaFeedback: feedback }));
-    dispatch(setReceipt({ receipt: feedback, index: curIdx }));
+  const updateDecision = async (status, feedback) => {
+    console.log(`visa: ${visaName},
+    status: ${status},
+    receipt: ${receiptName},
+    feedback: ${feedback},`);
+    const response = await sendRequest({
+      url: "http://127.0.0.1:4000/api/emp/visastatus/" + employeeId,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({
+        visa: visaName,
+        status: status,
+        receipt: receiptName,
+        feedback: feedback,
+      }),
+    });
+
+    console.log(response);
     setFeedback("");
   };
+  // const approve = () => {
+  //   dispatch(setVisa({ status: "approved", index: curIdx }));
+  //   dispatch(setReceipt({ receipt: "Approved", index: curIdx }));
+  //   dispatch(clearVisaFeedback());
+  //   setFeedback("");
+  // };
+  // const reject = () => {
+  //   dispatch(setVisa({ status: "rejected", index: curIdx }));
+  //   dispatch(setVisaFeedback({ visaFeedback: feedback }));
+  //   dispatch(setReceipt({ receipt: feedback, index: curIdx }));
+  //   setFeedback("");
+  // };
   return (
-    <>
-      <Card style={{ display: "flex", justifyContent: "center" }}>
-        <Space>
-          <TextArea
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
-          />
-          <Button type="primary" onClick={() => approve()}>
-            Approve
-          </Button>
-          <Button type="primary" onClick={() => reject()} danger>
-            Reject
-          </Button>
-        </Space>
-      </Card>
-    </>
+    <Space wrap>
+      <TextArea
+        value={feedback}
+        onChange={(e) => setFeedback(e.target.value)}
+      />
+      <Button
+        type="primary"
+        onClick={() => updateDecision("approved", feedback)}
+      >
+        Approve
+      </Button>
+      <Button
+        type="primary"
+        onClick={() => updateDecision("rejected", feedback)}
+        danger
+      >
+        Reject
+      </Button>
+    </Space>
   );
 };
 export default Action;

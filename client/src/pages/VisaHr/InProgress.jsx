@@ -15,15 +15,13 @@ const InProgress = () => {
     (async () => {
       const response = await loadAllUser();
       setEmp(response);
-
     })();
   }, []);
 
   const findLatestVisa = (visaInfo) => {
     const index = visaInfo.cur;
     const latestStatus = visaInfo[statusProperties[index]];
-    console.log(`inprogress: ${index}`);
-    console.log(`inprogress: ${latestStatus}`);
+    console.log(`inprogress: ${index} ${latestStatus}`);
     return { status: latestStatus, idx: index };
   };
   const daysRemain = (visaEndDate) => {
@@ -61,11 +59,14 @@ const InProgress = () => {
               <Descriptions.Item label="Number of Days Remaining">
                 {daysRemain(employee.info.visaDate[1])}
               </Descriptions.Item>
-              <Descriptions.Item label="Next Steps">
+              <Descriptions.Item label="Next Steps" span={2}>
                 <NextSteps {...findLatestVisa(employee.visa)} />
               </Descriptions.Item>
               <Descriptions.Item label="Actions">
-                <Action />
+                <Action
+                  employeeId={employee.userId}
+                  curIdx={employee.visa.cur}
+                />
               </Descriptions.Item>
             </Descriptions>
           </List.Item>
