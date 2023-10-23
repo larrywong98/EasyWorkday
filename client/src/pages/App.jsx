@@ -20,6 +20,8 @@ import InProgress from "./VisaHr/InProgress";
 import HrDecision from "./HrDecision";
 import ProfileHrView from "./ProfileHrView";
 import Error from "./Error";
+import VisaHrAll from "./VisaHr/All";
+import VisaHr from "./VisaHr";
 
 const App = () => {
   return (
@@ -42,6 +44,7 @@ const App = () => {
         <Routes>
           <Route path="/">
             <Route index element={<Home />} />
+            <Route path="home" element={<Home />} />
             <Route
               path="register/:regToken"
               element={
@@ -64,9 +67,9 @@ const App = () => {
               <Route
                 path="visa"
                 element={
-                  // <ProtectedRoute>
-                  <VisaEmp />
-                  // </ProtectedRoute>
+                  <ProtectedRoute>
+                    <VisaEmp />
+                  </ProtectedRoute>
                 }
               />
               <Route path="profile">
@@ -82,13 +85,41 @@ const App = () => {
               </Route>
             </Route>
             <Route path="hr">
-              <Route path="onboard" element={<OnBoardingHr />} />
-              {/* <Route path="visa" element={<VisaHr />} /> */}
-              <Route path="visa/inprogress" element={<InProgress />} />
-              <Route path="profile" element={<ProfileHr />} />
+              <Route
+                path="onboard"
+                element={
+                  <ProtectedRoute>
+                    <OnBoardingHr />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="visa">
+                <Route
+                  index
+                  element={
+                    <ProtectedRoute>
+                      <VisaHr />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="inprogress" element={<InProgress />} />
+                <Route path="all" element={<VisaHrAll />} />
+              </Route>
+              <Route
+                path="profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfileHr />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="decision/:employeeId"
-                element={<HrDecision />}
+                element={
+                  <ProtectedRoute>
+                    <HrDecision />
+                  </ProtectedRoute>
+                }
               ></Route>
             </Route>
             <Route path="success" element={<Success />} />

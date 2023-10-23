@@ -5,7 +5,6 @@ const loadUserInfo = async (userId) => {
     url: "http://127.0.0.1:4000/api/emp/" + userId,
     method: "GET",
   });
-  console.log(response);
   return response.status;
 };
 export { loadUserInfo };

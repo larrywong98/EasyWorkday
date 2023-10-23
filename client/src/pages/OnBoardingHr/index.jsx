@@ -23,14 +23,18 @@ import { status } from "../../reducer/global";
 import clsx from "clsx";
 import { setRegToken, getAllRegToken } from "../../services/regToken";
 import validateEmail from "../../utils/validateEmail";
+import getIncoming from "../../services/getIncoming";
+import removeIncoming from "../../services/removeIncoming";
 
 const OnBoardingHr = () => {
   const dispatch = useDispatch();
   const [employeeEmail, setEmployeeEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
+  const [fullNameError, setFullNameError] = useState(false);
   const [regToken, setLocalRegToken] = useState("");
   const [data, setData] = useState([]);
   const [registerData, setRegisterData] = useState([]);
+  const [incomingData, setIncomingData] = useState([]);
   const [emailSent, setEmailSent] = useState(false);
   const [fullName, setFullName] = useState("");
   // const [tableData, setTableData] = useState([]);
@@ -75,7 +79,10 @@ const OnBoardingHr = () => {
       setEmailError(true);
       return;
     }
-
+    if (fullName === "") {
+      setFullNameError(true);
+      return;
+    }
     //generate registration token
     const response = await setRegToken(employeeEmail, fullName, navigate);
     setLocalRegToken(response);
@@ -83,6 +90,12 @@ const OnBoardingHr = () => {
     //save to history
     const response1 = await getAllRegToken(navigate);
     setRegisterData(response1);
+
+    // remove income
+    const response2 = await removeIncoming(employeeEmail);
+    const response3 = await getIncoming();
+    console.log(response3);
+    setIncomingData(response3);
   };
   const sendEmail = async () => {
     //emailjs
@@ -113,17 +126,19 @@ const OnBoardingHr = () => {
     }
     const response = await loadUserInfo(data[i].userId);
     // details
-    console.log(response);
+    // console.log(response);
     dispatch(loadUser({ user: response }));
     navigate("/hr/decision/" + data[i].userId);
   };
   useEffect(() => {
     (async () => {
-      let response = await loadAllUser();
-      let regResponse = await getAllRegToken(navigate);
+      const response = await loadAllUser();
+      const regResponse = await getAllRegToken(navigate);
+      const newIncomingData = await getIncoming();
 
       setData(response);
       setRegisterData(regResponse);
+      setIncomingData(newIncomingData);
     })();
   }, []);
   const columns = [
@@ -173,6 +188,7 @@ const OnBoardingHr = () => {
       },
     },
   ];
+
   return (
     <Box
       sx={{
@@ -186,7 +202,7 @@ const OnBoardingHr = () => {
       <Paper
         elevation={3}
         title=" Hiring Management page"
-        style={{ width: "1000px" }}
+        sx={{ width: { xs: "100%", sm: "100%", md: "1000px" } }}
       >
         <Box
           sx={{
@@ -201,11 +217,41 @@ const OnBoardingHr = () => {
             }}
           >
             <Box component="h2">Invite new Employee</Box>
+            <Box component="span" sx={{ fontWeight: 600 }}>
+              Incoming employee
+            </Box>
+            <TableContainer component={Paper} sx={{ maxHeight: "500px" }}>
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Email</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {incomingData.map((row, index) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.fullName}
+                      </TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.email}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
             <Box>
               <TextField
                 label="Name"
                 size="small"
-                error={emailError}
+                error={fullNameError}
                 value={fullName}
                 onChange={(e) => nameOnChange(e)}
                 required
@@ -274,7 +320,10 @@ const OnBoardingHr = () => {
       <Paper
         elevation={3}
         title=" Hiring Management page"
-        style={{ width: "1000px", padding: "20px" }}
+        sx={{
+          width: { xs: "100%", sm: "100%", md: "1000px" },
+          padding: "20px",
+        }}
       >
         <Box component="h2">Registration History</Box>
         <TableContainer component={Paper} sx={{ maxHeight: "500px" }}>
@@ -314,7 +363,6 @@ const OnBoardingHr = () => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {console.log(row.regStatus)}
                     <Box
                       className={
                         row.regStatus === "pending"
@@ -339,7 +387,7 @@ const OnBoardingHr = () => {
       <Paper
         elevation={3}
         sx={{
-          width: { md: "1000px" },
+          width: { xs: "100%", sm: "100%", md: "1000px" },
           display: "flex",
           flexDirection: "column",
           padding: "20px",

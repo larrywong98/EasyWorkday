@@ -4,6 +4,12 @@ const temps = [
 ];
 
 const statusProperties = ["optStatus", "eadStatus", "i983Status", "i20Status"];
+const feedbackKey = [
+  "optFeedback",
+  "eadFeedback",
+  "i983Feedback",
+  "i20Feedback",
+];
 
 const receiptProperties = [
   "optFeedback",
@@ -13,6 +19,22 @@ const receiptProperties = [
 ];
 
 const visas = ["opt", "ead", "i983", "i20"];
+
+const nextStep = [
+  [
+    "Waiting for HR to approve your OPT Receipt",
+    "Please upload a copy of your OPT EAD",
+  ],
+  [
+    "Waiting for HR to approve your OPT EAD",
+    "Please download and fill out the I-983 form",
+  ],
+  [
+    "Waiting for HR to approve your and sign your I-983",
+    "Please send the I-983 along with all necesseay documents to your school and upload the new I-20",
+  ],
+  ["Waiting for HR to approve your I-20", "All documents have been approved"],
+];
 
 const nextSteps = {
   opt: [
@@ -57,6 +79,8 @@ export {
   fileName,
   statusProperties,
   receiptProperties,
+  feedbackKey,
+  nextStep,
   nextSteps,
   visas,
   temps,

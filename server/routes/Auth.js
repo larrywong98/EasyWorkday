@@ -1,5 +1,5 @@
 import express from "express";
-import { Auth, Register, User } from "../models/schema.js";
+import { Auth, Incoming, Register, User } from "../models/schema.js";
 import jwt from "jsonwebtoken";
 import { auth } from "../utils/auth.js";
 import md5 from "md5";
@@ -24,7 +24,7 @@ router.post("/regtoken", async (req, res) => {
     };
     // generate registration token
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "3h",
+      expiresIn: "180m",
     });
 
     const user = await User.findOne({ info: { email: email } });
@@ -69,7 +69,7 @@ router.post("/token", async (req, res) => {
       },
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "3h",
+      expiresIn: "3d",
     });
     res.json({ status: "ok", name: name, token: token });
   } catch (err) {
@@ -83,7 +83,7 @@ router.post("/signin", auth, async (req, res) => {
       { email: req.user.name },
       { password: false }
     );
-    console.log(`/signin: ${userInfo}`);
+    // console.log(`/signin: ${userInfo}`);
     res.json({ status: userInfo });
   } catch (err) {
     res.json({ status: "error" });
@@ -171,12 +171,12 @@ router.post("/signup", async (req, res) => {
       deleteDate: "",
     });
     const newinfo = await newUserInfo.save();
-    console.log(newinfo);
+    // console.log(newinfo);
     const success = await newUser.save();
     if (!success) res.json({ status: "create failed" });
     res.json({ status: "ok" });
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     res.json({ status: err.message });
   }
 });
