@@ -113,7 +113,7 @@ const OnBoardingHr = () => {
     }
     const response = await loadUserInfo(data[i].userId);
     // details
-    console.log(response);
+    // console.log(response);
     dispatch(loadUser({ user: response }));
     navigate("/hr/decision/" + data[i].userId);
   };
@@ -121,7 +121,6 @@ const OnBoardingHr = () => {
     (async () => {
       let response = await loadAllUser();
       let regResponse = await getAllRegToken(navigate);
-
       setData(response);
       setRegisterData(regResponse);
     })();
@@ -186,7 +185,7 @@ const OnBoardingHr = () => {
       <Paper
         elevation={3}
         title=" Hiring Management page"
-        style={{ width: "1000px" }}
+        sx={{ width: { xs: "100%", sm: "100%", md: "1000px" } }}
       >
         <Box
           sx={{
@@ -274,7 +273,10 @@ const OnBoardingHr = () => {
       <Paper
         elevation={3}
         title=" Hiring Management page"
-        style={{ width: "1000px", padding: "20px" }}
+        sx={{
+          width: { xs: "100%", sm: "100%", md: "1000px" },
+          padding: "20px",
+        }}
       >
         <Box component="h2">Registration History</Box>
         <TableContainer component={Paper} sx={{ maxHeight: "500px" }}>
@@ -314,7 +316,6 @@ const OnBoardingHr = () => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {console.log(row.regStatus)}
                     <Box
                       className={
                         row.regStatus === "pending"
@@ -339,7 +340,7 @@ const OnBoardingHr = () => {
       <Paper
         elevation={3}
         sx={{
-          width: { md: "1000px" },
+          width: { xs: "100%", sm: "100%", md: "1000px" },
           display: "flex",
           flexDirection: "column",
           padding: "20px",

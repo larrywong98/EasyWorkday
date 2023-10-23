@@ -2,20 +2,23 @@ import React, { useEffect } from "react";
 import { nextSteps, visas } from "../../reducer/global";
 import { useState } from "react";
 
-const NextSteps = (props) => {
-  const { status, idx } = props;
-  console.log(nextSteps[visas[idx]][0]);
-  console.log(nextSteps[visas[idx]][1]);
+const NextSteps = ({ curStatus, curIdx }) => {
+  // console.log(`NeaxtSteps: ${idx} ${status}`);
   useEffect(() => {
     generateNextStep();
   }, []);
   const [nextStep, setNextStep] = useState("");
   const generateNextStep = () => {
-    if (status === "pending") {
-      setNextStep(nextSteps[visas[idx]][0]);
-    } else if (status === "approved") {
-      setNextStep(nextSteps[visas[idx]][1]);
+    if (curStatus === "pending") {
+      setNextStep(nextSteps[visas[curIdx]][0]);
+    } else if (curStatus === "approved") {
+      setNextStep(nextSteps[visas[curIdx]][1]);
+    } else if (curStatus === "rejected") {
+      setNextStep(nextSteps[visas[curIdx]][0]);
     }
+    // else if (curIdx > 0) {
+    //   setNextStep(nextSteps[visas[curIdx - 1]][1]);
+    // }
   };
 
   return <div>{nextStep}</div>;

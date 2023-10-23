@@ -16,7 +16,6 @@ const UploadForm = ({ name }) => {
 
     formData.append("file", fileList[0]);
     setFileName(fileList[0].name);
-    // console.log(file);
     setUploading(true); // You can use any AJAX library you like
     fetch("http://144.202.42.97:8001/api/upload", {
       method: "POST",
@@ -24,7 +23,7 @@ const UploadForm = ({ name }) => {
     })
       .then((res) => {
         const result = res.json();
-        console.log(result);
+        // console.log(result);
         return result;
       })
       .then((res) => {
@@ -41,8 +40,10 @@ const UploadForm = ({ name }) => {
             },
           })
         );
+        console.log("res" + res);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err.message);
         message.error("upload failed.");
       })
       .finally(() => {

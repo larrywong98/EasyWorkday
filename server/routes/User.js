@@ -26,7 +26,7 @@ router.post("/save/:userId", async (req, res) => {
       { email: req.body.info.email },
       { regStatus: req.body.applicationStatus }
     );
-    console.log(historyResult);
+    // console.log(historyResult);
     res.json({ status: result });
   } catch (err) {
     res.json({ status: "error" });
@@ -46,7 +46,7 @@ router.get("/:userId", async (req, res) => {
       { userId: req.params.userId },
       { _id: false }
     );
-    console.log(result);
+    // console.log(result);
     res.json({ status: result });
   } catch (err) {
     res.json({ status: "error" });
@@ -60,6 +60,24 @@ router.post("/appstatus/:userId", async (req, res) => {
     applicationStatus: req.body.decision,
     onboardFeedback: req.body.reason,
   };
+  try {
+    const response = await User.findOneAndUpdate(filter, update);
+    res.json({ status: response });
+  } catch (err) {
+    res.json({ status: "error" });
+  }
+});
+
+// update feedback & visa status
+router.post("/visastatus/:userId", async (req, res) => {
+  let filter = { userId: req.params.userId };
+  const { visa, status, receipt, feedback, updateIdx } = req.body;
+  let update = {
+    ["visa.cur"]: updateIdx,
+    [`visa.${visa}`]: status,
+    [`visa.${receipt}`]: feedback,
+  };
+  // console.log(update);
   try {
     const response = await User.findOneAndUpdate(filter, update);
     res.json({ status: response });

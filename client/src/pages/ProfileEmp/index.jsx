@@ -1,5 +1,4 @@
-import { Space, Card, Row, Col } from "antd";
-import { Button, Form, Typography } from "antd";
+import { Space, Row, Col, Button, Form, Typography } from "antd";
 import { useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
@@ -10,8 +9,9 @@ import FileSection from "../../components/FileSection";
 import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
-import { fillInfo, discardFiles } from "../../reducer/userSlice";
+import { fillInfo, discardFiles, updateUserId } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import saveInfo from "../../services/saveInfo";
 
 const ProfileEmp = () => {
   const [form] = Form.useForm();
@@ -26,57 +26,55 @@ const ProfileEmp = () => {
     ];
     return tmp;
   }, [user.info]);
-  const [initialDataCopy, setInitialDataCopy] = useState(initialData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [sectionClosed, setsectionClosed] = useState(Array(6).fill(false));
   const [initFiles, setInitFiles] = useState(user.files);
-  const [action, setAction] = useState("cancel");
   const { Title } = Typography;
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setDisabled(true);
-    if (action === "save") {
-      data.profilePicture = "http://";
-      data.dob = data.dob.format("YYYY/MM/DD");
-      data.visaDate = [
-        data.visaDate[0].format("YYYY/MM/DD"),
-        data.visaDate[1].format("YYYY/MM/DD"),
-      ];
-      dispatch(fillInfo({ applicationStatus: status.pending, info: data }));
-      navigate("/success", { state: { message: "Submit Successful" } });
-    } else if (action === "cancel") {
-      form.resetFields();
+    data.profilePicture = "http://";
+    data.dob = data.dob.format("YYYY/MM/DD");
+    if (data.visaDate === undefined) {
+      data.visaDate = ["", ""];
+    } else {
+      if (data.visaDate[0] !== "" && data.visaDate[1] !== "") {
+        data.visaDate = [
+          data.visaDate[0].format("YYYY/MM/DD"),
+          data.visaDate[1].format("YYYY/MM/DD"),
+        ];
+      }
     }
+    const newData = {
+      role: user.role,
+      applicationStatus: status.approved,
+      onboardFeedback: user.onboardFeedback,
+      info: data,
+      visa: user.visa,
+      files: user.files,
+      createDate: user.createDate,
+      lastUpdateDate: user.lastUpdateDate,
+      deleteDate: user.deleteDate,
+    };
+    dispatch(fillInfo(newData));
+
+    // save user
+    const response = await saveInfo(user, newData);
+    dispatch(updateUserId({ userId: response.userId }));
+    // navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {
     let newsectionClosed = [...sectionClosed];
     newsectionClosed[i] = !newsectionClosed[i];
     setsectionClosed(newsectionClosed);
   };
-  // const checkStatus = () => {
-  //   if (user.applicationStatus === status.rejected) {
-  //     return true;
-  //   }
-  //   if (user.applicationStatus === status.pending) {
-  //     return true;
-  //   }
-  //   return false;
-  // };
-
-  // useEffect(() => {
-  //   setDisabled(checkStatus());
-  // }, []);
   const onCancel = (e) => {
-    setAction("cancel");
-    // init files after discard
+    setDisabled(true);
     dispatch(discardFiles({ files: initFiles }));
-    // console.log(initFiles);
-    // console.log(user.files);
-    form.submit();
+    form.resetFields();
   };
   const onSave = (e) => {
-    setAction("save");
     form.submit();
   };
   const onEdit = (e) => {
@@ -87,126 +85,108 @@ const ProfileEmp = () => {
     sectionControl: sectionControl,
     page: "personalInfo",
   };
-
+  const itemLayout = {
+    labelCol: {
+      sm: { span: 24 },
+      md: { span: 8 },
+    },
+    wrapperCol: { sm: { span: 24 }, md: { span: 14 } },
+  };
+  const formLayout = {
+    layout: { sm: "vertical", md: "horizontal" },
+  };
   return (
     <>
-      <Card
+      <Title
+        level={2}
         style={{
+          width: "100%",
           display: "flex",
           justifyContent: "center",
-          minWidth: 800,
+          marginBottom: "50px",
         }}
       >
-        <Title
-          level={2}
+        Personal Information
+      </Title>
+      <Row
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          gap: "15px",
+          marginBottom: "20px",
+          minWidth: 580,
+          maxWidth: 1600,
+        }}
+      >
+        <Col span={16}>
+          <Space style={{ width: "100%" }} align="end" direction="vertical">
+            <Space size="middle">
+              {disabled ? (
+                <Button
+                  type="primary"
+                  disabled={!disabled}
+                  style={{ width: "130px" }}
+                  onClick={(e) => onEdit(e)}
+                >
+                  Edit
+                </Button>
+              ) : (
+                <Space size="middle">
+                  <Button type="primary" onClick={(e) => onCancel(e)} danger>
+                    Cancel
+                  </Button>
+                  <Button type="primary" onClick={(e) => onSave(e)}>
+                    Save
+                  </Button>
+                </Space>
+              )}
+            </Space>
+          </Space>
+        </Col>
+      </Row>
+      <Form
+        id="personal"
+        {...itemLayout}
+        style={{
+          width: "100%",
+          minWidth: 580,
+          maxWidth: 1600,
+        }}
+        {...formLayout}
+        initialValues={initialData}
+        form={form}
+        onFinish={onSubmit}
+        disabled={disabled}
+      >
+        <Row
           style={{
             width: "100%",
             display: "flex",
             justifyContent: "center",
-            marginBottom: "50px",
+            gap: "15px",
           }}
         >
-          Personal Information
-        </Title>
-        <Row gutter={16}>
-          <Col className="gutter-row" span={6}>
-            <div></div>
-          </Col>
-          <Col className="gutter-row" span={6}>
-            <div></div>
-          </Col>
-          <Col className="gutter-row" span={5}>
-            <div></div>
-          </Col>
-          <Col className="gutter-row" span={4}>
-            {disabled ? (
-              <Button
-                type="primary"
-                style={{
-                  width: "80%",
-                  marginBottom: "20px",
-                  justifyContent: "center",
-                }}
-                disabled={!disabled}
-                onClick={(e) => onEdit(e)}
-              >
-                Edit
-              </Button>
-            ) : (
+          <NameSection {...sectionProps} />
+          <AddressSection {...sectionProps} />
+          <ContactSection {...sectionProps} />
+          <CitizenSection {...sectionProps} />
+          <ReferenceSection {...sectionProps} />
+          <FileSection {...sectionProps} />
+          <Col span={16}>
+            <Space style={{ width: "100%" }} align="end" direction="vertical">
               <Space size="middle">
-                <Button
-                  type="primary"
-                  style={{
-                    width: "80px",
-                    marginBottom: "20px",
-                    justifyContent: "center",
-                  }}
-                  onClick={(e) => onCancel(e)}
-                  danger
-                >
+                <Button type="primary" onClick={(e) => onCancel(e)} danger>
                   Cancel
                 </Button>
-                <Button
-                  type="primary"
-                  style={{
-                    width: "80px",
-                    marginBottom: "20px",
-                    justifyContent: "center",
-                  }}
-                  onClick={(e) => onSave(e)}
-                >
+                <Button type="primary" onClick={(e) => onSave(e)}>
                   Save
                 </Button>
               </Space>
-            )}
+            </Space>
           </Col>
         </Row>
-
-        <Form
-          id="personal"
-          labelCol={{
-            span: 6,
-          }}
-          wrapperCol={{
-            span: 14,
-          }}
-          style={{
-            width: "100%",
-            minWidth: 1000,
-            maxWidth: 1600,
-          }}
-          layout="horizontal"
-          initialValues={initialData}
-          form={form}
-          onFinish={onSubmit}
-          disabled={disabled}
-        >
-          <Row
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              gap: "15px",
-            }}
-          >
-            <NameSection {...sectionProps} />
-            <AddressSection {...sectionProps} />
-            <ContactSection {...sectionProps} />
-            <CitizenSection {...sectionProps} />
-            <ReferenceSection {...sectionProps} />
-            <FileSection {...sectionProps} />
-            <Col span={16}>
-              <Space style={{ width: "100%" }} align="end" direction="vertical">
-                <Space size="middle">
-                  <Button type="primary" htmlType="submit">
-                    submit
-                  </Button>
-                </Space>
-              </Space>
-            </Col>
-          </Row>
-        </Form>
-      </Card>
+      </Form>
     </>
   );
 };

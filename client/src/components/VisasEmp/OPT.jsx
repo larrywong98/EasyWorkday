@@ -2,6 +2,9 @@ import React from "react";
 import HRFeedback from "./HRFeedback";
 import { nextSteps } from "../../reducer/global";
 import UploadForm from "../VisaForms/UploadForm";
+import DownloadForm from "../VisaForms/DownloadForm";
+import { temps } from "../../reducer/global";
+import { Space } from "antd";
 
 const OPT = ({ status }) => {
   const OPTReceipt = () => {
@@ -16,11 +19,17 @@ const OPT = ({ status }) => {
   const approve = (st) => st === "approved";
   const receipt = OPTReceipt();
   return (
-    <div>
+    <>
+      {!approve(status) && (
+        <Space wrap>
+          <DownloadForm url={temps[0]} text="form" />
+          <DownloadForm url={temps[1]} text="template" />
+        </Space>
+      )}
       <div>
         {receipt} {!approve(status) && <UploadForm name="Opt" />}
       </div>
-    </div>
+    </>
   );
 };
 

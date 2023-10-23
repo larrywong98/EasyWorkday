@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "antd";
+import { Form, Button } from "antd";
 // ex:
 /* <DownloadForm
         url="http://localhost:4000/uploads/file-1697161233298.pdf"
@@ -22,14 +22,14 @@ const DownloadForm = ({ url, text }) => {
     document.body.removeChild(aTag);
   };
   return (
-    <div>
+    <Form.Item label={`Download ${text}`}>
       <Button
         onClick={() => downloadFileAtUrl(url)}
         style={{ marginRight: "5%" }}
       >
-        Download{` ${text}`}
+        Download
       </Button>
-    </div>
+    </Form.Item>
   );
 };
 
