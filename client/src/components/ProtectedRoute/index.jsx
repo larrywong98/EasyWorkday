@@ -1,8 +1,7 @@
 import { useSelector } from "react-redux";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { status } from "../../reducer/global";
-import { isExpired } from "react-jwt";
-// import checkExp from "../../services/checkExp";
+import jwt_decode from "jwt-decode";
 
 const ProtectedRoute = ({ children }) => {
   const user = useSelector((state) => state.userReducer);
@@ -12,8 +11,14 @@ const ProtectedRoute = ({ children }) => {
   // register token expiration
   if (location.pathname.includes("register")) {
     const token = location.pathname.split("/").splice(-1)[0];
-    if (isExpired(token)) {
-      return <>Expired</>;
+    var decoded = jwt_decode(token);
+    if (decoded.exp * 1000 < Date.now()) {
+      return (
+        <Navigate
+          to="/error"
+          state={{ message: "Registration Link Expired !!!" }}
+        />
+      );
     } else {
       return <>{children}</>;
     }
@@ -28,6 +33,10 @@ const ProtectedRoute = ({ children }) => {
   }
   // user is employee
   if (userInfo.role === "emp") {
+    // no access to hr page
+    if (location.pathname.includes("hr")) {
+      return <Navigate to="/error" />;
+    }
     //  onboard status
     if (location.pathname.includes("onboard")) {
       if (user.applicationStatus === status.approved) {
@@ -52,6 +61,8 @@ const ProtectedRoute = ({ children }) => {
         return <Navigate to="/emp/onboard" />;
       }
     }
+  } else if (userInfo.role === "hr") {
+    return <>{children}</>;
   } else {
     return <Navigate to="/error" />;
   }

@@ -82,13 +82,38 @@ const App = () => {
               </Route>
             </Route>
             <Route path="hr">
-              <Route path="onboard" element={<OnBoardingHr />} />
+              <Route
+                path="onboard"
+                element={
+                  <ProtectedRoute>
+                    <OnBoardingHr />
+                  </ProtectedRoute>
+                }
+              />
               {/* <Route path="visa" element={<VisaHr />} /> */}
-              <Route path="visa/inprogress" element={<InProgress />} />
-              <Route path="profile" element={<ProfileHr />} />
+              <Route
+                path="visa/inprogress"
+                element={
+                  <ProtectedRoute>
+                    <InProgress />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfileHr />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="decision/:employeeId"
-                element={<HrDecision />}
+                element={
+                  <ProtectedRoute>
+                    <HrDecision />
+                  </ProtectedRoute>
+                }
               ></Route>
             </Route>
             <Route path="success" element={<Success />} />

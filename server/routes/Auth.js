@@ -24,7 +24,7 @@ router.post("/regtoken", async (req, res) => {
     };
     // generate registration token
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "3h",
+      expiresIn: "180m",
     });
 
     const user = await User.findOne({ info: { email: email } });
@@ -69,7 +69,7 @@ router.post("/token", async (req, res) => {
       },
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "3h",
+      expiresIn: "3d",
     });
     res.json({ status: "ok", name: name, token: token });
   } catch (err) {

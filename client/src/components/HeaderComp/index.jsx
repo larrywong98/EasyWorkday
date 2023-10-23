@@ -40,36 +40,40 @@ const HeaderComp = () => {
       <Link className={styles["header-title"]} to="/">
         EasyWorkday
       </Link>
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        onClick={(e) => onClick(e)}
-        // defaultSelectedKeys={[current]}
-        selectedKeys={[current]}
-        items={headerText[userInfo.role].map((pageName, index) => {
-          const key = index;
-          return {
-            key,
-            label: pageName,
-          };
-        })}
-        className={styles["header-menu"]}
-      />
 
       {userInfo.signedIn ? (
-        <Button
-          type="text"
-          className={styles["header-signin"]}
-          onClick={() => {
-            dispatch(signOut());
-            localStorage.clear();
-            navigate("success", { state: { message: "Logout Successful!!!" } });
-          }}
-        >
-          <AiOutlineUser
-            style={{ width: "30px", height: "30px", color: "yellow" }}
+        <>
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            onClick={(e) => onClick(e)}
+            // defaultSelectedKeys={[current]}
+            selectedKeys={[current]}
+            items={headerText[userInfo.role].map((pageName, index) => {
+              const key = index;
+              return {
+                key,
+                label: pageName,
+              };
+            })}
+            className={styles["header-menu"]}
           />
-        </Button>
+          <Button
+            type="text"
+            className={styles["header-signin"]}
+            onClick={() => {
+              dispatch(signOut());
+              localStorage.clear();
+              navigate("success", {
+                state: { message: "Logout Successful!!!" },
+              });
+            }}
+          >
+            <AiOutlineUser
+              style={{ width: "30px", height: "30px", color: "yellow" }}
+            />
+          </Button>
+        </>
       ) : (
         <Button
           type="text"

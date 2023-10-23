@@ -21,7 +21,6 @@ import saveInfo from "../../services/saveInfo";
 
 const OnBoardingEmp = () => {
   const [form] = Form.useForm();
-
   const user = useSelector((state) => state.userReducer);
   const userInfo = useSelector((state) => state.authReducer);
   const [disabled, setDisabled] = useState(
@@ -169,13 +168,11 @@ const OnBoardingEmp = () => {
                 justifyContent: "space-between",
               }}
             >
-              {user.applicationStatus === status.pending ? (
-                <Typography style={{ color: "#ff9800" }}>
-                  Please wait for HR to review your application
-                </Typography>
-              ) : (
-                <></>
-              )}
+              <Typography style={{ color: "#ff9800" }}>
+                {user.applicationStatus === status.pending
+                  ? "Please wait for HR to review your application"
+                  : ""}
+              </Typography>
               <Button type="primary" htmlType="submit">
                 submit
               </Button>

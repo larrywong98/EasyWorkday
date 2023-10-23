@@ -41,7 +41,7 @@ const FileSection = (props) => {
         ) : (
           <>
             {fileFields.map((item, index) => (
-              <Form.Item label={item.name}>
+              <Form.Item key={index} label={item.name}>
                 <UploadComp
                   name={item.linkName}
                   listType={item.listType || "picture-card"}
