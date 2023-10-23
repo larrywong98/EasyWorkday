@@ -71,8 +71,9 @@ router.post("/appstatus/:userId", async (req, res) => {
 // update feedback & visa status
 router.post("/visastatus/:userId", async (req, res) => {
   let filter = { userId: req.params.userId };
-  const { visa, status, receipt, feedback } = req.body;
+  const { visa, status, receipt, feedback, updateIdx } = req.body;
   let update = {
+    ["visa.cur"]: updateIdx,
     [`visa.${visa}`]: status,
     [`visa.${receipt}`]: feedback,
   };

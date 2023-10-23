@@ -1,24 +1,44 @@
 import { Button, Input, Space } from "antd";
 import { useEffect, useState } from "react";
 import sendRequest from "../../services/sendRequest";
-import { statusProperties, receiptProperties } from "../../reducer/global";
+import {
+  statusProperties,
+  receiptProperties,
+  visas,
+} from "../../reducer/global";
+import DownloadForm from "../../components/VisaForms/DownloadForm";
+import Notification from "./Notification";
+
 const { TextArea } = Input;
 
-const Action = ({ employeeId, curIdx }) => {
-  const [feedback, setFeedback] = useState("");
+const Action = ({
+  employeeId,
+  curIdx,
+  curStatus,
+  visaUrl,
+  userName,
+  userEmail,
+  nextstep,
+}) => {
+  const [change, setChange] = useState(false);
   const [visaName, setVisaName] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [visaStatusName, setVisaStatusName] = useState("");
   const [receiptName, setReceiptName] = useState("");
-  console.log(`Action: ${curIdx}`);
+  // console.log(`Action: ${curIdx}`);
   useEffect(() => {
-    setVisaName(statusProperties[curIdx]);
+    setVisaName(visas[curIdx]);
+    setVisaStatusName(statusProperties[curIdx]);
     setReceiptName(receiptProperties[curIdx]);
   }, [curIdx]);
 
+  const approve = (st) => st === "approved";
   const updateDecision = async (status, feedback) => {
-    console.log(`visa: ${visaName},
+    console.log(`visa: ${visaStatusName},
     status: ${status},
     receipt: ${receiptName},
     feedback: ${feedback},`);
+    const updateIdx = approve(status) ? curIdx + 1 : curIdx;
     const response = await sendRequest({
       url: "http://127.0.0.1:4000/api/emp/visastatus/" + employeeId,
       method: "POST",
@@ -26,7 +46,8 @@ const Action = ({ employeeId, curIdx }) => {
         "Content-Type": "application/json",
       },
       data: JSON.stringify({
-        visa: visaName,
+        updateIdx: updateIdx,
+        visa: visaStatusName,
         status: status,
         receipt: receiptName,
         feedback: feedback,
@@ -35,6 +56,7 @@ const Action = ({ employeeId, curIdx }) => {
 
     console.log(response);
     setFeedback("");
+    setChange(true);
   };
   // const approve = () => {
   //   dispatch(setVisa({ status: "approved", index: curIdx }));
@@ -49,25 +71,40 @@ const Action = ({ employeeId, curIdx }) => {
   //   setFeedback("");
   // };
   return (
-    <Space wrap>
-      <TextArea
-        value={feedback}
-        onChange={(e) => setFeedback(e.target.value)}
-      />
-      <Button
-        type="primary"
-        onClick={() => updateDecision("approved", feedback)}
-      >
-        Approve
-      </Button>
-      <Button
-        type="primary"
-        onClick={() => updateDecision("rejected", feedback)}
-        danger
-      >
-        Reject
-      </Button>
-    </Space>
+    <>
+      {!approve(curStatus) && !change && (
+        <Space direction="vertical">
+          <DownloadForm url={visaUrl} text={visaName} />
+          <Space wrap>
+            <TextArea
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+            />
+            <Button
+              type="primary"
+              onClick={() => updateDecision("approved", feedback)}
+            >
+              Approve
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => updateDecision("rejected", feedback)}
+              danger
+            >
+              Reject
+            </Button>
+          </Space>
+        </Space>
+      )}
+      {approve(curStatus) && (
+        <Notification
+          emailAddress={userEmail}
+          message={nextstep}
+          userName={userName}
+        />
+      )}
+      {change && <div>Already take actions</div>}
+    </>
   );
 };
 export default Action;
