@@ -20,6 +20,8 @@ import InProgress from "./VisaHr/InProgress";
 import HrDecision from "./HrDecision";
 import ProfileHrView from "./ProfileHrView";
 import Error from "./Error";
+import VisaHrAll from "./VisaHr/All";
+import VisaHr from "./VisaHr";
 
 const App = () => {
   return (
@@ -91,14 +93,18 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="visa"
-                element={
-                  <ProtectedRoute>
-                    <InProgress />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="visa">
+                <Route
+                  index
+                  element={
+                    <ProtectedRoute>
+                      <VisaHr />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="inprogress" element={<InProgress />} />
+                <Route path="all" element={<VisaHrAll />} />
+              </Route>
               <Route
                 path="profile"
                 element={
