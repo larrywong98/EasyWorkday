@@ -38,10 +38,12 @@ app.use(express.urlencoded({ extended: true }));
 import userRoute from "./routes/User.js";
 import authRoute from "./routes/Auth.js";
 import incomingRoute from "./routes/Incoming.js";
+import visaRoute from "./routes/Visa.js";
 
 app.use("/api/auth", authRoute);
 app.use("/api/emp", userRoute);
 app.use("/api/incoming", incomingRoute);
+app.use("/api/visa/", visaRoute);
 
 app.listen(port, () =>
   console.info(`Server is up on http://localhost:${port}`)

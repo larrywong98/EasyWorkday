@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, message, Upload } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeFile, updateFile } from "../../reducer/userSlice";
+import { updateVisaFile } from "../../services/visa";
+import { useNavigate } from "react-router";
+import { fileName as fileNameMap } from "../../reducer/global";
 
 const UploadForm = ({ name }) => {
   const [fileList, setFileList] = useState([]);
   const [fileUrl, setFileUrl] = useState("");
   const [fileName, setFileName] = useState("");
   const [uploading, setUploading] = useState(false);
+  const userId = useSelector((state) => state.authReducer.userId);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleUpload = () => {
     const formData = new FormData();
@@ -26,20 +31,31 @@ const UploadForm = ({ name }) => {
         // console.log(result);
         return result;
       })
-      .then((res) => {
+      .then(async (res) => {
         setFileList([]);
         setFileUrl(res.fileUrl);
+
+        let newFileInfo = {
+          name: name,
+          status: "done",
+          url: res.fileUrl,
+        };
         message.success("upload successfully.");
+        // dispatch
         dispatch(
           updateFile({
             name: name,
-            fileInfo: {
-              name: name,
-              status: "done",
-              url: res.fileUrl,
-            },
+            fileInfo: newFileInfo,
           })
         );
+
+        const response = await updateVisaFile(
+          fileNameMap[name],
+          userId,
+          newFileInfo,
+          navigate
+        );
+
         console.log("res" + res);
       })
       .catch((err) => {

@@ -49,7 +49,7 @@ const ProtectedRoute = ({ children }) => {
     }
     // visa status
     if (location.pathname.includes("visa")) {
-      if (user.applicationStatus === status.approved) {
+      if (user.info.visaTitle === "F1(CPT/OPT)") {
         return <>{children}</>;
       } else {
         return <Navigate to="/emp/onboard" />;

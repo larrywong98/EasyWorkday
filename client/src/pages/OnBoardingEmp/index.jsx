@@ -57,7 +57,10 @@ const OnBoardingEmp = () => {
         ];
       }
     }
-
+    let newVisa = {
+      ...user.visa,
+    };
+    newVisa.optStatus = "pending";
     // change to pending
     // const newData = { applicationStatus: status.pending, info: data };
     const newData = {
@@ -65,7 +68,7 @@ const OnBoardingEmp = () => {
       applicationStatus: status.pending,
       onboardFeedback: user.onboardFeedback,
       info: data,
-      visa: user.visa,
+      visa: newVisa,
       files: user.files,
       createDate: user.createDate,
       lastUpdateDate: user.lastUpdateDate,
@@ -77,7 +80,7 @@ const OnBoardingEmp = () => {
     // save user
     const response = await saveInfo(user, newData);
     dispatch(updateUserId({ userId: response.userId }));
-    navigate("/success", { state: { message: "Submit Successful" } });
+    // navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {
     let newsectionClosed = [...sectionClosed];
