@@ -20,15 +20,17 @@ const InProgress = () => {
 
   const findLatestStatus = (visaInfo, fileInfo) => {
     let index = visaInfo.cur;
-    let urlindex = 3 + index;
+    let urlindex = Math.min(3 + index, 6);
+    // console.log(urlindex);
+    // console.log(fileInfo[urlindex][0].url);
     let latestStatus = visaInfo[statusProperties[index]];
-    let latestvisaUrl = fileInfo[urlindex].url;
-    if (index > 0 && latestStatus === "") {
+    let latestvisaUrl = fileInfo[urlindex][0]?.url || "";
+    if (index > 0 && latestStatus === "initial") {
       latestStatus = visaInfo[statusProperties[index - 1]];
-      latestvisaUrl = fileInfo[urlindex - 1];
+      latestvisaUrl = fileInfo[urlindex - 1][0]?.url || "";
       index = index - 1;
     }
-    console.log(`inprogress: ${index} ${latestStatus} ${latestvisaUrl}`);
+    // console.log(`inprogress: ${index} ${latestStatus} ${latestvisaUrl}`);
     const message = generateNextStep(latestStatus, index);
     // status, index, url
     dispatch(
@@ -80,7 +82,7 @@ const InProgress = () => {
   };
 
   return (
-    <div>
+    <div style={{ width: "80rem" }}>
       <h1>In Progress:</h1>
       <List
         header={<div>Employee</div>}
