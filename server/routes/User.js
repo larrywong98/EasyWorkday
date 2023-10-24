@@ -74,6 +74,7 @@ router.post("/appstatus/:userId", async (req, res) => {
     applicationStatus: req.body.decision,
     onboardFeedback: req.body.reason,
   };
+
   try {
     const response = await User.findOneAndUpdate(filter, update);
     res.json({ status: response });

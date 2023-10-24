@@ -37,7 +37,6 @@ const HrDecision = () => {
   const [decisionStatus, setDecisionStatus] = useState("");
   const employeeId = useLocation().pathname.split("/").slice(-1)[0];
   const dispatch = useDispatch();
-  console.log(user.applicationStatus);
   const [disabled, setDisabled] = useState(
     user.applicationStatus !== "pending"
   );
@@ -65,6 +64,7 @@ const HrDecision = () => {
         reason: reason,
       }),
     });
+
     setDisabled(true);
   };
   useEffect(() => {

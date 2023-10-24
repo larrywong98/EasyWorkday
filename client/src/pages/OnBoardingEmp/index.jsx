@@ -1,4 +1,4 @@
-import { Space, Card, Row, Col } from "antd";
+import { Space, Row, Col } from "antd";
 import { Button, Form, Typography } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
