@@ -22,6 +22,9 @@ const Visa = ({ name, index }) => {
     if (status === "pending") {
       return <p>{nextSteps[visas[index][0]]}</p>;
     } else if (status === "approved") {
+      if (visaInfo[statusProperties[index]] === "approved") {
+        return <p></p>;
+      }
       return <p>{nextSteps[visas[index][1]]}</p>;
     } else if (status === "rejected") {
       return <HRFeedback feedback={visaInfo[receiptProperties[index]]} />;

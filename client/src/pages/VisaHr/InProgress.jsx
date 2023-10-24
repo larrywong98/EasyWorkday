@@ -22,7 +22,7 @@ const InProgress = () => {
     let index = visaInfo.cur;
     let urlindex = 3 + index;
     let latestStatus = visaInfo[statusProperties[index]];
-    let latestvisaUrl = fileInfo[urlindex].url;
+    let latestvisaUrl = fileInfo[urlindex];
     if (index > 0 && latestStatus === "") {
       latestStatus = visaInfo[statusProperties[index - 1]];
       latestvisaUrl = fileInfo[urlindex - 1];
