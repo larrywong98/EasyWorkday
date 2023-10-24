@@ -39,17 +39,28 @@ router.get("/all", async (req, res) => {
   res.json({ status: result });
 });
 
-// get inprogress employee information
-router.get("/inprogress", async (req, res) => {
+// get all employee visa information
+router.get("/visa/all", async (req, res) => {
+  const query = {
+    "info.visaTitle": "F1(CPT/OPT)",
+  };
+  const result = await User.find(query, { _id: false });
+  console.log(result);
+  res.json({ status: result });
+});
+
+// get inprogress employee visa information
+router.get("/visa/inprogress", async (req, res) => {
   // Setting up the query to filter out documents where ["visa.i20Feedback"] is "approved"
   const query = {
     "visa.i20Status": { $ne: "approved" },
+    "info.visaTitle": "F1(CPT/OPT)",
     applicationStatus: "approved",
   };
 
   // Executing the find query with the filter applied
   const result = await User.find(query, { _id: false });
-
+  console.log(result);
   res.json({ status: result });
 });
 

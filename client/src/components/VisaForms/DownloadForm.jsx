@@ -22,7 +22,7 @@ const DownloadForm = ({ url, text }) => {
     document.body.removeChild(aTag);
   };
   return (
-    <Form.Item label={`Download ${text}`}>
+    <Form.Item label={text && `Download ${text}`}>
       <Button
         onClick={() => downloadFileAtUrl(url)}
         style={{ marginRight: "5%" }}
