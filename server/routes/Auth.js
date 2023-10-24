@@ -158,16 +158,16 @@ router.post("/signup", async (req, res) => {
       },
       visa: {
         cur: 0,
-        optStatus: "",
+        optStatus: "initial",
         optFeedback: "",
 
-        eadStatus: "",
+        eadStatus: "initial",
         eadFeedback: "",
 
-        i983Status: "",
+        i983Status: "initial",
         i983Feedback: "",
 
-        i20Status: "",
+        i20Status: "initial",
         i20Feedback: "",
       },
       files: [[], [], [], [], [], [], []],
