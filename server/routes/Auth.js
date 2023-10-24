@@ -3,6 +3,7 @@ import { Auth, Incoming, Register, User } from "../models/schema.js";
 import jwt from "jsonwebtoken";
 import { auth } from "../utils/auth.js";
 import md5 from "md5";
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 
@@ -55,8 +56,10 @@ router.post("/regtoken", async (req, res) => {
 router.post("/token", async (req, res) => {
   try {
     const { name, pwd } = req.body;
-    const user = await Auth.findOne({ email: name, password: pwd });
-    if (!user) {
+
+    const user = await Auth.findOne({ email: name });
+    const authorized = await bcrypt.compare(pwd, user.password);
+    if (!authorized) {
       res.json({ status: "unauthorized" });
       return;
     }
@@ -98,19 +101,21 @@ router.post("/signup", async (req, res) => {
       return;
     }
     const newUserId = md5(Date.now());
+    const saltRounds = 10;
+    const newPwd = await bcrypt.hash(req.body.pwd, saltRounds);
     // new user
     const newUser = Auth({
       userId: newUserId,
       userName: req.body.userName,
       email: req.body.email,
-      password: req.body.pwd,
+      password: newPwd,
       role: "emp",
     });
 
     // new user application
     const newUserInfo = User({
       userId: newUserId,
-      applicationStatus: "0",
+      applicationStatus: "initial",
       visaStatus: "",
       onboardFeedback: "",
       info: {
