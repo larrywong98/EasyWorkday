@@ -111,6 +111,7 @@ const SignIn = () => {
               name="email"
               onChange={(e) => setUsername(e.target.value)}
               value={username}
+              required
               sx={{ height: "56px" }}
               inputProps={{
                 style: {
@@ -176,9 +177,6 @@ const SignIn = () => {
           >
             Sign In
           </Button>
-          <Box>
-            {authorized ? <></> : <Typography>Wrong password</Typography>}
-          </Box>
         </Box>
         <Box
           sx={{
@@ -186,14 +184,18 @@ const SignIn = () => {
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
             justifyContent: "end",
-            alignItems: { xs: "center" },
+            alignItems: "center",
             marginTop: "22px",
           }}
         >
           <Box>
-            <Link to="/forget" style={{ color: "#5048e5" }}>
-              Forget password?
-            </Link>
+            {authorized ? (
+              <></>
+            ) : (
+              <Typography sx={{ fontSize: "13px", color: "red" }}>
+                Wrong password
+              </Typography>
+            )}
           </Box>
         </Box>
       </Box>

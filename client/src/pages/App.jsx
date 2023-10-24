@@ -37,7 +37,6 @@ const App = () => {
           backgroundColor: "#dddddd",
           display: "flex",
           flexDirection: "column",
-          // justifyContent: "center",
           alignItems: "center",
         }}
       >

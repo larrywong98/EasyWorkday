@@ -12,16 +12,17 @@ const ProtectedRoute = ({ children }) => {
   if (location.pathname.includes("register")) {
     const token = location.pathname.split("/").splice(-1)[0];
     var decoded = jwt_decode(token);
-    if (decoded.exp * 1000 < Date.now()) {
-      return (
-        <Navigate
-          to="/error"
-          state={{ message: "Registration Link Expired !!!" }}
-        />
-      );
-    } else {
-      return <>{children}</>;
-    }
+    // if (decoded.exp * 1000 < Date.now()) {
+    //   return (
+    //     <Navigate
+    //       to="/error"
+    //       state={{ message: "Registration Link Expired !!!" }}
+    //     />
+    //   );
+    // } else
+    // {
+    return <>{children}</>;
+    // }
   }
   // not signed in
   if (userInfo.signedIn === false) {
