@@ -13,9 +13,11 @@ import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import saveIncoming from "../../services/saveIncoming";
 import validateEmail from "../../utils/validateEmail";
+import CheckIcon from "@mui/icons-material/Check";
 
 const Home = () => {
   const navigate = useNavigate();
+  const user = useSelector((state) => state.userReducer);
   const userInfo = useSelector((state) => state.authReducer);
   const {
     register,
@@ -63,17 +65,29 @@ const Home = () => {
         {userInfo.signedIn ? (
           <Stack>
             <Box component="h2">Here are some steps for onboarding</Box>
-            <List>
-              {[
-                "Fill in Onboard Application",
-                "Upload your Visa Documents (visa status: F1)",
-                "Check and update your information in personal information page",
-              ].map((text, index) => (
-                <ListItem key={index} disableGutters>
-                  <ListItemText primary={`${index + 1}. ${text}`} />
-                </ListItem>
-              ))}
-            </List>
+            <Stack direction="row" sx={{ gap: "10px" }}>
+              <Stack
+                sx={{
+                  justifyContent: "space-between",
+                  padding: "20px 0",
+                }}
+              >
+                {[true, true, true].map((show, index) => (
+                  <CheckIcon key={index} sx={{ color: "green" }} />
+                ))}
+              </Stack>
+              <List>
+                {[
+                  "Fill in Onboard Application",
+                  "Upload your Visa Documents (visa status: F1)",
+                  "Check and update your information in personal information page",
+                ].map((text, index) => (
+                  <ListItem key={index} disableGutters>
+                    <ListItemText primary={`${index + 1}. ${text}`} />
+                  </ListItem>
+                ))}
+              </List>
+            </Stack>
           </Stack>
         ) : (
           <Stack direction="row" sx={{ gap: "100px" }}>

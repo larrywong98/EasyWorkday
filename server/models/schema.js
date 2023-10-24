@@ -6,6 +6,7 @@ const userSchema = new Schema(
     userId: String,
     role: String,
     applicationStatus: String,
+    visaStatus: String,
     onboardFeedback: String,
     info: {
       firstName: String,

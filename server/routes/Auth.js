@@ -116,7 +116,7 @@ router.post("/signup", async (req, res) => {
     const newUserInfo = User({
       userId: newUserId,
       applicationStatus: "initial",
-      visaStatus: "",
+      visaStatus: "initial",
       onboardFeedback: "",
       info: {
         firstName: "",
