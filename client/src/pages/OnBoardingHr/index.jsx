@@ -121,12 +121,11 @@ const OnBoardingHr = () => {
   };
 
   const toUserDetail = async (i) => {
-    if (data[i].applicationStatus === "0") {
+    if (data[i].applicationStatus === "initial") {
       return;
     }
     const response = await loadUserInfo(data[i].userId);
     // details
-    // console.log(response);
     dispatch(loadUser({ user: response }));
     navigate("/hr/decision/" + data[i].userId);
   };
@@ -333,7 +332,7 @@ const OnBoardingHr = () => {
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Registration Token</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Onboarding Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

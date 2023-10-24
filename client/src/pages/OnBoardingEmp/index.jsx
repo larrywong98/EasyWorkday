@@ -1,6 +1,6 @@
 import { Space, Card, Row, Col } from "antd";
 import { Button, Form, Typography } from "antd";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
 import ContactSection from "../../components/ContactSection";
@@ -12,12 +12,14 @@ import dayjs from "dayjs";
 import { status } from "../../reducer/global";
 import {
   fillInfo,
+  loadUser,
   updateUserId,
   updateVisaOptReceipt,
 } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Feedback from "../../components/Feedback";
 import saveInfo from "../../services/saveInfo";
+import { loadUserInfo } from "../../services/loadUserInfo";
 
 const OnBoardingEmp = () => {
   const [form] = Form.useForm();
@@ -92,6 +94,13 @@ const OnBoardingEmp = () => {
   const formLayout = {
     layout: { sm: "vertical", md: "horizontal" },
   };
+
+  useEffect(() => {
+    (async () => {
+      const response1 = await loadUserInfo(userInfo.userId);
+      dispatch(loadUser({ user: response1 }));
+    })();
+  }, []);
 
   return (
     <>
