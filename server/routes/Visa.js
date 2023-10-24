@@ -13,7 +13,17 @@ router.put("/", async (req, res) => {
     let user = await User.findOne(filter);
     let newFiles = user.files;
     newFiles[req.body.index] = req.body.fileInfo;
-    const update = { files: newFiles };
+    let newVisa = user.visa;
+    if (req.body.index === 3) {
+      newVisa.optStatus = "pending";
+    } else if (req.body.index === 4) {
+      newVisa.eadStatus = "pending";
+    } else if (req.body.index === 5) {
+      newVisa.i983Status = "pending";
+    } else if (req.body.index === 6) {
+      newVisa.i20Status = "pending";
+    }
+    const update = { files: newFiles, visa: newVisa };
     const response = await User.findOneAndUpdate(filter, update);
 
     res.json({ status: "ok" });
