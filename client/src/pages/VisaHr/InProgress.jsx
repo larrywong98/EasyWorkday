@@ -2,7 +2,7 @@ import React from "react";
 import { Descriptions } from "antd";
 import { useEffect, useState } from "react";
 import { List } from "antd";
-import loadInProgressUser from "../../services/loadInProgressUser";
+import loadInProgressVisaUser from "../../services/loadInProgressVisaUser";
 import { statusProperties, visas, nextSteps } from "../../reducer/global";
 import Action from "../../components/VisaHr/Action";
 import Notification from "../../components/VisaHr/Notification";
@@ -45,7 +45,8 @@ const InProgress = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await loadInProgressUser();
+      const response = await loadInProgressVisaUser();
+      console.log(response);
       setEmp(response);
       dispatch(clearHrSlice());
       response.forEach((employee) => {
