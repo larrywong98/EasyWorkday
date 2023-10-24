@@ -24,6 +24,7 @@ const InProgress = () => {
     // console.log(urlindex);
     // console.log(fileInfo[urlindex][0].url);
     let latestStatus = visaInfo[statusProperties[index]];
+
     let latestvisaUrl = fileInfo[urlindex][0]?.url || "";
     if (index > 0 && latestStatus === "initial") {
       latestStatus = visaInfo[statusProperties[index - 1]];

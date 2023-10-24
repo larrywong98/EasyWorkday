@@ -19,7 +19,6 @@ import {
   TableBody,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { status } from "../../reducer/global";
 import clsx from "clsx";
 import { setRegToken, getAllRegToken } from "../../services/regToken";
 import validateEmail from "../../utils/validateEmail";
@@ -37,11 +36,7 @@ const OnBoardingHr = () => {
   const [incomingData, setIncomingData] = useState([]);
   const [emailSent, setEmailSent] = useState(false);
   const [fullName, setFullName] = useState("");
-  // const [tableData, setTableData] = useState([]);
-  // const valueToStatus = (value) => {
-  //   const statusText = Object.keys(status).find((key) => status[key] === value);
-  //   return statusText;
-  // };
+
   const tableData = useMemo(() => {
     return data.map((item, index) => {
       if (item.info.firstName === "") item.info.firstName = "null";
@@ -91,7 +86,7 @@ const OnBoardingHr = () => {
     const response1 = await getAllRegToken(navigate);
     setRegisterData(response1);
 
-    // remove income
+    // remove incoming user
     const response2 = await removeIncoming(employeeEmail);
     const response3 = await getIncoming();
     console.log(response3);
@@ -187,6 +182,19 @@ const OnBoardingHr = () => {
       },
     },
   ];
+
+  const getOnboardingStatus = (email) => {
+    const selectedUser = data.filter((item) => item.info.email === email)[0];
+    return selectedUser?.applicationStatus || "initial";
+  };
+
+  const onboardingStatusClass = (email) => {
+    const selectedOnBoardingStatus = getOnboardingStatus(email);
+    if (selectedOnBoardingStatus === "pending") return styles["yellow"];
+    if (selectedOnBoardingStatus === "rejected") return styles["red"];
+    if (selectedOnBoardingStatus === "approved") return styles["green"];
+    return "";
+  };
 
   return (
     <Box
@@ -363,18 +371,10 @@ const OnBoardingHr = () => {
                   </TableCell>
                   <TableCell>
                     <Box
-                      className={
-                        row.regStatus === "pending"
-                          ? styles["yellow"]
-                          : row.regStatus === "rejected"
-                          ? styles["red"]
-                          : row.regStatus === "approved"
-                          ? styles["green"]
-                          : ""
-                      }
+                      className={onboardingStatusClass(row.email)}
                       sx={{ width: "100px" }}
                     >
-                      {row.regStatus}
+                      {getOnboardingStatus(row.email)}
                     </Box>
                   </TableCell>
                 </TableRow>

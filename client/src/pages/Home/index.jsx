@@ -72,7 +72,11 @@ const Home = () => {
                   padding: "20px 0",
                 }}
               >
-                {[true, true, true].map((show, index) => (
+                {[
+                  user && user.applicationStatus === "approved",
+                  true,
+                  true,
+                ].map((show, index) => (
                   <CheckIcon key={index} sx={{ color: "green" }} />
                 ))}
               </Stack>
