@@ -7,11 +7,7 @@ import { statusProperties, visas, nextSteps } from "../../reducer/global";
 import Action from "../../components/VisaHr/Action";
 import Notification from "../../components/VisaHr/Notification";
 import { useSelector } from "react-redux";
-import {
-  initialHrSlice,
-  clearHrSlice,
-  initialTime,
-} from "../../reducer/hrSlice";
+import { initialHrSlice, clearHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
 
 const InProgress = () => {
@@ -24,11 +20,12 @@ const InProgress = () => {
 
   const findLatestStatus = (visaInfo, fileInfo) => {
     let index = visaInfo.cur;
+    let urlindex = 3 + index;
     let latestStatus = visaInfo[statusProperties[index]];
-    let latestvisaUrl = fileInfo[index].url;
+    let latestvisaUrl = fileInfo[urlindex].url;
     if (index > 0 && latestStatus === "") {
       latestStatus = visaInfo[statusProperties[index - 1]];
-      latestvisaUrl = fileInfo[index - 1];
+      latestvisaUrl = fileInfo[urlindex - 1];
       index = index - 1;
     }
     console.log(`inprogress: ${index} ${latestStatus} ${latestvisaUrl}`);
@@ -50,9 +47,6 @@ const InProgress = () => {
       setEmp(response);
       dispatch(clearHrSlice());
       response.forEach((employee) => {
-        if (time.length === 0) {
-          dispatch(initialTime());
-        }
         findLatestStatus(employee.visa, employee.files);
       });
     })();

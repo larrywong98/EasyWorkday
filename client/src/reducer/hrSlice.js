@@ -21,9 +21,9 @@ const hrSlice = createSlice({
       state.curIndex.push(index);
       state.latestVisaUrl.push(url);
       state.nextStep.push(message);
-    },
-    initialTime: (state) => {
-      state.time.push("");
+      if (state.time.length === 0) {
+        state.time.push("");
+      }
     },
     changeResponse: (state, action) => {
       const index = action.payload;
@@ -44,11 +44,6 @@ const hrSlice = createSlice({
   },
 });
 
-export const {
-  initialHrSlice,
-  changeResponse,
-  updateTime,
-  clearHrSlice,
-  initialTime,
-} = hrSlice.actions;
+export const { initialHrSlice, changeResponse, updateTime, clearHrSlice } =
+  hrSlice.actions;
 export default hrSlice.reducer;
