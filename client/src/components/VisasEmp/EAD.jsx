@@ -10,7 +10,7 @@ const EAD = ({ status }) => {
     } else if (status === "approved") {
       return <p>{nextSteps.ead[1]}</p>;
     } else if (status === "rejected") {
-      return <<HRFeedback />>;
+      return <HRFeedback />;
     }
   };
   const approve = (st) => st === "approved";

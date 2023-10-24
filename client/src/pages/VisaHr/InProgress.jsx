@@ -7,7 +7,11 @@ import { statusProperties, visas, nextSteps } from "../../reducer/global";
 import Action from "../../components/VisaHr/Action";
 import Notification from "../../components/VisaHr/Notification";
 import { useSelector } from "react-redux";
-import { initialHrSlice, clearHrSlice } from "../../reducer/hrSlice";
+import {
+  initialHrSlice,
+  clearHrSlice,
+  initialTime,
+} from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
 
 const InProgress = () => {
@@ -46,6 +50,9 @@ const InProgress = () => {
       setEmp(response);
       dispatch(clearHrSlice());
       response.forEach((employee) => {
+        if (time.length === 0) {
+          dispatch(initialTime());
+        }
         findLatestStatus(employee.visa, employee.files);
       });
     })();

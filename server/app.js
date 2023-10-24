@@ -18,9 +18,9 @@ const __dirname = dirname(__filename);
 const port = process.env.PORT || 4000;
 
 // yingshan's mongoDB
-// const uri = `mongodb+srv://${process.env.MDB_NAME}:${process.env.MDB_PWD}@workday.aicingq.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.MDB_NAME}:${process.env.MDB_PWD}@workday.aicingq.mongodb.net/?retryWrites=true&w=majority`;
 
-const uri = `mongodb+srv://${process.env.MONGODB_NAME}:${process.env.MONGODB_PWD}@cluster0.yyafoyf.mongodb.net/workday?retryWrites=true&w=majority`;
+// const uri = `mongodb+srv://${process.env.MONGODB_NAME}:${process.env.MONGODB_PWD}@cluster0.yyafoyf.mongodb.net/workday?retryWrites=true&w=majority`;
 mongoose
   .connect(uri)
   .then(() => {
