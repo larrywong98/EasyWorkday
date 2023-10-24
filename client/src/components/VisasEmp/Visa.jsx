@@ -18,20 +18,22 @@ const Visa = ({ name, index }) => {
   const visaInfo = useSelector((state) => state.userReducer.visa);
   const status = visaInfo[statusProperties[index]];
   console.log(status);
-  const Receipt = () => {
+  const Receipt = (index) => {
     if (status === "pending") {
-      return <p>{nextSteps[visas[index][0]]}</p>;
+      return <p>{nextSteps[visas[index]][0]}</p>;
     } else if (status === "approved") {
-      if (visaInfo[statusProperties[index]] === "approved") {
+      //   console.log(nextSteps[visas[index]][1]);
+      if (visaInfo[statusProperties[Math.min(index + 1, 6)]] === "approved") {
         return <p></p>;
       }
-      return <p>{nextSteps[visas[index][1]]}</p>;
+      return <p>{nextSteps[visas[index]][1]}</p>;
     } else if (status === "rejected") {
       return <HRFeedback feedback={visaInfo[receiptProperties[index]]} />;
     }
   };
   const approve = (st) => st === "approved";
-  const receipt = Receipt();
+  const receipt = Receipt(index);
+
   return (
     <>
       <div>

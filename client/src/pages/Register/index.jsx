@@ -47,6 +47,11 @@ const SignUp = () => {
 
   const submit = async (e) => {
     e.preventDefault();
+    
+    if (pwdRepeat || validateEmail(email) === false || password === "") {
+      setFirstLoad(false);
+      return;
+    }
 
     const response = await signUpRequest(username, password, email, navigate);
     // console.log(response);
@@ -153,6 +158,23 @@ const SignUp = () => {
                     },
                   }}
                 />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "end",
+                    color: "#FC5A44",
+                    position: "absolute",
+                    top: "80px",
+                    right: "0px",
+                  }}
+                >
+                  <Typography variant="p" sx={{ fontSize: "14px" }}>
+                    {!firstLoad && username === ""
+                      ? "Field Required"
+                      : ""}
+                  </Typography>
+                </Box>
+
               </Box>
 
               <Box
