@@ -1,8 +1,7 @@
-import { Box, InputAdornment, Paper, TextField } from "@mui/material";
+import { Alert, Box, InputAdornment, Paper, TextField } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
-import { status } from "../../reducer/global";
 import loadAllUser from "../../services/loadAllUser";
 import { loadUser } from "../../reducer/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +11,7 @@ import SearchIcon from "@mui/icons-material/Search";
 const ProfileHr = () => {
   const [data, setData] = useState([]);
   const [initialData, setInitialData] = useState([]);
+  const [showError, setShowError] = useState(false);
   // const valueToStatus = (value) => {
   //   const statusText = Object.keys(status).find((key) => status[key] === value);
   //   return statusText;
@@ -42,11 +42,16 @@ const ProfileHr = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.userReducer);
   const toUserProfileDetail = (index) => {
-    if (data[index].applicationStatus === "4") {
+    if (data[index].applicationStatus === "approved") {
       const selectedUser = data[index];
       dispatch(loadUser({ user: selectedUser }));
       navigate("/emp/profile/view");
+      return;
     }
+    setShowError(true);
+    setTimeout(() => {
+      setShowError(false);
+    }, 3000);
   };
   const columns = [
     {
@@ -165,6 +170,22 @@ const ProfileHr = () => {
   }, []);
   return (
     <>
+      <Box
+        component={Paper}
+        sx={{
+          position: "absolute",
+          top: "10%",
+          opacity: showError ? "1" : "0",
+          transition: "all .5s",
+          visibility: showError ? "visible" : "hidden",
+        }}
+      >
+        <Alert severity="warning">
+          Only approved profile can be viewed. Otherwise approve the onboarding
+          application !
+        </Alert>
+      </Box>
+
       <Paper
         elevation={3}
         sx={{
@@ -198,6 +219,9 @@ const ProfileHr = () => {
           initialState={{
             pagination: {
               paginationModel: { page: 0, pageSize: 5 },
+            },
+            sorting: {
+              sortModel: [{ field: "lastName", sort: "asc" }],
             },
           }}
           // filterModel={filterModel}

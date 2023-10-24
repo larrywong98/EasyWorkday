@@ -1,30 +1,19 @@
-import { Space, Typography } from "antd";
+import { Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  statusProperties,
-  temps,
-  nextStep,
-  feedbackKey,
-} from "../../reducer/global";
-import UploadForm from "../../components/VisaForms/UploadForm";
 import { Collapse } from "antd";
 import { useEffect } from "react";
-import DownloadForm from "../../components/VisaForms/DownloadForm";
 import { loadUserInfo } from "../../services/loadUserInfo";
 import { loadUser } from "../../reducer/userSlice";
+import { statusProperties } from "../../reducer/global";
+import Visa from "../../components/VisasEmp/Visa";
 const { Title } = Typography;
 const { Panel } = Collapse;
 
 const VisaEmp = () => {
-  const status = useSelector((state) => state.userReducer.visa);
   const user = useSelector((state) => state.userReducer);
+  const visaInfo = useSelector((state) => state.userReducer.visa);
+  console.log(user);
   const dispatch = useDispatch();
-  const statusArray = [
-    status[statusProperties[0]],
-    status[statusProperties[1]],
-    status[statusProperties[2]],
-    status[statusProperties[3]],
-  ];
 
   //load user data userInfo.userId
   useEffect(() => {
@@ -34,22 +23,20 @@ const VisaEmp = () => {
     })();
   }, []);
 
-  const receipt = (index) => {
-    if (statusArray[index] === "pending") {
-      return <p>{nextStep[index][0]}</p>;
-    } else if (statusArray[index] === "approved") {
-      return <p>{nextStep[index][1]}</p>;
-    } else if (statusArray[index] === "rejected") {
-      console.log(feedbackKey[index]);
-      return <p>{user.visa[feedbackKey[index]]}</p>;
-    }
-  };
   const collapseChildren = [
-    { header: "EAD", key: "EAD", uploadName: "Ead" },
-    { header: "I-983", key: "I-983", uploadName: "I983" },
-    { header: "I-20", key: "I-20", uploadName: "I20" },
+    { visa: "OPT", uploadName: "Opt" },
+    { visa: "EAD", uploadName: "Ead" },
+    { visa: "I-983", uploadName: "I983" },
+    { visa: "I-20", uploadName: "I20" },
   ];
 
+  const isOPT = (name) => name === "Opt";
+
+  const findOuterStatus = (name, index) => {
+    return isOPT(name)
+      ? user.applicationStatus
+      : visaInfo[statusProperties[index - 1]];
+  };
   const approve = (st) => st === "approved";
 
   return (
@@ -70,36 +57,14 @@ const VisaEmp = () => {
             width: "800px",
           }}
         >
-          <Panel header="OPT" key="OPT">
-            <p>OPT status: {statusArray[0]}</p>
-            <Space wrap>
-              <DownloadForm url={temps[0]} text="form" />
-              <DownloadForm url={temps[1]} text="template" />
-            </Space>
-
-            <div>
-              {receipt(0)}
-              {!approve(statusArray[0]) && <UploadForm name="Opt" />}
-            </div>
-          </Panel>
-
-          {collapseChildren.map((item, index) => (
-            <>
-              {approve(statusArray[index]) && (
-                <Panel header={item.header} key={item.key}>
-                  <p>
-                    {item.header} status: {statusArray[index + 1]}
-                  </p>
-                  <div>
-                    {receipt(index + 1)}
-                    {!approve(statusArray[index + 1]) && (
-                      <UploadForm name={item.uploadName} />
-                    )}
-                  </div>
+          {collapseChildren.map(
+            (item, index) =>
+              approve(findOuterStatus(item.uploadName, index)) && (
+                <Panel header={item.visa} key={index}>
+                  <Visa name={item.uploadName} index={index} />
                 </Panel>
-              )}
-            </>
-          ))}
+              )
+          )}
         </Collapse>
       </div>
     </>

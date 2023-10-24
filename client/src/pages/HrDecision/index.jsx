@@ -1,6 +1,6 @@
 import { Space, Card, Row } from "antd";
 import { Button, Form, Typography } from "antd";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
 import ContactSection from "../../components/ContactSection";
@@ -10,12 +10,14 @@ import FileSection from "../../components/FileSection";
 import { useLocation } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Input } from "antd";
 import sendRequest from "../../services/sendRequest";
 import { Link } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
 import { Box } from "@mui/material";
+import { loadUserInfo } from "../../services/loadUserInfo";
+import { loadUser } from "../../reducer/userSlice";
 
 const HrDecision = () => {
   const [form] = Form.useForm();
@@ -34,6 +36,11 @@ const HrDecision = () => {
   const [feedback, setFeedback] = useState("");
   const [decisionStatus, setDecisionStatus] = useState("");
   const employeeId = useLocation().pathname.split("/").slice(-1)[0];
+  const dispatch = useDispatch();
+  console.log(user.applicationStatus);
+  const [disabled, setDisabled] = useState(
+    user.applicationStatus !== "pending"
+  );
 
   const { TextArea } = Input;
 
@@ -58,9 +65,14 @@ const HrDecision = () => {
         reason: reason,
       }),
     });
-
-    console.log(response);
+    setDisabled(true);
   };
+  useEffect(() => {
+    (async () => {
+      const response = await loadUserInfo(user.userId);
+      dispatch(loadUser({ user: response }));
+    })();
+  }, []);
 
   return (
     <>
@@ -144,19 +156,19 @@ const HrDecision = () => {
             style={{ width: "300px" }}
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
-            disabled={user.applicationStatus !== "pending"}
+            disabled={disabled}
           />
           <Button
             type="primary"
             onClick={() => updateDecision("approved", "")}
-            disabled={user.applicationStatus !== "pending"}
+            disabled={disabled}
           >
             Approve
           </Button>
           <Button
             type="primary"
             onClick={() => updateDecision("rejected", feedback)}
-            disabled={user.applicationStatus !== "pending"}
+            disabled={disabled}
             danger
           >
             Reject

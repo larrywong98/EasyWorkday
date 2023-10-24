@@ -6,6 +6,7 @@ const userSchema = new Schema(
     userId: String,
     role: String,
     applicationStatus: String,
+    visaStatus: String,
     onboardFeedback: String,
     info: {
       firstName: String,
@@ -98,8 +99,20 @@ const registerSchema = new Schema(
     collection: "Register",
   }
 );
+
+const incomingSchema = new Schema(
+  {
+    fullName: String,
+    email: String,
+  },
+  {
+    collection: "Incoming",
+  }
+);
+
 const User = mongoose.model("User", userSchema);
 const Auth = mongoose.model("Auth", authSchema);
 const Register = mongoose.model("Register", registerSchema);
+const Incoming = mongoose.model("Incoming", incomingSchema);
 
-export { User, Auth, Register };
+export { User, Auth, Register, Incoming };

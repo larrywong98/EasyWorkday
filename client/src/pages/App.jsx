@@ -20,6 +20,8 @@ import InProgress from "./VisaHr/InProgress";
 import HrDecision from "./HrDecision";
 import ProfileHrView from "./ProfileHrView";
 import Error from "./Error";
+import VisaHrAll from "./VisaHr/All";
+import VisaHr from "./VisaHr";
 
 const App = () => {
   return (
@@ -35,13 +37,13 @@ const App = () => {
           backgroundColor: "#dddddd",
           display: "flex",
           flexDirection: "column",
-          // justifyContent: "center",
           alignItems: "center",
         }}
       >
         <Routes>
           <Route path="/">
             <Route index element={<Home />} />
+            <Route path="home" element={<Home />} />
             <Route
               path="register/:regToken"
               element={
@@ -64,9 +66,9 @@ const App = () => {
               <Route
                 path="visa"
                 element={
-                  // <ProtectedRoute>
-                  <VisaEmp />
-                  // </ProtectedRoute>
+                  <ProtectedRoute>
+                    <VisaEmp />
+                  </ProtectedRoute>
                 }
               />
               <Route path="profile">
@@ -85,20 +87,23 @@ const App = () => {
               <Route
                 path="onboard"
                 element={
-                  <ProtectedRoute>
-                    <OnBoardingHr />
-                  </ProtectedRoute>
+                  // <ProtectedRoute>
+                  <OnBoardingHr />
+                  // </ProtectedRoute>
                 }
               />
-              {/* <Route path="visa" element={<VisaHr />} /> */}
-              <Route
-                path="visa"
-                element={
-                  <ProtectedRoute>
-                    <InProgress />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="visa">
+                <Route
+                  index
+                  element={
+                    // <ProtectedRoute>
+                    <VisaHr />
+                    // </ProtectedRoute>
+                  }
+                />
+                <Route path="inprogress" element={<InProgress />} />
+                <Route path="all" element={<VisaHrAll />} />
+              </Route>
               <Route
                 path="profile"
                 element={

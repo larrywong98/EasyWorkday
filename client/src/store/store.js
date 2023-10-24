@@ -4,6 +4,7 @@ import userReducer from "../reducer/userSlice";
 // import statusReducer from "../reducer/statusSlice";
 import feedbackReducer from "../reducer/feedbackSlice";
 import authReducer from "../reducer/authSlice";
+import hrReducer from "../reducer/hrSlice";
 import thunk from "redux-thunk";
 import {
   persistStore,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   userReducer,
   feedbackReducer,
   authReducer,
+  hrReducer,
 });
 
 const persistConfig = {

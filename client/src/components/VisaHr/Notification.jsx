@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import emailjs from "@emailjs/browser";
 import { Button } from "antd";
+import { changeResponse, updateTime } from "../../reducer/hrSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const Notification = ({ userName, emailAddress, message }) => {
-  //   const [change, setChange] = useState(false);
+const Notification = ({ index, userName, emailAddress }) => {
   const [result, setResult] = useState("");
+  const message = useSelector((state) => state.hrReducer.nextStep[index]);
+
+  const dispatch = useDispatch();
 
   const sendNotification = () => {
     emailjs
@@ -29,15 +33,14 @@ const Notification = ({ userName, emailAddress, message }) => {
           setResult("Failed to send email!");
         }
       );
-    // setChange(true);
+    dispatch(changeResponse(index));
+    dispatch(updateTime(index));
   };
 
   return (
     <>
       <div>
-        {/* {!change && ( */}
         <Button onClick={sendNotification}>Send Notification</Button>
-        {/* )} */}
         {result && <p>{result}</p>}
       </div>
     </>
