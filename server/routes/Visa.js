@@ -63,6 +63,7 @@ router.post("/token", async (req, res) => {
 router.get("/all", async (req, res) => {
   const query = {
     "info.visaTitle": "F1(CPT/OPT)",
+    applicationStatus: "approved",
   };
   const result = await User.find(query, { _id: false });
   console.log(result);

@@ -123,8 +123,8 @@ const InProgress = () => {
                 <Descriptions.Item label="Start and end date">
                   <div
                     style={{
-                      height: "30px",
-                      width: "50px",
+                      height: "50px",
+                      width: "100px",
                     }}
                   >
                     {employee.info.visaDate[0]} {employee.info.visaDate[1]}
