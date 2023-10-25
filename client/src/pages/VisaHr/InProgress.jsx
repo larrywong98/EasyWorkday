@@ -11,6 +11,7 @@ import { initialHrSlice, clearHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
+import { approve } from "../../utils/approve";
 
 const InProgress = () => {
   const [employees, setEmp] = useState([]);
@@ -57,8 +58,6 @@ const InProgress = () => {
       });
     })();
   }, []);
-
-  const approve = (st) => st === "approved";
 
   const generateNextStep = (latestStatus, index) => {
     let nextstep = "";

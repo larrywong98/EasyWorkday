@@ -1,5 +1,4 @@
 import React from "react";
-import HRFeedback from "./HRFeedback";
 import {
   nextSteps,
   visas,
@@ -11,6 +10,7 @@ import DownloadForm from "../VisaForms/DownloadForm";
 import { useSelector } from "react-redux";
 import { temps } from "../../reducer/global";
 import { Space } from "antd";
+import { approve } from "../../utils/approve";
 
 const Visa = ({ name, index }) => {
   console.log(`name: ${name}, index: ${index}`);
@@ -28,10 +28,15 @@ const Visa = ({ name, index }) => {
       }
       return <p>{nextSteps[visas[index]][1]}</p>;
     } else if (status === "rejected") {
-      return <HRFeedback feedback={visaInfo[receiptProperties[index]]} />;
+      const feedback =
+        visaInfo[receiptProperties[index]] || "Rejected without feedback";
+      // const HRFeedback = feedback.length
+      //   ? feedback
+      //   : "Rejected without feedback";
+      return <p style={{ color: "red" }}>Reject reason: {feedback}</p>;
     }
   };
-  const approve = (st) => st === "approved";
+
   const receipt = Receipt(index);
 
   return (

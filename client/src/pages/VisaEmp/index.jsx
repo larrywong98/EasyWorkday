@@ -37,7 +37,6 @@ const VisaEmp = () => {
       ? user.applicationStatus
       : visaInfo[statusProperties[index - 1]];
   };
-  const approve = (st) => st === "approved";
 
   return (
     <>

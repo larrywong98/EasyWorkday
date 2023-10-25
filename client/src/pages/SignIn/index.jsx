@@ -29,6 +29,9 @@ const SignIn = () => {
       }
     }
     const response = await signInRequest(dispatch, navigate);
+    if (response === "error") {
+      return;
+    }
     // console.log(response);
   };
   return (
