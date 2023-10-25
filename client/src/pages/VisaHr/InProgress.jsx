@@ -30,7 +30,7 @@ const InProgress = () => {
       latestvisaUrl = fileInfo[urlindex - 1][0]?.url || "";
       index = index - 1;
     }
-    // console.log(`inprogress: ${index} ${latestStatus} ${latestvisaUrl}`);
+    console.log(`inprogress: ${index} ${latestStatus} ${latestvisaUrl}`);
     const message = generateNextStep(latestStatus, index);
     // status, index, url
     dispatch(
@@ -46,7 +46,7 @@ const InProgress = () => {
   useEffect(() => {
     (async () => {
       const response = await loadInProgressVisaUser();
-      console.log(response);
+      // console.log(response);
       setEmp(response);
       dispatch(clearHrSlice());
       response.forEach((employee) => {
