@@ -108,16 +108,37 @@ const InProgress = () => {
             <List.Item key={index}>
               <Descriptions title="Employee Info">
                 <Descriptions.Item label="Name">
-                  {employee.info.firstName} {employee.info.lastName}
+                  <div
+                    style={{
+                      height: "30px",
+                      width: "200px",
+                    }}
+                  >
+                    {employee.info.firstName} {employee.info.lastName}
+                  </div>
                 </Descriptions.Item>
                 <Descriptions.Item label="Title">
                   {employee.info.visaTitle}
                 </Descriptions.Item>
                 <Descriptions.Item label="Start and end date">
-                  {employee.info.visaDate[0]} {employee.info.visaDate[1]}
+                  <div
+                    style={{
+                      height: "50px",
+                      width: "100px",
+                    }}
+                  >
+                    {employee.info.visaDate[0]} {employee.info.visaDate[1]}
+                  </div>
                 </Descriptions.Item>
                 <Descriptions.Item label="Number of Days Remaining">
-                  {daysRemain(employee.info.visaDate[1])}
+                  <div
+                    style={{
+                      height: "30px",
+                      width: "50px",
+                    }}
+                  >
+                    {daysRemain(employee.info.visaDate[1])}
+                  </div>
                 </Descriptions.Item>
                 <Descriptions.Item label="Next Steps" span={2}>
                   {nextStep[index]}
