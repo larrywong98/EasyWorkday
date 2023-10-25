@@ -3,7 +3,7 @@ import React from "react";
 
 const HRFeedback = ({ feedback }) => {
   const HRFeedback = feedback.length ? feedback : "Rejected without feedback";
-  return <p>{HRFeedback}</p>;
+  return <p style={{ color: "red" }}>Reject reason: {HRFeedback}</p>;
 };
 
 export default HRFeedback;

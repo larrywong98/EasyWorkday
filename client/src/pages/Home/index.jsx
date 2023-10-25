@@ -10,15 +10,18 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import saveIncoming from "../../services/saveIncoming";
 import validateEmail from "../../utils/validateEmail";
 import CheckIcon from "@mui/icons-material/Check";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { loadUserInfo } from "../../services/loadUserInfo";
+import { loadUser } from "../../reducer/userSlice";
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.userReducer);
   const userInfo = useSelector((state) => state.authReducer);
   const {
@@ -59,6 +62,13 @@ const Home = () => {
       state: { message: "Wait for Hr to send the registration link" },
     });
   };
+
+  useEffect(() => {
+    (async () => {
+      const response1 = await loadUserInfo(userInfo.userId);
+      dispatch(loadUser({ user: response1 }));
+    })();
+  }, []);
   return (
     <Paper
       elevation={3}
