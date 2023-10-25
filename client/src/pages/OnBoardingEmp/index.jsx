@@ -60,7 +60,9 @@ const OnBoardingEmp = () => {
     let newVisa = {
       ...user.visa,
     };
-    newVisa.optStatus = "pending";
+    if (user.info.visaTitle === "F1(CPT/OPT)") {
+      newVisa.optStatus = "pending";
+    }
     // change to pending
     // const newData = { applicationStatus: status.pending, info: data };
     const newData = {

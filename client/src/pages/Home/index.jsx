@@ -15,6 +15,7 @@ import saveIncoming from "../../services/saveIncoming";
 import validateEmail from "../../utils/validateEmail";
 import CheckIcon from "@mui/icons-material/Check";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
+import { useState } from "react";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -27,6 +28,23 @@ const Home = () => {
     watch,
     formState: { errors },
   } = useForm();
+
+  const welcomeText = useState(() => {
+    if (user.info.visaTitle === "F1(CPT/OPT)") {
+      return [
+        "Fill in Onboard Application",
+        "Upload your Visa Documents (visa status: F1)",
+        "Check and update your information in personal information page",
+      ];
+    } else {
+      return [
+        "Fill in Onboard Application",
+        "No visa document required",
+        "Check and update your information in personal information page",
+      ];
+    }
+  }, []);
+
   const onSubmit = async (data) => {
     if (!validateEmail(data.email)) {
       setError("email", { type: "custom", message: "Email not valid" });
@@ -81,7 +99,8 @@ const Home = () => {
                   >
                     {[
                       user.applicationStatus === "approved",
-                      user.visa.i20Status === "approved",
+                      user.info.visaTitle !== "F1(CPT/OPT)" &&
+                        user.visa.i20Status === "approved",
                       user.applicationStatus === "approved" &&
                         user.visa.i20Status === "approved",
                     ].map((show, index) => {
@@ -96,11 +115,7 @@ const Home = () => {
                     })}
                   </Stack>
                   <List>
-                    {[
-                      "Fill in Onboard Application",
-                      "Upload your Visa Documents (visa status: F1)",
-                      "Check and update your information in personal information page",
-                    ].map((text, index) => (
+                    {welcomeText.map((text, index) => (
                       <ListItem key={index} disableGutters>
                         <ListItemText primary={`${index + 1}. ${text}`} />
                       </ListItem>
