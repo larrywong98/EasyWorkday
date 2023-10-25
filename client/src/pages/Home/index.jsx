@@ -81,7 +81,8 @@ const Home = () => {
                   >
                     {[
                       user.applicationStatus === "approved",
-                      user.visa.i20Status === "approved",
+                      user.info.visaTitle !== "F1(CPT/OPT)" ||
+                        user.visa.i20Status === "approved",
                       user.applicationStatus === "approved" &&
                         user.visa.i20Status === "approved",
                     ].map((show, index) => {
