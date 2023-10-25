@@ -2,7 +2,7 @@ import sendRequest from "./sendRequest";
 
 const loadAllVisaUser = async () => {
   const response = await sendRequest({
-    url: "http://127.0.0.1:4000/api/emp/all",
+    url: "http://127.0.0.1:4000/api/visa/all",
     method: "GET",
   });
   return response.status;
