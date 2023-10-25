@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 import { clearHrSlice, initialHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
 import DownloadForm from "../../components/VisaForms/DownloadForm";
+import { Link } from "react-router-dom";
+import { LeftOutlined } from "@ant-design/icons";
 const { Search } = Input;
 
 const All = () => {
@@ -136,8 +138,19 @@ const All = () => {
   };
 
   return (
-    <div style={{ width: "80rem" }}>
-      <h1>All:</h1>
+    <div style={{ width: "80%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1>All:</h1>
+        <Link to="/hr/visa">
+          <LeftOutlined />
+        </Link>
+      </div>
       <Search
         placeholder="input search text"
         value={searchTerm}

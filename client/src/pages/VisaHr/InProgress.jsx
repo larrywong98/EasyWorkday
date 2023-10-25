@@ -9,6 +9,8 @@ import Notification from "../../components/VisaHr/Notification";
 import { useSelector } from "react-redux";
 import { initialHrSlice, clearHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { LeftOutlined } from "@ant-design/icons";
 
 const InProgress = () => {
   const [employees, setEmp] = useState([]);
@@ -84,8 +86,19 @@ const InProgress = () => {
   };
 
   return (
-    <div style={{ width: "80rem" }}>
-      <h1>In Progress:</h1>
+    <div style={{ width: "80%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1>In progress:</h1>
+        <Link to="/hr/visa">
+          <LeftOutlined />
+        </Link>
+      </div>
       <List
         header={<div>Employee</div>}
         bordered

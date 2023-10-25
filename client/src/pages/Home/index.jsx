@@ -73,7 +73,7 @@ const Home = () => {
                   padding: "20px 0",
                 }}
               >
-                {console.log(user.applicationStatus, user.visa.i20Status)}
+                {/* {console.log(user.applicationStatus, user.visa.i20Status)} */}
                 {[
                   user.applicationStatus === "approved",
                   user.visa.i20Status === "approved",
