@@ -1,13 +1,12 @@
 import React from "react";
 import { Descriptions, Space } from "antd";
 import { useEffect, useState } from "react";
-import { List } from "antd";
+import { List, Select, Input, Button } from "antd";
 import loadAllVisaUser from "../../services/loadAllVisaUser";
 import { statusProperties, visas, nextSteps } from "../../reducer/global";
 import { useSelector } from "react-redux";
 import { clearHrSlice, initialHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
-import { Select, Input } from "antd";
 import DownloadForm from "../../components/VisaForms/DownloadForm";
 const { Search } = Input;
 
@@ -17,17 +16,24 @@ const All = () => {
   const [downloads, setDownloads] = useState([]);
   const dispatch = useDispatch();
   const [url, setUrl] = useState("");
+  // State to hold the search term
+  const [searchTerm, setSearchTerm] = useState("");
+  // State to hold the current list of values to display
+  const [displayValues, setDisplayValues] = useState([]);
 
   const findLatestStatus = (visaInfo, fileInfo) => {
     let index = visaInfo.cur;
+    let urlindex = Math.min(3 + index, 6);
+    // console.log(urlindex);
+    // console.log(fileInfo[urlindex][0].url);
     let latestStatus = visaInfo[statusProperties[index]];
-    let latestvisaUrl = fileInfo[index].url;
-    if (index > 0 && latestStatus === "") {
+    let latestvisaUrl = fileInfo[urlindex][0]?.url || "";
+    if (index > 0 && latestStatus === "initial") {
       latestStatus = visaInfo[statusProperties[index - 1]];
-      latestvisaUrl = fileInfo[index - 1];
+      latestvisaUrl = fileInfo[urlindex - 1][0]?.url || "";
       index = index - 1;
     }
-    console.log(`All: ${index} ${latestStatus} ${latestvisaUrl}`);
+    console.log(`all: ${index} ${latestStatus} ${latestvisaUrl}`);
     const message = generateNextStep(latestStatus, index);
     // status, index, url
     dispatch(
@@ -44,8 +50,10 @@ const All = () => {
     (async () => {
       const response = await loadAllVisaUser();
       setEmp(response);
+      setDisplayValues(response);
       dispatch(clearHrSlice());
       response.forEach((employee) => {
+        console.log(employees);
         // console.log(employee.files.slice(3)[0]);
         downloads.push(employee.files.slice(3));
         // setDownloads(...downloads, employee.files.slice(3));
@@ -81,7 +89,7 @@ const All = () => {
   // generateOptiona(dowloads[index])
 
   const handleChange = (value) => {
-    console.log(value);
+    // console.log(value);
     setUrl(value.value);
   };
 
@@ -98,23 +106,53 @@ const All = () => {
     return Difference_In_Days.toFixed(0);
   };
 
-  const onSearch = (value, _e, info) => console.log(info?.source, value);
+  const onSearch = (value, _e, info) => {
+    if (value) {
+      const newValues = employees.filter((employee) =>
+        employee.info.firstName.toLowerCase().includes(value.toLowerCase())
+      );
+      if (!newValues) {
+        newValues = employees.filter((employee) =>
+          employee.info.lastName.toLowerCase().includes(value.toLowerCase())
+        );
+        if (!newValues) {
+          newValues = employees.filter((employee) =>
+            employee.info.preferredName
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          );
+        }
+      }
+      setDisplayValues(newValues);
+    } else {
+      setDisplayValues(employees);
+    }
+    console.log(info?.source, value);
+  };
+
+  const clearSearch = () => {
+    setSearchTerm("");
+    setDisplayValues(employees);
+  };
 
   return (
-    <div>
+    <div style={{ width: "80rem" }}>
       <h1>All:</h1>
-      <Search placeholder="input search text" onSearch={onSearch} enterButton />
       <Search
         placeholder="input search text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
         allowClear
-        enterButton="Search"
-        size="large"
+        enterButton
         onSearch={onSearch}
       />
+      <Button onClick={clearSearch} style={{ margin: "10px 0" }}>
+        Clear Search
+      </Button>
       <List
         header={<div>Employee</div>}
         bordered
-        dataSource={employees}
+        dataSource={displayValues}
         renderItem={(employee, index) => (
           <>
             <List.Item key={index}>
@@ -135,7 +173,7 @@ const All = () => {
                   {nextStep[index]}
                 </Descriptions.Item>
                 <Descriptions.Item label="DownLoad Files">
-                  {console.log(downloads[index][0])}
+                  {/* {console.log(downloads[index][0])} */}
                   {downloads[index][0].length > 0 ? (
                     <Space align="start">
                       <Select
