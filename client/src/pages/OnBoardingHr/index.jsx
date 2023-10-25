@@ -142,11 +142,6 @@ const OnBoardingHr = () => {
       width: 100,
     },
     {
-      headerName: "Middle Name",
-      field: "middleName",
-      width: 120,
-    },
-    {
       headerName: "Last Name",
       field: "lastName",
       width: 100,
@@ -209,7 +204,7 @@ const OnBoardingHr = () => {
       <Paper
         elevation={3}
         title=" Hiring Management page"
-        sx={{ width: { xs: "100%", sm: "100%", md: "1000px" } }}
+        sx={{ width: { xs: "100%", sm: "100%", md: "800px" } }}
       >
         <Box
           sx={{
@@ -328,7 +323,7 @@ const OnBoardingHr = () => {
         elevation={3}
         title=" Hiring Management page"
         sx={{
-          width: { xs: "100%", sm: "100%", md: "1000px" },
+          width: { xs: "100%", sm: "100%", md: "800px" },
           padding: "20px",
         }}
       >
@@ -386,7 +381,7 @@ const OnBoardingHr = () => {
       <Paper
         elevation={3}
         sx={{
-          width: { xs: "100%", sm: "100%", md: "1000px" },
+          width: { xs: "100%", sm: "100%", md: "800px" },
           display: "flex",
           flexDirection: "column",
           padding: "20px",
