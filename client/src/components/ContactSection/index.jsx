@@ -11,11 +11,25 @@ const ContactSection = (props) => {
       required: true,
     },
   ];
+  const validatePhone = ({ getFieldValue }) => ({
+    validator(rule) {
+      const cellPhone = getFieldValue("cellPhoneNumber");
+      if (cellPhone.length === 10) {
+        return Promise.resolve();
+      }
+      return Promise.reject("Cell Phone not valid");
+    },
+  });
   const inputFields = [
-    { label: "Cell phone", name: "cellPhoneNumber", rules: requiredItem },
+    {
+      label: "Cell phone",
+      name: "cellPhoneNumber",
+      rules: [{ required: true }, validatePhone],
+    },
     { label: "Work phone", name: "workPhoneNumber", rules: [] },
     { label: "Email", name: "email", rules: requiredItem },
   ];
+
   return (
     <Col span={16}>
       <Card

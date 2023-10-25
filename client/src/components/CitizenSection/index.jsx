@@ -3,6 +3,7 @@ import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUsCitizen, updateVisaTitle } from "../../reducer/userSlice";
 import UploadComp from "../UploadComp";
+import dayjs from "dayjs";
 
 const CitizenSection = (props) => {
   const sectionClosed = props.sectionClosed;
@@ -19,6 +20,18 @@ const CitizenSection = (props) => {
   // const [visa, setVisa] = useState(initVisa);
   const visaTitle = useSelector((state) => state.userReducer.info.visaTitle);
 
+  const validateVisaRange = ({ getFieldValue }) => ({
+    validator(rule) {
+      const visaDate = getFieldValue("visaDate");
+      if (visaDate[0] === "" || visaDate[1] === "") {
+        return Promise.reject("Visa Date is required");
+      }
+      if (visaDate[1] <= dayjs().startOf("day")) {
+        return Promise.reject("Visa End Date cannot be earlier than today");
+      }
+      return Promise.resolve();
+    },
+  });
   return (
     <Col span={16}>
       <Card
@@ -130,7 +143,7 @@ const CitizenSection = (props) => {
               </Radio.Group>
             </Form.Item>
             {visaTitle === "F1(CPT/OPT)" ? (
-              <Form.Item label="Opt Receipt" hidden={sectionClosed[3]}>
+              <Form.Item label="Opt Receipt" hidden={sectionClosed[3]} required>
                 <UploadComp name="Opt" listType="picture-card" />
               </Form.Item>
             ) : (
@@ -141,6 +154,7 @@ const CitizenSection = (props) => {
               label="Start and End Date"
               name="visaDate"
               hidden={sectionClosed[3]}
+              rules={[...requiredItem, validateVisaRange]}
             >
               <RangePicker />
             </Form.Item>

@@ -76,7 +76,11 @@ const UploadComp = (props) => {
               alt=""
             />
           ) : (
-            <a target="_blank" href={user.files[fileName[props.name]][0].url}>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={user.files[fileName[props.name]][0].url}
+            >
               {props.name}
             </a>
           )}

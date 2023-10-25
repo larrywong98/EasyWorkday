@@ -3,6 +3,7 @@ import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import UploadComp from "../UploadComp";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import dayjs from "dayjs";
 
 const NameSection = (props) => {
   const sectionClosed = props.sectionClosed;
@@ -20,6 +21,22 @@ const NameSection = (props) => {
     { label: "Last Name", name: "lastName", rules: requiredItem },
     { label: "Preferred Name", name: "preferredName", rules: [] },
   ];
+
+  const validatessn = ({ getFieldValue }) => ({
+    validator(rule) {
+      if (
+        getFieldValue("ssn").length === 9 &&
+        /^\d+$/.test(getFieldValue("ssn"))
+      ) {
+        return Promise.resolve();
+      }
+      return Promise.reject("SSN not valid");
+    },
+  });
+  const dobDisabledDate = (current) => {
+    return current && current > dayjs().endOf("day");
+  };
+
   return (
     <Col span={16}>
       <Card
@@ -55,7 +72,7 @@ const NameSection = (props) => {
           <Form.Item
             label="SSN"
             name="ssn"
-            rules={requiredItem}
+            rules={[...requiredItem, validatessn]}
             hidden={sectionClosed[0]}
           >
             <Input style={{ width: "150px" }} />
@@ -66,7 +83,7 @@ const NameSection = (props) => {
             rules={requiredItem}
             hidden={sectionClosed[0]}
           >
-            <DatePicker />
+            <DatePicker disabledDate={dobDisabledDate} />
           </Form.Item>
           <Form.Item
             label="Gender"

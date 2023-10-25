@@ -108,14 +108,14 @@ const OnBoardingEmp = () => {
     })();
   }, []);
 
-  const validateOnboarding = (field, text) => {
-    if (field === "ssn") {
-      if (text.length === 9) {
-        return true;
-      }
-      return false;
-    }
-  };
+  // const validateOnboarding = (field, text) => {
+  //   if (field === "ssn") {
+  //     if (text.length === 9) {
+  //       return true;
+  //     }
+  //     return false;
+  //   }
+  // };
 
   return (
     <>
