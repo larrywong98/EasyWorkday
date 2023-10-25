@@ -110,21 +110,14 @@ const All = () => {
 
   const onSearch = (value, _e, info) => {
     if (value) {
-      const newValues = employees.filter((employee) =>
-        employee.info.firstName.toLowerCase().includes(value.toLowerCase())
+      const newValues = employees.filter(
+        (employee) =>
+          employee.info.firstName.toLowerCase().includes(value.toLowerCase()) ||
+          employee.info.lastName.toLowerCase().includes(value.toLowerCase()) ||
+          employee.info.preferredName
+            .toLowerCase()
+            .includes(value.toLowerCase())
       );
-      if (!newValues) {
-        newValues = employees.filter((employee) =>
-          employee.info.lastName.toLowerCase().includes(value.toLowerCase())
-        );
-        if (!newValues) {
-          newValues = employees.filter((employee) =>
-            employee.info.preferredName
-              .toLowerCase()
-              .includes(value.toLowerCase())
-          );
-        }
-      }
       setDisplayValues(newValues);
     } else {
       setDisplayValues(employees);
