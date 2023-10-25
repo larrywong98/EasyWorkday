@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { clearHrSlice, initialHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
 import DownloadForm from "../../components/VisaForms/DownloadForm";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
 const { Search } = Input;
 
@@ -17,6 +17,7 @@ const All = () => {
   const nextStep = useSelector((state) => state.hrReducer.nextStep);
   const [downloads, setDownloads] = useState([]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [url, setUrl] = useState("");
   // State to hold the search term
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,7 +36,7 @@ const All = () => {
       latestvisaUrl = fileInfo[urlindex - 1][0]?.url || "";
       index = index - 1;
     }
-    console.log(`all: ${index} ${latestStatus} ${latestvisaUrl}`);
+    // console.log(`all: ${index} ${latestStatus} ${latestvisaUrl}`);
     const message = generateNextStep(latestStatus, index);
     // status, index, url
     dispatch(
@@ -51,14 +52,19 @@ const All = () => {
   useEffect(() => {
     (async () => {
       const response = await loadAllVisaUser();
+      if (response === "error") {
+        navigate("/error");
+        return;
+      }
       setEmp(response);
       setDisplayValues(response);
       dispatch(clearHrSlice());
       response.forEach((employee) => {
-        console.log(employees);
-        // console.log(employee.files.slice(3)[0]);
-        downloads.push(employee.files.slice(3));
-        // setDownloads(...downloads, employee.files.slice(3));
+        // set value not working
+        // nested array need update function to update
+        setDownloads((prevState) => {
+          return [...prevState, employee.files.slice(3)];
+        });
         findLatestStatus(employee.visa, employee.files);
       });
     })();
@@ -122,7 +128,7 @@ const All = () => {
     } else {
       setDisplayValues(employees);
     }
-    console.log(info?.source, value);
+    // console.log(info?.source, value);
   };
 
   const clearSearch = () => {

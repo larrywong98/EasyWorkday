@@ -9,7 +9,7 @@ import Notification from "../../components/VisaHr/Notification";
 import { useSelector } from "react-redux";
 import { initialHrSlice, clearHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
 import { approve } from "../../utils/approve";
 
@@ -20,6 +20,7 @@ const InProgress = () => {
   const time = useSelector((state) => state.hrReducer.time);
   const nextStep = useSelector((state) => state.hrReducer.nextStep);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const findLatestStatus = (visaInfo, fileInfo) => {
     let index = visaInfo.cur;
@@ -50,6 +51,10 @@ const InProgress = () => {
   useEffect(() => {
     (async () => {
       const response = await loadInProgressVisaUser();
+      if (response === "error") {
+        navigate("/error");
+        return;
+      }
       // console.log(response);
       setEmp(response);
       dispatch(clearHrSlice());

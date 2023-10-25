@@ -10,7 +10,7 @@ const getJwtToken = async (username, password, navigate) => {
     data: JSON.stringify({ name: username, pwd: password }),
     headers: { "Content-Type": "application/json" },
   });
-  console.log(response);
+  // console.log(response);
   if (response.status === "ok") {
     localStorage.setItem("token", response.token);
     return "ok";
@@ -32,7 +32,7 @@ const signInRequest = async (dispatch, navigate) => {
   });
   if (response.status === "unauthorized") {
     return "unauthorized";
-  } else if (response.status === "error") {
+  } else if (response.status === "error" || response === "error") {
     navigate("/error");
     return "error";
   }

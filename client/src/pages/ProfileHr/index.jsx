@@ -164,6 +164,9 @@ const ProfileHr = () => {
   useEffect(() => {
     (async () => {
       let response = await loadAllUser();
+      if (response === "error") {
+        navigate("/error");
+      }
       setData(response);
       setInitialData(response);
     })();

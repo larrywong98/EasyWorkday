@@ -108,24 +108,8 @@ const OnBoardingEmp = () => {
     })();
   }, []);
 
-  // const validateOnboarding = (field, text) => {
-  //   if (field === "ssn") {
-  //     if (text.length === 9) {
-  //       return true;
-  //     }
-  //     return false;
-  //   }
-  // };
-
   return (
     <>
-      {/* <Card
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          // width: { xs: "100%", md: "800px" },
-        }}
-      > */}
       <Form
         {...itemLayout}
         style={{
@@ -221,7 +205,6 @@ const OnBoardingEmp = () => {
           <></>
         )}
       </Space>
-      {/* </Card> */}
     </>
   );
 };
