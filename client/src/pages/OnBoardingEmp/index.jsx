@@ -80,6 +80,7 @@ const OnBoardingEmp = () => {
     // save user
     const response = await saveInfo(user, newData);
     dispatch(updateUserId({ userId: response.userId }));
+    setDisabled(true);
     // navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {
@@ -104,6 +105,15 @@ const OnBoardingEmp = () => {
       dispatch(loadUser({ user: response1 }));
     })();
   }, []);
+
+  const validateOnboarding = (field, text) => {
+    if (field === "ssn") {
+      if (text.length === 9) {
+        return true;
+      }
+      return false;
+    }
+  };
 
   return (
     <>

@@ -56,8 +56,16 @@ const ProtectedRoute = ({ children }) => {
     }
     // profile status
     if (location.pathname.includes("profile")) {
-      if (user.applicationStatus === status.approved) {
+      if (
+        user.applicationStatus === status.approved &&
+        user.visa.i20Status === status.approved
+      ) {
         return <>{children}</>;
+      } else if (
+        user.applicationStatus === status.approved &&
+        user.visa.i20Status !== status.approved
+      ) {
+        return <Navigate to="/emp/visa" />;
       } else {
         return <Navigate to="/emp/onboard" />;
       }

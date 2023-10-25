@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Layout, Menu } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineUser } from "react-icons/ai";
 import styles from "./index.module.css";
@@ -11,29 +11,30 @@ const HeaderComp = () => {
   const [current, setCurrent] = useState("");
   const user = useSelector((state) => state.userReducer);
   const userInfo = useSelector((state) => state.authReducer);
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onClick = (e) => {
     if (e.key === "0") navigate(`/${userInfo.role}/onboard`);
     if (e.key === "1") navigate(`/${userInfo.role}/visa`);
     if (e.key === "2") navigate(`/${userInfo.role}/profile`);
-    if (userInfo.role === "emp") {
-      if (e.key === "0" && user.applicationStatus === "approved") {
-        setCurrent("");
-        return;
-      }
-      if (e.key === "2" && user.applicationStatus !== "approved") {
-        setCurrent("0");
-        return;
-      }
-    }
-
     setCurrent(e.key);
   };
   const headerText = {
     emp: ["Onboarding Application", "Visa Management", "Personal Information"],
     hr: ["Hiring Management", "Visa Management", "Employee Profiles"],
   };
+  useEffect(() => {
+    if (location.pathname.includes("onboard")) {
+      setCurrent("0");
+    } else if (location.pathname.includes("visa")) {
+      setCurrent("1");
+    } else if (location.pathname.includes("profile")) {
+      setCurrent("2");
+    } else {
+      setCurrent("");
+    }
+  }, [location]);
 
   return (
     <Header className={styles["header"]}>

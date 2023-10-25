@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import saveIncoming from "../../services/saveIncoming";
 import validateEmail from "../../utils/validateEmail";
 import CheckIcon from "@mui/icons-material/Check";
+import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -72,13 +73,22 @@ const Home = () => {
                   padding: "20px 0",
                 }}
               >
+                {console.log(user.applicationStatus, user.visa.i20Status)}
                 {[
-                  user && user.applicationStatus === "approved",
-                  true,
-                  true,
-                ].map((show, index) => (
-                  <CheckIcon key={index} sx={{ color: "green" }} />
-                ))}
+                  user.applicationStatus === "approved",
+                  user.visa.i20Status === "approved",
+                  user.applicationStatus === "approved" &&
+                    user.visa.i20Status === "approved",
+                ].map((show, index) => {
+                  if (!show)
+                    return (
+                      <HourglassBottomIcon
+                        key={index}
+                        sx={{ color: "#ff9800" }}
+                      />
+                    );
+                  return <CheckIcon key={index} sx={{ color: "green" }} />;
+                })}
               </Stack>
               <List>
                 {[
