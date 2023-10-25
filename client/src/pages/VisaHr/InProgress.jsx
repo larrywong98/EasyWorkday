@@ -2,13 +2,15 @@ import React from "react";
 import { Descriptions } from "antd";
 import { useEffect, useState } from "react";
 import { List } from "antd";
-import loadInProgressUser from "../../services/loadInProgressUser";
+import loadInProgressVisaUser from "../../services/loadInProgressVisaUser";
 import { statusProperties, visas, nextSteps } from "../../reducer/global";
 import Action from "../../components/VisaHr/Action";
 import Notification from "../../components/VisaHr/Notification";
 import { useSelector } from "react-redux";
 import { initialHrSlice, clearHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { LeftOutlined } from "@ant-design/icons";
 
 const InProgress = () => {
   const [employees, setEmp] = useState([]);
@@ -31,7 +33,7 @@ const InProgress = () => {
       latestvisaUrl = fileInfo[urlindex - 1][0]?.url || "";
       index = index - 1;
     }
-    // console.log(`inprogress: ${index} ${latestStatus} ${latestvisaUrl}`);
+    console.log(`inprogress: ${index} ${latestStatus} ${latestvisaUrl}`);
     const message = generateNextStep(latestStatus, index);
     // status, index, url
     dispatch(
@@ -46,7 +48,8 @@ const InProgress = () => {
 
   useEffect(() => {
     (async () => {
-      const response = await loadInProgressUser();
+      const response = await loadInProgressVisaUser();
+      // console.log(response);
       setEmp(response);
       dispatch(clearHrSlice());
       response.forEach((employee) => {
@@ -83,8 +86,19 @@ const InProgress = () => {
   };
 
   return (
-    <div style={{ width: "80rem" }}>
-      <h1>In Progress:</h1>
+    <div style={{ width: "80%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1>In progress:</h1>
+        <Link to="/hr/visa">
+          <LeftOutlined />
+        </Link>
+      </div>
       <List
         header={<div>Employee</div>}
         bordered
@@ -94,16 +108,37 @@ const InProgress = () => {
             <List.Item key={index}>
               <Descriptions title="Employee Info">
                 <Descriptions.Item label="Name">
-                  {employee.info.firstName} {employee.info.lastName}
+                  <div
+                    style={{
+                      height: "30px",
+                      width: "200px",
+                    }}
+                  >
+                    {employee.info.firstName} {employee.info.lastName}
+                  </div>
                 </Descriptions.Item>
                 <Descriptions.Item label="Title">
                   {employee.info.visaTitle}
                 </Descriptions.Item>
                 <Descriptions.Item label="Start and end date">
-                  {employee.info.visaDate[0]} {employee.info.visaDate[1]}
+                  <div
+                    style={{
+                      height: "50px",
+                      width: "100px",
+                    }}
+                  >
+                    {employee.info.visaDate[0]} {employee.info.visaDate[1]}
+                  </div>
                 </Descriptions.Item>
                 <Descriptions.Item label="Number of Days Remaining">
-                  {daysRemain(employee.info.visaDate[1])}
+                  <div
+                    style={{
+                      height: "30px",
+                      width: "50px",
+                    }}
+                  >
+                    {daysRemain(employee.info.visaDate[1])}
+                  </div>
                 </Descriptions.Item>
                 <Descriptions.Item label="Next Steps" span={2}>
                   {nextStep[index]}

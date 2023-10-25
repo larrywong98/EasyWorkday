@@ -60,7 +60,9 @@ const OnBoardingEmp = () => {
     let newVisa = {
       ...user.visa,
     };
-    newVisa.optStatus = "pending";
+    if (user.info.visaTitle === "F1(CPT/OPT)") {
+      newVisa.optStatus = "pending";
+    }
     // change to pending
     // const newData = { applicationStatus: status.pending, info: data };
     const newData = {
@@ -80,6 +82,7 @@ const OnBoardingEmp = () => {
     // save user
     const response = await saveInfo(user, newData);
     dispatch(updateUserId({ userId: response.userId }));
+    setDisabled(true);
     // navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {
@@ -104,6 +107,15 @@ const OnBoardingEmp = () => {
       dispatch(loadUser({ user: response1 }));
     })();
   }, []);
+
+  // const validateOnboarding = (field, text) => {
+  //   if (field === "ssn") {
+  //     if (text.length === 9) {
+  //       return true;
+  //     }
+  //     return false;
+  //   }
+  // };
 
   return (
     <>

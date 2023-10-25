@@ -87,18 +87,18 @@ const App = () => {
               <Route
                 path="onboard"
                 element={
-                  // <ProtectedRoute>
-                  <OnBoardingHr />
-                  // </ProtectedRoute>
+                  <ProtectedRoute>
+                    <OnBoardingHr />
+                  </ProtectedRoute>
                 }
               />
               <Route path="visa">
                 <Route
                   index
                   element={
-                    // <ProtectedRoute>
-                    <VisaHr />
-                    // </ProtectedRoute>
+                    <ProtectedRoute>
+                      <VisaHr />
+                    </ProtectedRoute>
                   }
                 />
                 <Route path="inprogress" element={<InProgress />} />

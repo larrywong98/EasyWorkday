@@ -9,23 +9,56 @@ import {
   Typography,
 } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
+import validateEmail from "../../utils/validateEmail";
 const ReferenceSection = (props) => {
   const sectionClosed = props.sectionClosed;
   const sectionControl = props.sectionControl;
-  const requiredItem = [
+  const validatePhone = ({ getFieldValue }) => ({
+    validator(rule, value) {
+      if ((value.length === 10 && /^\d+$/.test(value)) || value === "") {
+        return Promise.resolve();
+      }
+      return Promise.reject("Cell Phone not valid");
+    },
+  });
+  const validateRefEmail = ({ getFieldValue }) => ({
+    validator(rule, value) {
+      if (validateEmail(value)) {
+        return Promise.resolve();
+      }
+      return Promise.reject("Email not valid");
+    },
+  });
+  const inputFields = [
     {
-      required: true,
+      label: "First Name",
+      name: "firstName",
+      rules: [{ required: true, message: "First Name is required" }],
+    },
+    { label: "Middle Name", name: "middleName", rules: [] },
+    {
+      label: "Last Name",
+      name: "lastName",
+      rules: [{ required: true, message: "Last Name is required" }],
+    },
+    { label: "Preferred Name", name: "preferredName", rules: [] },
+    {
+      label: "phone",
+      name: "phone",
+      rules: [{ required: false }, validatePhone],
+    },
+    {
+      label: "Email",
+      name: "email",
+      rules: [{ required: false }, validateRefEmail],
+    },
+    {
+      label: "Relationship",
+      name: "relationship",
+      rules: [{ required: true, message: "Relationship is required" }],
     },
   ];
-  const inputFields = [
-    { label: "First Name", name: "firstName", rules: requiredItem },
-    { label: "Middle Name", name: "middleName", rules: [] },
-    { label: "Last Name", name: "lastName", rules: requiredItem },
-    { label: "Preferred Name", name: "preferredName", rules: [] },
-    { label: "phone", name: "phone", rules: [] },
-    { label: "Email", name: "email", rules: [] },
-    { label: "Relationship", name: "relationship", rules: requiredItem },
-  ];
+
   return (
     <Col span={16}>
       <Card
@@ -96,11 +129,7 @@ const ReferenceSection = (props) => {
                       hidden={sectionClosed[4]}
                       rules={item.rules}
                     >
-                      {/* {user.applicationStatus === status.initial ? (
-                          <Input />
-                        ) : ( */}
                       <Input />
-                      {/* )} */}
                     </Form.Item>
                   ))}
 

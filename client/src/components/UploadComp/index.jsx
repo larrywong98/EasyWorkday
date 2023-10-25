@@ -76,7 +76,13 @@ const UploadComp = (props) => {
               alt=""
             />
           ) : (
-            <a href={user.files[fileName[props.name]][0].url}>{props.name}</a>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={user.files[fileName[props.name]][0].url}
+            >
+              {props.name}
+            </a>
           )}
 
           <Button onClick={() => dispatch(removeFile({ name: props.name }))}>

@@ -10,13 +10,18 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import saveIncoming from "../../services/saveIncoming";
 import validateEmail from "../../utils/validateEmail";
 import CheckIcon from "@mui/icons-material/Check";
+import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
+import { useEffect, useMemo } from "react";
+import { loadUserInfo } from "../../services/loadUserInfo";
+import { loadUser } from "../../reducer/userSlice";
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.userReducer);
   const userInfo = useSelector((state) => state.authReducer);
   const {
@@ -26,6 +31,26 @@ const Home = () => {
     watch,
     formState: { errors },
   } = useForm();
+
+  const welcomeText = useMemo(() => {
+    if (!user) {
+      return [];
+    }
+    if (user.info.visaTitle === "F1(CPT/OPT)") {
+      return [
+        "Fill in Onboard Application",
+        "Upload your Visa Documents (visa status: F1)",
+        "Check and update your information in personal information page",
+      ];
+    } else {
+      return [
+        "Fill in Onboard Application",
+        "No visa document required",
+        "Check and update your information in personal information page",
+      ];
+    }
+  }, [user]);
+
   const onSubmit = async (data) => {
     if (!validateEmail(data.email)) {
       setError("email", { type: "custom", message: "Email not valid" });
@@ -37,6 +62,13 @@ const Home = () => {
       state: { message: "Wait for Hr to send the registration link" },
     });
   };
+
+  useEffect(() => {
+    (async () => {
+      const response1 = await loadUserInfo(userInfo.userId);
+      dispatch(loadUser({ user: response1 }));
+    })();
+  }, []);
   return (
     <Paper
       elevation={3}
@@ -63,36 +95,48 @@ const Home = () => {
         }}
       >
         {userInfo.signedIn ? (
-          <Stack>
-            <Box component="h2">Here are some steps for onboarding</Box>
-            <Stack direction="row" sx={{ gap: "10px" }}>
-              <Stack
-                sx={{
-                  justifyContent: "space-between",
-                  padding: "20px 0",
-                }}
-              >
-                {[
-                  user && user.applicationStatus === "approved",
-                  true,
-                  true,
-                ].map((show, index) => (
-                  <CheckIcon key={index} sx={{ color: "green" }} />
-                ))}
+          <>
+            {userInfo.role === "hr" ? (
+              <Box component="h2">
+                Hello Hr! Start Management at the navigation!
+              </Box>
+            ) : (
+              <Stack>
+                <Box component="h2">Here are some steps for onboarding</Box>
+                <Stack direction="row" sx={{ gap: "10px" }}>
+                  <Stack
+                    sx={{
+                      justifyContent: "space-between",
+                      padding: "20px 0",
+                    }}
+                  >
+                    {[
+                      user.applicationStatus === "approved",
+                      user.visaStatus === "approved",
+                      user.applicationStatus === "approved" &&
+                        user.visaStatus === "approved",
+                    ].map((show, index) => {
+                      if (!show)
+                        return (
+                          <HourglassBottomIcon
+                            key={index}
+                            sx={{ color: "#ff9800" }}
+                          />
+                        );
+                      return <CheckIcon key={index} sx={{ color: "green" }} />;
+                    })}
+                  </Stack>
+                  <List>
+                    {welcomeText.map((text, index) => (
+                      <ListItem key={index} disableGutters>
+                        <ListItemText primary={`${index + 1}. ${text}`} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Stack>
               </Stack>
-              <List>
-                {[
-                  "Fill in Onboard Application",
-                  "Upload your Visa Documents (visa status: F1)",
-                  "Check and update your information in personal information page",
-                ].map((text, index) => (
-                  <ListItem key={index} disableGutters>
-                    <ListItemText primary={`${index + 1}. ${text}`} />
-                  </ListItem>
-                ))}
-              </List>
-            </Stack>
-          </Stack>
+            )}
+          </>
         ) : (
           <Stack direction="row" sx={{ gap: "100px" }}>
             <form onSubmit={handleSubmit(onSubmit)}>

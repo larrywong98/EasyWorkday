@@ -48,16 +48,24 @@ const ProtectedRoute = ({ children }) => {
     }
     // visa status
     if (location.pathname.includes("visa")) {
-      if (user.info.visaTitle === "F1(CPT/OPT)") {
-        return <>{children}</>;
-      } else {
+      if (user.applicationStatus !== "approved") {
         return <Navigate to="/emp/onboard" />;
       }
+      return <>{children}</>;
     }
     // profile status
     if (location.pathname.includes("profile")) {
-      if (user.applicationStatus === status.approved) {
+      if (
+        user.info.visaTitle !== "F1(CPT/OPT)" ||
+        (user.applicationStatus === status.approved &&
+          user.visaStatus === status.approved)
+      ) {
         return <>{children}</>;
+      } else if (
+        user.applicationStatus === status.approved &&
+        user.visaStatus !== status.approved
+      ) {
+        return <Navigate to="/emp/visa" />;
       } else {
         return <Navigate to="/emp/onboard" />;
       }
