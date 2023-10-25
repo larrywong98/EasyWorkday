@@ -58,12 +58,12 @@ const ProtectedRoute = ({ children }) => {
       if (
         user.info.visaTitle !== "F1(CPT/OPT)" ||
         (user.applicationStatus === status.approved &&
-          user.visa.i20Status === status.approved)
+          user.visaStatus === status.approved)
       ) {
         return <>{children}</>;
       } else if (
         user.applicationStatus === status.approved &&
-        user.visa.i20Status !== status.approved
+        user.visaStatus !== status.approved
       ) {
         return <Navigate to="/emp/visa" />;
       } else {

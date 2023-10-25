@@ -70,11 +70,11 @@ const ProfileHr = () => {
       field: "firstName",
       width: 100,
     },
-    {
-      headerName: "Middle Name",
-      field: "middleName",
-      width: 120,
-    },
+    // {
+    //   headerName: "Middle Name",
+    //   field: "middleName",
+    //   width: 120,
+    // },
     {
       headerName: "Last Name",
       field: "lastName",
@@ -189,7 +189,7 @@ const ProfileHr = () => {
       <Paper
         elevation={3}
         sx={{
-          width: { xs: "100%", sm: "100%", md: "1100px" },
+          width: { xs: "100%", sm: "100%", md: "950px" },
           display: "flex",
           flexDirection: "column",
           alignItems: { xs: "center", sm: "center", md: "start" },

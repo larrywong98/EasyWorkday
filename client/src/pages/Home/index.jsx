@@ -15,7 +15,7 @@ import saveIncoming from "../../services/saveIncoming";
 import validateEmail from "../../utils/validateEmail";
 import CheckIcon from "@mui/icons-material/Check";
 import HourglassBottomIcon from "@mui/icons-material/HourglassBottom";
-import { useState } from "react";
+import { useMemo } from "react";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -29,7 +29,10 @@ const Home = () => {
     formState: { errors },
   } = useForm();
 
-  const welcomeText = useState(() => {
+  const welcomeText = useMemo(() => {
+    if (!user) {
+      return [];
+    }
     if (user.info.visaTitle === "F1(CPT/OPT)") {
       return [
         "Fill in Onboard Application",
@@ -43,7 +46,7 @@ const Home = () => {
         "Check and update your information in personal information page",
       ];
     }
-  }, []);
+  }, [user]);
 
   const onSubmit = async (data) => {
     if (!validateEmail(data.email)) {
@@ -99,10 +102,9 @@ const Home = () => {
                   >
                     {[
                       user.applicationStatus === "approved",
-                      user.info.visaTitle !== "F1(CPT/OPT)" &&
-                        user.visa.i20Status === "approved",
+                      user.visaStatus === "approved",
                       user.applicationStatus === "approved" &&
-                        user.visa.i20Status === "approved",
+                        user.visaStatus === "approved",
                     ].map((show, index) => {
                       if (!show)
                         return (

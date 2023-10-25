@@ -79,6 +79,7 @@ router.post("/visastatus/:userId", async (req, res) => {
     [`visa.${receipt}`]: feedback,
   };
   // console.log(update);
+
   try {
     const response = await User.findOneAndUpdate(filter, update);
     res.json({ status: response });
