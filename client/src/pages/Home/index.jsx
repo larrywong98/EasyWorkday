@@ -64,45 +64,52 @@ const Home = () => {
         }}
       >
         {userInfo.signedIn ? (
-          <Stack>
-            <Box component="h2">Here are some steps for onboarding</Box>
-            <Stack direction="row" sx={{ gap: "10px" }}>
-              <Stack
-                sx={{
-                  justifyContent: "space-between",
-                  padding: "20px 0",
-                }}
-              >
-                {/* {console.log(user.applicationStatus, user.visa.i20Status)} */}
-                {[
-                  user.applicationStatus === "approved",
-                  user.visa.i20Status === "approved",
-                  user.applicationStatus === "approved" &&
-                    user.visa.i20Status === "approved",
-                ].map((show, index) => {
-                  if (!show)
-                    return (
-                      <HourglassBottomIcon
-                        key={index}
-                        sx={{ color: "#ff9800" }}
-                      />
-                    );
-                  return <CheckIcon key={index} sx={{ color: "green" }} />;
-                })}
+          <>
+            {userInfo.role === "hr" ? (
+              <Box component="h2">
+                Hello Hr! Start Management at the navigation!
+              </Box>
+            ) : (
+              <Stack>
+                <Box component="h2">Here are some steps for onboarding</Box>
+                <Stack direction="row" sx={{ gap: "10px" }}>
+                  <Stack
+                    sx={{
+                      justifyContent: "space-between",
+                      padding: "20px 0",
+                    }}
+                  >
+                    {[
+                      user.applicationStatus === "approved",
+                      user.visa.i20Status === "approved",
+                      user.applicationStatus === "approved" &&
+                        user.visa.i20Status === "approved",
+                    ].map((show, index) => {
+                      if (!show)
+                        return (
+                          <HourglassBottomIcon
+                            key={index}
+                            sx={{ color: "#ff9800" }}
+                          />
+                        );
+                      return <CheckIcon key={index} sx={{ color: "green" }} />;
+                    })}
+                  </Stack>
+                  <List>
+                    {[
+                      "Fill in Onboard Application",
+                      "Upload your Visa Documents (visa status: F1)",
+                      "Check and update your information in personal information page",
+                    ].map((text, index) => (
+                      <ListItem key={index} disableGutters>
+                        <ListItemText primary={`${index + 1}. ${text}`} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Stack>
               </Stack>
-              <List>
-                {[
-                  "Fill in Onboard Application",
-                  "Upload your Visa Documents (visa status: F1)",
-                  "Check and update your information in personal information page",
-                ].map((text, index) => (
-                  <ListItem key={index} disableGutters>
-                    <ListItemText primary={`${index + 1}. ${text}`} />
-                  </ListItem>
-                ))}
-              </List>
-            </Stack>
-          </Stack>
+            )}
+          </>
         ) : (
           <Stack direction="row" sx={{ gap: "100px" }}>
             <form onSubmit={handleSubmit(onSubmit)}>
