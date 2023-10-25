@@ -7,8 +7,9 @@ import { statusProperties, visas, nextSteps } from "../../reducer/global";
 import { useSelector } from "react-redux";
 import { clearHrSlice, initialHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
-import { Select } from "antd";
+import { Select, Input } from "antd";
 import DownloadForm from "../../components/VisaForms/DownloadForm";
+const { Search } = Input;
 
 const All = () => {
   const [employees, setEmp] = useState([]);
@@ -97,9 +98,19 @@ const All = () => {
     return Difference_In_Days.toFixed(0);
   };
 
+  const onSearch = (value, _e, info) => console.log(info?.source, value);
+
   return (
     <div>
       <h1>All:</h1>
+      <Search placeholder="input search text" onSearch={onSearch} enterButton />
+      <Search
+        placeholder="input search text"
+        allowClear
+        enterButton="Search"
+        size="large"
+        onSearch={onSearch}
+      />
       <List
         header={<div>Employee</div>}
         bordered
@@ -124,6 +135,7 @@ const All = () => {
                   {nextStep[index]}
                 </Descriptions.Item>
                 <Descriptions.Item label="DownLoad Files">
+                  {console.log(downloads[index][0])}
                   {downloads[index][0].length > 0 ? (
                     <Space align="start">
                       <Select
