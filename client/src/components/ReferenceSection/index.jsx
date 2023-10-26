@@ -23,7 +23,7 @@ const ReferenceSection = (props) => {
   });
   const validateRefEmail = ({ getFieldValue }) => ({
     validator(rule, value) {
-      if (validateEmail(value)) {
+      if (validateEmail(value) || value === "") {
         return Promise.resolve();
       }
       return Promise.reject("Email not valid");
