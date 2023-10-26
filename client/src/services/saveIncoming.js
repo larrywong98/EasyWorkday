@@ -14,6 +14,7 @@ const saveIncoming = async (email, fullName, navigate) => {
     return "ok";
   } else {
     navigate("/error");
+    return "error";
   }
 };
 

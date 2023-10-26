@@ -8,6 +8,7 @@ router.post("/save/:userId", async (req, res) => {
   let update = {
     role: req.body.role,
     applicationStatus: req.body.applicationStatus,
+    visaStatus: req.body.visaStatus,
     onboardFeedback: req.body.onboardFeedback,
     info: req.body.info,
     visa: req.body.visa,

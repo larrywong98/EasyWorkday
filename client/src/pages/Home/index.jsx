@@ -58,6 +58,9 @@ const Home = () => {
     }
 
     const response = await saveIncoming(data.email, data.fullName, navigate);
+    if (response === "error") {
+      return;
+    }
     navigate("/success", {
       state: { message: "Wait for Hr to send the registration link" },
     });
@@ -65,6 +68,9 @@ const Home = () => {
 
   useEffect(() => {
     (async () => {
+      if (userInfo.userId === "") {
+        return;
+      }
       const response1 = await loadUserInfo(userInfo.userId);
       dispatch(loadUser({ user: response1 }));
     })();

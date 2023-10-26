@@ -8,15 +8,19 @@ import { useSelector } from "react-redux";
 import { clearHrSlice, initialHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
 import DownloadForm from "../../components/VisaForms/DownloadForm";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
+import { Pagination } from "antd";
 const { Search } = Input;
 
 const All = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // you can adjust this value
   const [employees, setEmp] = useState([]);
   const nextStep = useSelector((state) => state.hrReducer.nextStep);
   const [downloads, setDownloads] = useState([]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [url, setUrl] = useState("");
   // State to hold the search term
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,7 +39,7 @@ const All = () => {
       latestvisaUrl = fileInfo[urlindex - 1][0]?.url || "";
       index = index - 1;
     }
-    console.log(`all: ${index} ${latestStatus} ${latestvisaUrl}`);
+    // console.log(`all: ${index} ${latestStatus} ${latestvisaUrl}`);
     const message = generateNextStep(latestStatus, index);
     // status, index, url
     dispatch(
@@ -51,14 +55,19 @@ const All = () => {
   useEffect(() => {
     (async () => {
       const response = await loadAllVisaUser();
+      if (response === "error") {
+        navigate("/error");
+        return;
+      }
       setEmp(response);
       setDisplayValues(response);
       dispatch(clearHrSlice());
       response.forEach((employee) => {
-        console.log(employees);
-        // console.log(employee.files.slice(3)[0]);
-        downloads.push(employee.files.slice(3));
-        // setDownloads(...downloads, employee.files.slice(3));
+        // set value not working
+        // nested array need update function to update
+        setDownloads((prevState) => {
+          return [...prevState, employee.files.slice(3)];
+        });
         findLatestStatus(employee.visa, employee.files);
       });
     })();
@@ -110,31 +119,29 @@ const All = () => {
 
   const onSearch = (value, _e, info) => {
     if (value) {
-      const newValues = employees.filter((employee) =>
-        employee.info.firstName.toLowerCase().includes(value.toLowerCase())
+      const newValues = employees.filter(
+        (employee) =>
+          employee.info.firstName.toLowerCase().includes(value.toLowerCase()) ||
+          employee.info.lastName.toLowerCase().includes(value.toLowerCase()) ||
+          employee.info.preferredName
+            .toLowerCase()
+            .includes(value.toLowerCase())
       );
-      if (!newValues) {
-        newValues = employees.filter((employee) =>
-          employee.info.lastName.toLowerCase().includes(value.toLowerCase())
-        );
-        if (!newValues) {
-          newValues = employees.filter((employee) =>
-            employee.info.preferredName
-              .toLowerCase()
-              .includes(value.toLowerCase())
-          );
-        }
-      }
       setDisplayValues(newValues);
     } else {
       setDisplayValues(employees);
     }
-    console.log(info?.source, value);
+    // console.log(info?.source, value);
   };
 
   const clearSearch = () => {
     setSearchTerm("");
     setDisplayValues(employees);
+  };
+
+  // Function to handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -165,7 +172,11 @@ const All = () => {
       <List
         header={<div>Employee</div>}
         bordered
-        dataSource={displayValues}
+        // dataSource={displayValues}
+        dataSource={displayValues.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )}
         renderItem={(employee, index) => (
           <>
             <List.Item key={index}>
@@ -232,6 +243,12 @@ const All = () => {
             </List.Item>
           </>
         )}
+      />
+      <Pagination
+        current={currentPage}
+        total={displayValues.length}
+        pageSize={itemsPerPage}
+        onChange={handlePageChange}
       />
     </div>
   );

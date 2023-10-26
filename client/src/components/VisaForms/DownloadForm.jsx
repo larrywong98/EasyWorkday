@@ -1,15 +1,7 @@
 import React from "react";
 import { Form, Button } from "antd";
-// ex:
-/* <DownloadForm
-        url="http://localhost:4000/uploads/file-1697161233298.pdf"
-        text="form"
-      /> */
 
-// need mdify download function
-// download two templates
-// dowload visas
-
+// Download Template files
 const DownloadForm = ({ url, text }) => {
   const downloadFileAtUrl = (url) => {
     const filename = url.split("/").pop();

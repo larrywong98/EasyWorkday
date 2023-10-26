@@ -8,7 +8,6 @@ import { Route, Routes } from "react-router";
 import VisaEmp from "./VisaEmp";
 import ProfileEmp from "./ProfileEmp";
 import OnBoardingHr from "./OnBoardingHr";
-// import VisaHr from "./VisaHr";
 import ProfileHr from "./ProfileHr";
 import { Content } from "antd/es/layout/layout";
 import Success from "./Success";

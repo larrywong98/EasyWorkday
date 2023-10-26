@@ -9,6 +9,7 @@ import {
 import DownloadForm from "../../components/VisaForms/DownloadForm";
 import { changeResponse, updateTime } from "../../reducer/hrSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { approve } from "../../utils/approve";
 const { TextArea } = Input;
 
 const Action = ({ index, employeeId }) => {
@@ -26,12 +27,7 @@ const Action = ({ index, employeeId }) => {
     setReceiptName(receiptProperties[curIdx]);
   }, [curIdx]);
 
-  const approve = (st) => st === "approved";
   const updateDecision = async (status, feedback) => {
-    console.log(`visa: ${visaStatusName},
-    status: ${status},
-    receipt: ${receiptName},
-    feedback: ${feedback},`);
     const updateIdx = approve(status) ? curIdx + 1 : curIdx;
     const response = await sendRequest({
       url: "http://127.0.0.1:4000/api/emp/visastatus/" + employeeId,
@@ -48,7 +44,6 @@ const Action = ({ index, employeeId }) => {
       }),
     });
 
-    console.log(response);
     setFeedback("");
     dispatch(changeResponse(index));
     dispatch(updateTime(index));

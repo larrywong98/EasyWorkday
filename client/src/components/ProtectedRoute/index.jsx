@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { status } from "../../reducer/global";
 import jwt_decode from "jwt-decode";
 
@@ -11,6 +11,9 @@ const ProtectedRoute = ({ children }) => {
   // register token expiration
   if (location.pathname.includes("register")) {
     const token = location.pathname.split("/").splice(-1)[0];
+    if (!token.includes(".")) {
+      return <Navigate to="/error" />;
+    }
     var decoded = jwt_decode(token);
     if (decoded.exp * 1000 < Date.now()) {
       return (
@@ -56,9 +59,8 @@ const ProtectedRoute = ({ children }) => {
     // profile status
     if (location.pathname.includes("profile")) {
       if (
-        user.info.visaTitle !== "F1(CPT/OPT)" ||
-        (user.applicationStatus === status.approved &&
-          user.visaStatus === status.approved)
+        user.applicationStatus === status.approved &&
+        user.visaStatus === status.approved
       ) {
         return <>{children}</>;
       } else if (

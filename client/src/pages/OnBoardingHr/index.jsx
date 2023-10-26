@@ -128,7 +128,7 @@ const OnBoardingHr = () => {
     (async () => {
       const response = await loadAllUser();
       const regResponse = await getAllRegToken(navigate);
-      const newIncomingData = await getIncoming();
+      const newIncomingData = await getIncoming(navigate);
 
       setData(response);
       setRegisterData(regResponse);

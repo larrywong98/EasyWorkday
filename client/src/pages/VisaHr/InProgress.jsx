@@ -9,16 +9,21 @@ import Notification from "../../components/VisaHr/Notification";
 import { useSelector } from "react-redux";
 import { initialHrSlice, clearHrSlice } from "../../reducer/hrSlice";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
+import { approve } from "../../utils/approve";
+import { Pagination } from "antd";
 
 const InProgress = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // you can adjust this value
   const [employees, setEmp] = useState([]);
   const change = useSelector((state) => state.hrReducer.response);
   const curStatus = useSelector((state) => state.hrReducer.empStatus);
   const time = useSelector((state) => state.hrReducer.time);
   const nextStep = useSelector((state) => state.hrReducer.nextStep);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const findLatestStatus = (visaInfo, fileInfo) => {
     let index = visaInfo.cur;
@@ -49,6 +54,10 @@ const InProgress = () => {
   useEffect(() => {
     (async () => {
       const response = await loadInProgressVisaUser();
+      if (response === "error") {
+        navigate("/error");
+        return;
+      }
       // console.log(response);
       setEmp(response);
       dispatch(clearHrSlice());
@@ -57,8 +66,6 @@ const InProgress = () => {
       });
     })();
   }, []);
-
-  const approve = (st) => st === "approved";
 
   const generateNextStep = (latestStatus, index) => {
     let nextstep = "";
@@ -85,6 +92,11 @@ const InProgress = () => {
     return Difference_In_Days.toFixed(0);
   };
 
+  // Function to handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div style={{ width: "80%" }}>
       <div
@@ -102,7 +114,11 @@ const InProgress = () => {
       <List
         header={<div>Employee</div>}
         bordered
-        dataSource={employees}
+        // dataSource={employees}
+        dataSource={employees.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )}
         renderItem={(employee, index) => (
           <>
             <List.Item key={index}>
@@ -163,6 +179,12 @@ const InProgress = () => {
             </List.Item>
           </>
         )}
+      />
+      <Pagination
+        current={currentPage}
+        total={employees.length}
+        pageSize={itemsPerPage}
+        onChange={handlePageChange}
       />
     </div>
   );

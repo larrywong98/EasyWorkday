@@ -61,28 +61,36 @@ router.post("/token", async (req, res) => {
 
 // get all employee visa information
 router.get("/all", async (req, res) => {
-  const query = {
-    "info.visaTitle": "F1(CPT/OPT)",
-    applicationStatus: "approved",
-  };
-  const result = await User.find(query, { _id: false });
-  console.log(result);
-  res.json({ status: result });
+  try {
+    const query = {
+      "info.visaTitle": "F1(CPT/OPT)",
+      applicationStatus: "approved",
+    };
+    const result = await User.find(query, { _id: false });
+    // console.log(result);
+    res.json({ status: result });
+  } catch (err) {
+    res.json("error");
+  }
 });
 
 // get inprogress employee visa information
 router.get("/inprogress", async (req, res) => {
-  // Setting up the query to filter out documents where ["visa.i20Feedback"] is "approved"
-  const query = {
-    "visa.i20Status": { $ne: "approved" },
-    "info.visaTitle": "F1(CPT/OPT)",
-    applicationStatus: "approved",
-  };
+  try {
+    // Setting up the query to filter out documents where ["visa.i20Feedback"] is "approved"
+    const query = {
+      "visa.i20Status": { $ne: "approved" },
+      "info.visaTitle": "F1(CPT/OPT)",
+      applicationStatus: "approved",
+    };
 
-  // Executing the find query with the filter applied
-  const result = await User.find(query, { _id: false });
-  console.log(result);
-  res.json({ status: result });
+    // Executing the find query with the filter applied
+    const result = await User.find(query, { _id: false });
+    // console.log(result);
+    res.json({ status: result });
+  } catch (err) {
+    res.json("error");
+  }
 });
 
 export default router;
