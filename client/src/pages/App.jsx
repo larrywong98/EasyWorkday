@@ -100,8 +100,22 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
-                <Route path="inprogress" element={<InProgress />} />
-                <Route path="all" element={<VisaHrAll />} />
+                <Route
+                  path="inprogress"
+                  element={
+                    <ProtectedRoute>
+                      <InProgress />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="all"
+                  element={
+                    <ProtectedRoute>
+                      <VisaHrAll />
+                    </ProtectedRoute>
+                  }
+                />
               </Route>
               <Route
                 path="profile"
