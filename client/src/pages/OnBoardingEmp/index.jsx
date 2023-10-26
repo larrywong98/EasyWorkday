@@ -64,6 +64,9 @@ const OnBoardingEmp = () => {
     if (user.info.visaTitle === "F1(CPT/OPT)") {
       newVisa.optStatus = "pending";
     }
+    if (user.info.visaTitle === "Other") {
+      data.visaTitle = form.getFieldValue("visaTitleOther");
+    }
     // change to pending
     // const newData = { applicationStatus: status.pending, info: data };
     const newData = {
@@ -158,6 +161,7 @@ const OnBoardingEmp = () => {
           <CitizenSection
             sectionClosed={sectionClosed}
             sectionControl={sectionControl}
+            form={form}
           />
           <ReferenceSection
             sectionClosed={sectionClosed}

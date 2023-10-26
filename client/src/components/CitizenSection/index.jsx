@@ -1,7 +1,6 @@
 import { Button, Card, Col, DatePicker, Form, Input, Radio, Space } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
-import { updateUsCitizen, updateVisaTitle } from "../../reducer/userSlice";
+import { useSelector } from "react-redux";
 import UploadComp from "../UploadComp";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -9,7 +8,6 @@ import { useState } from "react";
 const CitizenSection = (props) => {
   const sectionClosed = props.sectionClosed;
   const sectionControl = props.sectionControl;
-  const dispatch = useDispatch();
   const requiredItem = [
     {
       required: true,
@@ -23,9 +21,25 @@ const CitizenSection = (props) => {
   const storedVisaTitle = useSelector(
     (state) => state.userReducer.info.visaTitle
   );
-  const [visaTitle, setVisaTitle] = useState(storedVisaTitle);
+  const [visaTitle, setVisaTitle] = useState(
+    storedVisaTitle !== "H1-B" &&
+      storedVisaTitle !== "L2" &&
+      storedVisaTitle !== "F1(CPT/OPT)" &&
+      storedVisaTitle !== "H4"
+      ? "Other"
+      : storedVisaTitle
+  );
+  const [customedVisaTitle, setCustomedVisaTitle] = useState(
+    storedVisaTitle !== "H1-B" &&
+      storedVisaTitle !== "L2" &&
+      storedVisaTitle !== "F1(CPT/OPT)" &&
+      storedVisaTitle !== "H4" &&
+      storedVisaTitle !== "Other"
+      ? storedVisaTitle
+      : ""
+  );
   const userFiles = useSelector((state) => state.userReducer.files);
-
+  const appStatus = useSelector((state) => state.userReducer.applicationStatus);
   const validateVisaRange = ({ getFieldValue }) => ({
     validator(rule) {
       const visaDate = getFieldValue("visaDate");
@@ -119,8 +133,20 @@ const CitizenSection = (props) => {
                         width: 100,
                         marginLeft: 10,
                       }}
-                      onChange={(e) => {}}
-                      disabled={visaTitle === "Other" ? false : true}
+                      onChange={(e) => {
+                        setCustomedVisaTitle(e.target.value);
+                        props.form.setFieldsValue({
+                          visaTitleOther: e.target.value,
+                        });
+                      }}
+                      value={visaTitle === "Other" ? customedVisaTitle : ""}
+                      disabled={
+                        appStatus === "pending"
+                          ? true
+                          : visaTitle === "Other"
+                          ? false
+                          : true
+                      }
                     />
                   </Radio>
                 </Space>
