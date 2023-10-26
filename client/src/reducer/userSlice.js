@@ -138,10 +138,6 @@ const userSlice = createSlice({
       return state;
     },
 
-    updateUsCitizen: (state, action) => {
-      state.info.usCitizen = action.payload.usCitizen;
-      return state;
-    },
     updateApplicationStatus: (state, action) => {
       state.applicationStatus = action.payload.applicationStatus;
       return state;
@@ -151,10 +147,6 @@ const userSlice = createSlice({
     },
     updateOnboardFeedback: (state, action) => {
       state.onboardFeedback = action.payload.onboardFeedback;
-      return state;
-    },
-    updateVisaTitle: (state, action) => {
-      state.info.visaTitle = action.payload.visaTitle;
       return state;
     },
     fillInfo: (state, action) => {
@@ -177,10 +169,8 @@ export const {
   updateFile,
   removeFile,
   updateDriverLicense,
-  updateUsCitizen,
   updateOnboardFeedback,
   updateVisaStatus,
-  updateVisaTitle,
   updateVisaOptReceipt,
   fillInfo,
   discardFiles,

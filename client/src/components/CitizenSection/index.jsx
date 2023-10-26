@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUsCitizen, updateVisaTitle } from "../../reducer/userSlice";
 import UploadComp from "../UploadComp";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 const CitizenSection = (props) => {
   const sectionClosed = props.sectionClosed;
@@ -15,10 +16,15 @@ const CitizenSection = (props) => {
     },
   ];
   const { RangePicker } = DatePicker;
-  const citizen = useSelector((state) => state.userReducer.info.usCitizen);
-  // const initVisa = useSelector((state) => state.userReducer.info.visaTitle);
-  // const [visa, setVisa] = useState(initVisa);
-  const visaTitle = useSelector((state) => state.userReducer.info.visaTitle);
+  const storedCitizen = useSelector(
+    (state) => state.userReducer.info.usCitizen
+  );
+  const [citizen, setCitizen] = useState(storedCitizen);
+  const storedVisaTitle = useSelector(
+    (state) => state.userReducer.info.visaTitle
+  );
+  const [visaTitle, setVisaTitle] = useState(storedVisaTitle);
+  const userFiles = useSelector((state) => state.userReducer.files);
 
   const validateVisaRange = ({ getFieldValue }) => ({
     validator(rule) {
@@ -28,6 +34,14 @@ const CitizenSection = (props) => {
       }
       if (visaDate[1] <= dayjs().startOf("day")) {
         return Promise.reject("Visa End Date cannot be earlier than today");
+      }
+      return Promise.resolve();
+    },
+  });
+  const validateOptUpload = ({ getFieldValue }) => ({
+    validator(rule) {
+      if (userFiles[3].length === 0) {
+        return Promise.reject("Opt receipt required");
       }
       return Promise.resolve();
     },
@@ -50,21 +64,13 @@ const CitizenSection = (props) => {
           hidden={sectionClosed[3]}
         >
           <Radio.Group
-            onChange={(e) =>
-              dispatch(updateUsCitizen({ usCitizen: e.target.value }))
-            }
+            onChange={(e) => setCitizen(e.target.value)}
             value={citizen}
           >
-            <Radio.Button
-              value="Yes"
-              onChange={() => dispatch(updateUsCitizen({ usCitizen: "Yes" }))}
-            >
+            <Radio.Button value="Yes" onChange={() => setCitizen("Yes")}>
               Yes
             </Radio.Button>
-            <Radio.Button
-              value="No"
-              onChange={() => dispatch(updateUsCitizen({ usCitizen: "No" }))}
-            >
+            <Radio.Button value="No" onChange={() => setCitizen("Yes")}>
               No
             </Radio.Button>
           </Radio.Group>
@@ -91,44 +97,22 @@ const CitizenSection = (props) => {
             >
               <Radio.Group value={visaTitle}>
                 <Space direction="vertical" style={{ marginTop: "7px" }}>
-                  <Radio
-                    value="H1-B"
-                    onChange={() =>
-                      dispatch(updateVisaTitle({ visaTitle: "H1-B" }))
-                    }
-                  >
+                  <Radio value="H1-B" onChange={() => setVisaTitle("H1-B")}>
                     H1-B
                   </Radio>
-                  <Radio
-                    value="L2"
-                    onChange={() =>
-                      dispatch(updateVisaTitle({ visaTitle: "L2" }))
-                    }
-                  >
+                  <Radio value="L2" onChange={() => setVisaTitle("L2")}>
                     L2
                   </Radio>
                   <Radio
                     value="F1(CPT/OPT)"
-                    onChange={() =>
-                      dispatch(updateVisaTitle({ visaTitle: "F1(CPT/OPT)" }))
-                    }
+                    onChange={() => setVisaTitle("F1(CPT/OPT)")}
                   >
                     F1(CPT/OPT)
                   </Radio>
-                  <Radio
-                    value="H4"
-                    onChange={() =>
-                      dispatch(updateVisaTitle({ visaTitle: "H4" }))
-                    }
-                  >
+                  <Radio value="H4" onChange={() => setVisaTitle("H4")}>
                     H4
                   </Radio>
-                  <Radio
-                    value="Other"
-                    onChange={() =>
-                      dispatch(updateVisaTitle({ visaTitle: "Other" }))
-                    }
-                  >
+                  <Radio value="Other" onChange={() => setVisaTitle("Other")}>
                     Other
                     <Input
                       style={{
@@ -143,13 +127,18 @@ const CitizenSection = (props) => {
               </Radio.Group>
             </Form.Item>
             {visaTitle === "F1(CPT/OPT)" ? (
-              <Form.Item label="Opt Receipt" hidden={sectionClosed[3]} required>
+              <Form.Item
+                label="Opt Receipt"
+                name="optReceipt"
+                hidden={sectionClosed[3]}
+                rules={[{}, validateOptUpload]}
+                required
+              >
                 <UploadComp name="Opt" listType="picture-card" />
               </Form.Item>
             ) : (
               <></>
             )}
-
             <Form.Item
               label="Start and End Date"
               name="visaDate"

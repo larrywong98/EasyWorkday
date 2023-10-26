@@ -24,7 +24,8 @@ const ContactSection = (props) => {
     {
       label: "Cell phone",
       name: "cellPhoneNumber",
-      rules: [{ required: true }, validatePhone],
+      rules: [{}, validatePhone],
+      required: true,
     },
     { label: "Work phone", name: "workPhoneNumber", rules: [] },
     { label: "Email", name: "email", rules: requiredItem },
@@ -49,6 +50,7 @@ const ContactSection = (props) => {
             label={item.label}
             name={item.name}
             rules={item.rules}
+            required={item.required}
           >
             {item.name === "email" && location.pathname.includes("onboard") ? (
               <Input disabled={true} />

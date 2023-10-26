@@ -42,30 +42,32 @@ const UploadComp = (props) => {
   return (
     <>
       {user.files && user.files[fileName[props.name]].length === 0 ? (
-        <Upload
-          name="file"
-          action="http://144.202.42.97:8001/api/upload"
-          maxCount={1}
-          listType={props.listType || "picture-card"}
-          onChange={handleChange}
-          onRemove={handleRemove}
-          beforeUpload={beforeUpload}
-          showUploadList={showUploadList}
-          // antd bug not fixed infinite loading if filelist get a value
-          // defaultFileList={}
-          // fileList = {}
-        >
-          <div>
-            <PlusOutlined />
-            <div
-              style={{
-                marginTop: 8,
-              }}
-            >
-              Upload
+        <>
+          <Upload
+            name="file"
+            action="http://144.202.42.97:8001/api/upload"
+            maxCount={1}
+            listType={props.listType || "picture-card"}
+            onChange={handleChange}
+            onRemove={handleRemove}
+            beforeUpload={beforeUpload}
+            showUploadList={showUploadList}
+            // antd bug not fixed infinite loading if filelist get a value
+            // defaultFileList={}
+            // fileList = {}
+          >
+            <div>
+              <PlusOutlined />
+              <div
+                style={{
+                  marginTop: 8,
+                }}
+              >
+                Upload
+              </div>
             </div>
-          </div>
-        </Upload>
+          </Upload>
+        </>
       ) : (
         // Upload Preview
         <Space size="middle">

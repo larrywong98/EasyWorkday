@@ -72,8 +72,9 @@ const NameSection = (props) => {
           <Form.Item
             label="SSN"
             name="ssn"
-            rules={[...requiredItem, validatessn]}
+            rules={[{}, validatessn]}
             hidden={sectionClosed[0]}
+            required
           >
             <Input style={{ width: "150px" }} />
           </Form.Item>

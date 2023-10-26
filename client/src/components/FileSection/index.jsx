@@ -3,44 +3,76 @@ import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import UploadComp from "../UploadComp";
 import { useMemo } from "react";
 import { useLocation } from "react-router";
+import { useSelector } from "react-redux";
 
 const FileSection = (props) => {
   const sectionClosed = props.sectionClosed;
   const sectionControl = props.sectionControl;
   const location = useLocation();
+  const visaTitle = useSelector((state) => state.userReducer.visaTitle);
   const fileFields = useMemo(() => {
     if (location.pathname.includes("/emp/profile")) {
-      return [
-        {
-          name: "Profile Picture",
-          linkName: "ProfilePicture",
-          listType: "picture-circle",
-        },
-        {
-          name: "Driver License",
-          linkName: "DriverLicense",
-        },
-        {
-          name: "Work Authorization",
-          linkName: "WorkAuthorization",
-        },
-        {
-          name: "OPT Receipt",
-          linkName: "Opt",
-        },
-        {
-          name: "EAD",
-          linkName: "Ead",
-        },
-        {
-          name: "I-983",
-          linkName: "I983",
-        },
-        {
-          name: "I-20",
-          linkName: "I20",
-        },
-      ];
+      if (visaTitle === "Green Card" || visaTitle === "Citizen") {
+        return [
+          {
+            name: "Profile Picture",
+            linkName: "ProfilePicture",
+            listType: "picture-circle",
+          },
+          {
+            name: "Driver License",
+            linkName: "DriverLicense",
+          },
+        ];
+      } else if (visaTitle === "F1(CPT/OPT)") {
+        return [
+          {
+            name: "Profile Picture",
+            linkName: "ProfilePicture",
+            listType: "picture-circle",
+          },
+          {
+            name: "Driver License",
+            linkName: "DriverLicense",
+          },
+          {
+            name: "Work Authorization",
+            linkName: "WorkAuthorization",
+          },
+        ];
+      } else {
+        return [
+          {
+            name: "Profile Picture",
+            linkName: "ProfilePicture",
+            listType: "picture-circle",
+          },
+          {
+            name: "Driver License",
+            linkName: "DriverLicense",
+          },
+          {
+            name: "Work Authorization",
+            linkName: "WorkAuthorization",
+          },
+          {
+            name: "OPT Receipt",
+            linkName: "Opt",
+          },
+          {
+            name: "EAD",
+            linkName: "Ead",
+          },
+          {
+            name: "I-983",
+            linkName: "I983",
+          },
+          {
+            name: "I-20",
+            linkName: "I20",
+          },
+        ];
+      }
     } else {
       return [
         {

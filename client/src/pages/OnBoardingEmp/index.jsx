@@ -45,6 +45,7 @@ const OnBoardingEmp = () => {
   const { Title } = Typography;
 
   const onSubmit = async (data) => {
+    console.log(data);
     data.profilePicture = "http://";
     data.dob = data.dob.format("YYYY/MM/DD");
     if (data.visaDate === undefined) {

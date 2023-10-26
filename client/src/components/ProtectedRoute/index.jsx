@@ -59,9 +59,8 @@ const ProtectedRoute = ({ children }) => {
     // profile status
     if (location.pathname.includes("profile")) {
       if (
-        user.info.visaTitle !== "F1(CPT/OPT)" ||
-        (user.applicationStatus === status.approved &&
-          user.visaStatus === status.approved)
+        user.applicationStatus === status.approved &&
+        user.visaStatus === status.approved
       ) {
         return <>{children}</>;
       } else if (
