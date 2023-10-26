@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 const Notification = ({ index, userName, emailAddress }) => {
   const [result, setResult] = useState("");
   const message = useSelector((state) => state.hrReducer.nextStep[index]);
-
   const dispatch = useDispatch();
 
   const sendNotification = () => {

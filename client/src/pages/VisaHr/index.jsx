@@ -1,10 +1,9 @@
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Card, Space } from "antd";
+import { Space } from "antd";
 
 const VisaHr = () => {
   return (
-    // <Card style={{ width: "50%", height: "600px" }}>
     <Space
       direction="vertical"
       size="large"
@@ -42,7 +41,6 @@ const VisaHr = () => {
         All Employees
       </Button>
     </Space>
-    // </Card>
   );
 };
 export default VisaHr;

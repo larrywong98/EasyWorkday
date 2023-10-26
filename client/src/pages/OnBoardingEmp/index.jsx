@@ -7,7 +7,6 @@ import ContactSection from "../../components/ContactSection";
 import CitizenSection from "../../components/CitizenSection";
 import ReferenceSection from "../../components/ReferenceSection";
 import FileSection from "../../components/FileSection";
-import { useNavigate } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
 import {
@@ -39,7 +38,6 @@ const OnBoardingEmp = () => {
     }
     return tmp;
   }, [user.info]);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [sectionClosed, setsectionClosed] = useState(Array(6).fill(false));
   const { Title } = Typography;
@@ -68,7 +66,6 @@ const OnBoardingEmp = () => {
       data.visaTitle = form.getFieldValue("visaTitleOther");
     }
     // change to pending
-    // const newData = { applicationStatus: status.pending, info: data };
     const newData = {
       role: user.role,
       applicationStatus: status.pending,
@@ -87,7 +84,6 @@ const OnBoardingEmp = () => {
     const response = await saveInfo(user, newData);
     dispatch(updateUserId({ userId: response.userId }));
     setDisabled(true);
-    // navigate("/success", { state: { message: "Submit Successful" } });
   };
   const sectionControl = (i) => {
     let newsectionClosed = [...sectionClosed];

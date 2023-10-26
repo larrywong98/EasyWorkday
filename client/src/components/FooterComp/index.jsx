@@ -11,7 +11,7 @@ const FooterComp = () => {
         color: "#ffffff",
       }}
     >
-      Ant Design ©2023 Created by Ant UED
+      EasyWorkday ©2023 Created by EasyWorkday Group
     </Footer>
   );
 };

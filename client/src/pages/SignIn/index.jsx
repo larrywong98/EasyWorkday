@@ -9,14 +9,13 @@ import {
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getJwtToken, signInRequest } from "../../services/auth";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const SignIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [pwdShow, setPwdShow] = useState(true);
   const [authorized, setAuthorized] = useState(true);
-  const userInfo = useSelector((state) => state.authReducer);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -29,7 +28,6 @@ const SignIn = () => {
       }
     }
     const response = await signInRequest(dispatch, navigate);
-    console.log(response);
     if (response === "unauthorized") {
       setAuthorized(false);
       return;
@@ -37,7 +35,6 @@ const SignIn = () => {
     if (response === "error") {
       return;
     }
-    // console.log(response);
   };
   return (
     <Paper
@@ -146,9 +143,6 @@ const SignIn = () => {
               type={pwdShow ? "password" : "text"}
               onChange={(e) => setPassword(e.target.value)}
               value={password}
-              // sx={{
-              //   height: "56px",
-              // }}
               inputProps={{
                 style: { WebkitBoxShadow: "0 0 0 1000px white inset" },
               }}

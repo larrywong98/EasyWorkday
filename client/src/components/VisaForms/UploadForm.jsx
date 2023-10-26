@@ -28,7 +28,6 @@ const UploadForm = ({ name }) => {
     })
       .then((res) => {
         const result = res.json();
-        // console.log(result);
         return result;
       })
       .then(async (res) => {
@@ -41,7 +40,6 @@ const UploadForm = ({ name }) => {
           url: res.fileUrl,
         };
         message.success("upload successfully.");
-        // dispatch
         dispatch(
           updateFile({
             name: name,

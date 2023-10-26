@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
 import { Box } from "@mui/material";
-// import FileAllSection from "../../components/FileAllSection";
 
 const ProfileHrView = () => {
   const [form] = Form.useForm();

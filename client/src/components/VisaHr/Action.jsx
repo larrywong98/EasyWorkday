@@ -28,10 +28,6 @@ const Action = ({ index, employeeId }) => {
   }, [curIdx]);
 
   const updateDecision = async (status, feedback) => {
-    console.log(`visa: ${visaStatusName},
-    status: ${status},
-    receipt: ${receiptName},
-    feedback: ${feedback},`);
     const updateIdx = approve(status) ? curIdx + 1 : curIdx;
     const response = await sendRequest({
       url: "http://127.0.0.1:4000/api/emp/visastatus/" + employeeId,
@@ -48,7 +44,6 @@ const Action = ({ index, employeeId }) => {
       }),
     });
 
-    console.log(response);
     setFeedback("");
     dispatch(changeResponse(index));
     dispatch(updateTime(index));
