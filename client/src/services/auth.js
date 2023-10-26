@@ -16,6 +16,8 @@ const getJwtToken = async (username, password, navigate) => {
     return "ok";
   } else if (response.status === "unauthorized") {
     return "unauthorized";
+  } else if (response.status === "not exist") {
+    return "not exist";
   } else {
     navigate("/error");
   }

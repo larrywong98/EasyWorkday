@@ -29,6 +29,11 @@ const SignIn = () => {
       }
     }
     const response = await signInRequest(dispatch, navigate);
+    console.log(response);
+    if (response === "unauthorized") {
+      setAuthorized(false);
+      return;
+    }
     if (response === "error") {
       return;
     }
@@ -196,7 +201,7 @@ const SignIn = () => {
               <></>
             ) : (
               <Typography sx={{ fontSize: "13px", color: "red" }}>
-                Wrong password
+                User not exist or Wrong password
               </Typography>
             )}
           </Box>

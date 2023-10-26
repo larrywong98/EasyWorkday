@@ -58,6 +58,10 @@ router.post("/token", async (req, res) => {
     const { name, pwd } = req.body;
 
     const user = await Auth.findOne({ email: name });
+    if (!user) {
+      res.json({ status: "not exist" });
+      return;
+    }
     const authorized = await bcrypt.compare(pwd, user.password);
     if (!authorized) {
       res.json({ status: "unauthorized" });
