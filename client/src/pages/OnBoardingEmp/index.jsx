@@ -62,6 +62,8 @@ const OnBoardingEmp = () => {
     if (data.visaTitle === "F1(CPT/OPT)") {
       newVisa.optStatus = "pending";
     }
+    const newVisaStatus =
+      data.visaTitle !== "F1(CPT/OPT)" ? "approved" : "initial";
     if (data.visaTitle === "Other") {
       data.visaTitle = form.getFieldValue("visaTitleOther");
     }
@@ -70,6 +72,7 @@ const OnBoardingEmp = () => {
       role: user.role,
       applicationStatus: status.pending,
       onboardFeedback: user.onboardFeedback,
+      visaStatus: newVisaStatus,
       info: data,
       visa: newVisa,
       files: user.files,
