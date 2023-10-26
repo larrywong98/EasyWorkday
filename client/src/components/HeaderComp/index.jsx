@@ -9,7 +9,6 @@ const { Header } = Layout;
 
 const HeaderComp = () => {
   const [current, setCurrent] = useState("");
-  const user = useSelector((state) => state.userReducer);
   const userInfo = useSelector((state) => state.authReducer);
   const location = useLocation();
   const navigate = useNavigate();

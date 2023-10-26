@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import loadAllUser from "../../services/loadAllUser";
 import { loadUser } from "../../reducer/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -12,10 +12,6 @@ const ProfileHr = () => {
   const [data, setData] = useState([]);
   const [initialData, setInitialData] = useState([]);
   const [showError, setShowError] = useState(false);
-  // const valueToStatus = (value) => {
-  //   const statusText = Object.keys(status).find((key) => status[key] === value);
-  //   return statusText;
-  // };
   const tableData = useMemo(() => {
     return data.map((item, index) => {
       let fullName = "null";
@@ -40,7 +36,6 @@ const ProfileHr = () => {
   }, [data]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.userReducer);
   const toUserProfileDetail = (index) => {
     if (data[index].applicationStatus === "approved") {
       const selectedUser = data[index];
@@ -249,7 +244,6 @@ const ProfileHr = () => {
             },
           }}
           slots={{ toolbar: GridToolbar }}
-          // checkboxSelection
         />
       </Paper>
     </>

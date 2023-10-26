@@ -9,8 +9,6 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-// import { getJwtToken, signInRequest, signUpRequest } from "../services/auth";
 import validateEmail from "../../utils/validateEmail";
 import { signUpRequest } from "../../services/auth";
 
@@ -23,7 +21,6 @@ const SignUp = () => {
   const [firstLoad, setFirstLoad] = useState(true);
   const [userExist, setUserExist] = useState(false);
   const [pwdRepeat, setPwdRepeat] = useState(false);
-  const user = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
 
   const handlePwdRepeat = () => {
@@ -39,22 +36,16 @@ const SignUp = () => {
 
   const handlePwdConfirmChange = (e) => {
     setPasswordConfirm(e.target.value);
-    // if (password === passwordConfirm)
-    //   setPwdRepeat(true);
-    // else
-    //   setPwdRepeat(false);
   };
 
   const submit = async (e) => {
     e.preventDefault();
-    
+
     if (pwdRepeat || validateEmail(email) === false || password === "") {
       setFirstLoad(false);
       return;
     }
-
     const response = await signUpRequest(username, password, email, navigate);
-    // console.log(response);
     if (response === "exist") {
       setUserExist(true);
     }
@@ -122,7 +113,7 @@ const SignUp = () => {
                 marginTop: "44px",
               }}
             >
-              {"Sign up with new account "}
+              "Sign up with new account "
             </Typography>
 
             <Box
@@ -169,12 +160,9 @@ const SignUp = () => {
                   }}
                 >
                   <Typography variant="p" sx={{ fontSize: "14px" }}>
-                    {!firstLoad && username === ""
-                      ? "Field Required"
-                      : ""}
+                    {!firstLoad && username === "" ? "Field Required" : ""}
                   </Typography>
                 </Box>
-
               </Box>
 
               <Box
@@ -358,11 +346,7 @@ const SignUp = () => {
                 <Typography variant="span">
                   Already have an account?&nbsp;
                 </Typography>
-                <Link
-                  to="/signin"
-                  // onClick={initState}
-                  style={{ color: "#5048e5" }}
-                >
+                <Link to="/signin" style={{ color: "#5048e5" }}>
                   Sign in
                 </Link>
               </Box>

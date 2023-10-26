@@ -13,16 +13,13 @@ import { Space } from "antd";
 import { approve } from "../../utils/approve";
 
 const Visa = ({ name, index }) => {
-  console.log(`name: ${name}, index: ${index}`);
   const isI983 = (name) => name === "I983";
   const visaInfo = useSelector((state) => state.userReducer.visa);
   const status = visaInfo[statusProperties[index]];
-  console.log(status);
   const Receipt = (index) => {
     if (status === "pending") {
       return <p>{nextSteps[visas[index]][0]}</p>;
     } else if (status === "approved") {
-      //   console.log(nextSteps[visas[index]][1]);
       if (visaInfo[statusProperties[Math.min(index + 1, 6)]] === "approved") {
         return <p></p>;
       }

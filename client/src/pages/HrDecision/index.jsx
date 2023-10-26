@@ -1,5 +1,4 @@
-import { Space, Card, Row } from "antd";
-import { Button, Form, Typography } from "antd";
+import { Space, Card, Row, Input, Button, Form, Typography } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import NameSection from "../../components/NameSection";
 import AddressSection from "../../components/AddressSection";
@@ -11,7 +10,6 @@ import { useLocation } from "react-router";
 import dayjs from "dayjs";
 import { status } from "../../reducer/global";
 import { useDispatch, useSelector } from "react-redux";
-import { Input } from "antd";
 import sendRequest from "../../services/sendRequest";
 import { Link } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
