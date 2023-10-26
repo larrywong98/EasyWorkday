@@ -12,8 +12,11 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
 import { approve } from "../../utils/approve";
+import { Pagination } from "antd";
 
 const InProgress = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // you can adjust this value
   const [employees, setEmp] = useState([]);
   const change = useSelector((state) => state.hrReducer.response);
   const curStatus = useSelector((state) => state.hrReducer.empStatus);
@@ -89,6 +92,11 @@ const InProgress = () => {
     return Difference_In_Days.toFixed(0);
   };
 
+  // Function to handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div style={{ width: "80%" }}>
       <div
@@ -106,7 +114,11 @@ const InProgress = () => {
       <List
         header={<div>Employee</div>}
         bordered
-        dataSource={employees}
+        // dataSource={employees}
+        dataSource={employees.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )}
         renderItem={(employee, index) => (
           <>
             <List.Item key={index}>
@@ -167,6 +179,12 @@ const InProgress = () => {
             </List.Item>
           </>
         )}
+      />
+      <Pagination
+        current={currentPage}
+        total={employees.length}
+        pageSize={itemsPerPage}
+        onChange={handlePageChange}
       />
     </div>
   );

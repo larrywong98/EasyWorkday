@@ -10,9 +10,12 @@ import { useDispatch } from "react-redux";
 import DownloadForm from "../../components/VisaForms/DownloadForm";
 import { Link, useNavigate } from "react-router-dom";
 import { LeftOutlined } from "@ant-design/icons";
+import { Pagination } from "antd";
 const { Search } = Input;
 
 const All = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // you can adjust this value
   const [employees, setEmp] = useState([]);
   const nextStep = useSelector((state) => state.hrReducer.nextStep);
   const [downloads, setDownloads] = useState([]);
@@ -136,6 +139,11 @@ const All = () => {
     setDisplayValues(employees);
   };
 
+  // Function to handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div style={{ width: "80%" }}>
       <div
@@ -164,7 +172,11 @@ const All = () => {
       <List
         header={<div>Employee</div>}
         bordered
-        dataSource={displayValues}
+        // dataSource={displayValues}
+        dataSource={displayValues.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )}
         renderItem={(employee, index) => (
           <>
             <List.Item key={index}>
@@ -231,6 +243,12 @@ const All = () => {
             </List.Item>
           </>
         )}
+      />
+      <Pagination
+        current={currentPage}
+        total={displayValues.length}
+        pageSize={itemsPerPage}
+        onChange={handlePageChange}
       />
     </div>
   );
