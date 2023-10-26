@@ -113,7 +113,7 @@ const SignUp = () => {
                 marginTop: "44px",
               }}
             >
-              "Sign up with new account "
+              Sign up with new account
             </Typography>
 
             <Box
