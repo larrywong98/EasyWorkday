@@ -7,13 +7,14 @@ import { loadUser } from "../../reducer/userSlice";
 import { statusProperties } from "../../reducer/global";
 import Visa from "../../components/VisasEmp/Visa";
 import { approve } from "../../utils/approve";
+import { Alert, Box, Button, Stack } from "@mui/material";
+import { Link } from "react-router-dom";
 const { Title } = Typography;
 const { Panel } = Collapse;
 
 const VisaEmp = () => {
   const user = useSelector((state) => state.userReducer);
   const visaInfo = useSelector((state) => state.userReducer.visa);
-  console.log(user);
   const dispatch = useDispatch();
 
   //load user data userInfo.userId
@@ -50,22 +51,43 @@ const VisaEmp = () => {
           alignItems: "center",
         }}
       >
-        <Title>Visa Management</Title>
-        <Collapse
-          accordion
-          style={{
-            width: "800px",
-          }}
-        >
-          {collapseChildren.map(
-            (item, index) =>
-              approve(findOuterStatus(item.uploadName, index)) && (
-                <Panel header={item.visa} key={index}>
-                  <Visa name={item.uploadName} index={index} />
-                </Panel>
-              )
-          )}
-        </Collapse>
+        {user.info.visaTitle === "F1(CPT/OPT)" ? (
+          <>
+            <Title>Visa Management</Title>
+            <Collapse
+              accordion
+              style={{
+                width: "800px",
+              }}
+            >
+              {collapseChildren.map(
+                (item, index) =>
+                  approve(findOuterStatus(item.uploadName, index)) && (
+                    <Panel header={item.visa} key={index}>
+                      <Visa name={item.uploadName} index={index} />
+                    </Panel>
+                  )
+              )}
+            </Collapse>
+          </>
+        ) : (
+          <Stack direction="column" sx={{ alignItems: "center", gap: 35 }}>
+            <Alert
+              severity="success"
+              sx={{ width: 400, justifyContent: "center" }}
+            >
+              No visa document required
+            </Alert>
+            <Button
+              component={Link}
+              to="/"
+              variant="contained"
+              sx={{ width: "150px", height: "150px", borderRadius: "50%" }}
+            >
+              Go Home
+            </Button>
+          </Stack>
+        )}
       </div>
     </>
   );
