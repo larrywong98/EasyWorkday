@@ -62,6 +62,7 @@ const OnBoardingEmp = () => {
     if (data.visaTitle === "F1(CPT/OPT)") {
       newVisa.optStatus = "pending";
     }
+    console.log(data.visaTitle);
     const newVisaStatus =
       data.visaTitle !== "F1(CPT/OPT)" ? "approved" : "initial";
     if (data.visaTitle === "Other") {

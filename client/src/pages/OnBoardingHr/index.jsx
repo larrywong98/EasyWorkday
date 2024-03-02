@@ -95,16 +95,19 @@ const OnBoardingHr = () => {
   const sendEmail = async () => {
     //emailjs
     var templateParams = {
-      email: employeeEmail,
-      name: "Xiaoyun Wang",
+      to_email: employeeEmail,
+      from_name: "Yingshan Qu",
       registerUrl: "http://127.0.0.1:3000/register/" + regToken,
     };
     emailjs
       .send(
-        "service_1qbtjn6",
-        "template_5ib7nbj",
+        // "service_1qbtjn6",
+        "service_dnk2nug",
+        // "template_5ib7nbj",
+        "template_hlf0ebq",
         templateParams,
-        "9956vAL6uIAW9zoeP"
+        // "9956vAL6uIAW9zoeP"
+        "F6ljvQUYfyNjd-1Qt"
       )
       .then(
         (res) => console.log(res),
